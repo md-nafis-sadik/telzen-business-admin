@@ -1,0 +1,407 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .containerX {
+    @apply w-full max-w-[1178px] mx-auto relative;
+  }
+
+  .label {
+    @apply text-sm text-gray-700 font-medium;
+  }
+  .input-none {
+    @apply p-0 bg-transparent w-full text-sm placeholder:text-gray-800 text-black-100  border-none outline-none rounded-none read-only:cursor-default focus:outline-none focus:border-none focus:shadow-none focus:ring-0 focus:ring-transparent;
+  }
+
+  .input {
+    @apply px-4 py-3 bg-white w-full text-sm  text-black-100 border border-natural-400  outline-none rounded-[8px] placeholder:text-gray-800 read-only:cursor-default focus:outline-none focus:shadow-none focus:ring-0 focus:ring-transparent disabled:bg-natural-100 disabled:text-black-100 read-only:text-black-400 read-only:bg-natural-150 read-only:border-natural-400;
+  }
+  .Country-list {
+    @apply p-4 bg-white w-full text-sm  text-black-100 border  outline-none rounded-[8px] placeholder:text-gray-800 read-only:cursor-default focus:outline-none focus:shadow-none focus:ring-0 focus:ring-transparent disabled:bg-natural-100 disabled:text-black-100 read-only:text-black-100 read-only:bg-white-100;
+  }
+
+  .btn_violet {
+    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-4 bg-main-600 max-w-max hover:bg-main-700 text-white text-sm sm:text-base font-bold rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out uppercase leading-tight;
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .btn_save {
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 bg-main-600 hover:bg-main-500 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out text-white text-sm font-medium leading-tight;
+    &:active {
+      @apply scale-95;
+    }
+  }
+  .btn_disabled {
+    @apply flex items-center justify-center text-center px-6 py-3 rounded-[8px] cursor-not-allowed sm:px-4 sm:py-4 h-12 bg-natural-250  text-text-500 text-sm font-medium leading-tight;
+  }
+
+  .btn_green {
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 bg-[#00AE5B] hover:bg-[#008d49] sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out text-white text-sm font-medium leading-tight;
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .btn_cancel {
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 text-sm font-medium leading-tight bg-white border border-main-600 hover:bg-main-50 text-main-600 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out;
+    &:active {
+      @apply scale-95;
+    }
+  }
+  .btn_edit {
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 text-sm font-medium leading-tight bg-black border border-natural-50 text-gray-700 sm:text-base rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out;
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .btn_delete {
+    @apply justify-center text-white px-10 py-4 rounded-[8px] cursor-pointer transition-transform duration-300 ease-in-out text-sm font-medium leading-tight min-w-[207px] !bg-[#FF4646] hover:!bg-[#e03535];
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .btn_success {
+    @apply justify-center text-white px-10 py-4 rounded-[8px] cursor-pointer transition-transform duration-300 ease-in-out text-sm font-medium leading-tight min-w-[207px] !bg-main-600 hover:!bg-main-700;
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .btn_no {
+    @apply bg-black-200 text-white min-w-[207px] px-10 py-4 rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out;
+    &:active {
+      @apply scale-95;
+    }
+  }
+
+  .skeleton {
+    @apply bg-gray-200 animate-pulse rounded;
+  }
+
+  .table {
+    @apply w-full border-l-0 border-spacing-0 border-separate;
+  }
+
+  .table_head {
+    @apply table-header-group border-inherit border-separate z-10;
+  }
+
+  .table_row {
+    @apply table-row align-[inherit] border-inherit odd:bg-white even:bg-neutral-100;
+  }
+
+  .table_th {
+    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none;
+  }
+
+  .table_th_first {
+    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none rounded-tl-lg;
+  }
+
+  .table_th_last {
+    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none rounded-tr-lg;
+  }
+
+  .table_td {
+    @apply p-3 border-neutral-200 text-sm text-text-700;
+  }
+
+  .table_border_td {
+    @apply p-4 border-l border-t border-neutral-200 text-sm  text-text-700;
+  }
+
+  .table_outline_td {
+    @apply px-3 py-2.5 text-sm font-normal !leading-[20px] text-text-700 text-center;
+  }
+
+  .pulse {
+    @apply bg-white-300 animate-pulse;
+  }
+  
+  .transition_common {
+    @apply transition-all duration-300 ease-in-out;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+
+    --foreground: 0 0% 3.9%;
+
+    --card: 0 0% 100%;
+
+    --card-foreground: 0 0% 3.9%;
+
+    --popover: 0 0% 100%;
+
+    --popover-foreground: 0 0% 3.9%;
+
+    --primary: 0 0% 9%;
+
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 0 0% 96.1%;
+
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96.1%;
+
+    --muted-foreground: 0 0% 45.1%;
+
+    --accent: 0 0% 96.1%;
+
+    --accent-foreground: 0 0% 9%;
+
+    --destructive: 0 84.2% 60.2%;
+
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 89.8%;
+
+    --input: 0 0% 89.8%;
+
+    --ring: 0 0% 3.9%;
+
+    --chart-1: 12 76% 61%;
+
+    --chart-2: 173 58% 39%;
+
+    --chart-3: 197 37% 24%;
+
+    --chart-4: 43 74% 66%;
+
+    --chart-5: 27 87% 67%;
+
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 3.9%;
+
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 0 0% 98%;
+
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+
+    --input: 0 0% 14.9%;
+
+    --ring: 0 0% 83.1%;
+
+    --chart-1: 220 70% 50%;
+
+    --chart-2: 160 60% 45%;
+
+    --chart-3: 30 80% 55%;
+
+    --chart-4: 280 65% 60%;
+
+    --chart-5: 340 75% 55%;
+  }
+}
+
+.ReactFlagsSelect-module_selectBtn__19wW7 {
+  border: 1px solid #bdbdbd !important; /* or use your Tailwind red */
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 140% !important;
+  padding: 11px !important;
+}
+
+.ReactFlagsSelect-module_selectBtn__19wW7:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.sidebar .active {
+  font-weight: 600;
+  color: #e47a48;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/*=============== PAGINATION START  ========================*/
+
+.pagination {
+  gap: 8px !important;
+}
+
+.page-item .page-link {
+  display: flex !important;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  line-height: normal;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  color: #212121 !important;
+  border: none;
+  line-height: 10px;
+  cursor: pointer !important;
+}
+
+.pagination .page-link:hover {
+  background-color: transparent !important;
+  cursor: pointer !important;
+}
+
+.page-item.active .page-link {
+  border: 1px solid #e47a48 !important;
+  background-color: #e47a48 !important;
+  color: #fff !important;
+}
+
+.page-item .page-link[aria-label="Previous"]::after {
+  content: url("./assets/images/arrow-left.webp");
+}
+
+.page-item .page-link[aria-label="Next"]::after {
+  content: url("./assets/images/arrow-right.webp");
+}
+
+.page-item .page-link[aria-label="Previous"] span,
+.page-item .page-link[aria-label="Next"] span {
+  display: none !important;
+}
+
+.page-item .page-link[aria-label="Previous"]::after,
+.page-item .page-link[aria-label="Next"]::after {
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.twemoji {
+  font-family: "Twemoji Mozilla", "Twemoji", sans-serif;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/*=============== PAGINATION END  ========================*/
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff3f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e47a48;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e47a48;
+}
+
+::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+/* Firefox scrollbar */
+/* * {
+  scrollbar-width: medium;
+  scrollbar-color: #E47A48 #ffffff;
+} */
+
+.custom-bullet {
+  width: 12px;
+  height: 12px;
+  background: #9d7859;
+  border-radius: 50%;
+  opacity: 1;
+  margin: 0 6px;
+  transition: all 0.3s ease;
+}
+.custom-bullet-active {
+  width: 32px;
+  height: 12px;
+  background: #d8ccb6;
+  border-radius: 6px;
+}
+
+.swiper-pagination {
+  position: fixed !important;
+  bottom: 30px !important;
+  left: 75% !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+  margin: 0 !important;
+  z-index: 1000;
+}
+
+.recharts-text .recharts-cartesian-axis-tick-value {
+  font-size: 10px !important;
+}

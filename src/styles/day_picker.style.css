@@ -1,0 +1,103 @@
+.rdp-root {
+  --rdp-today-color: #2e4141 !important;
+  --rdp-selected-border: 2px solid #fff !important;
+  --rdp-font-family: "Inter", sans-serif !important;
+}
+
+/* months full container */
+.rdp-months {
+  @apply !max-w-full;
+}
+
+/* month */
+.rdp-month {
+  @apply !w-full;
+}
+
+/*  */
+.rdp-month_grid {
+  @apply !w-full;
+}
+
+/* navigation container */
+.rdp-nav {
+  @apply !justify-between !w-full;
+}
+
+/* chevron */
+.rdp-chevron {
+  @apply !fill-gray-600 !w-6 !h-6;
+}
+
+/* main title */
+.rdp-month_caption {
+  @apply !mb-6 !text-gray-900 !justify-center !text-2xl;
+}
+
+/* week container */
+.rdp-weekdays {
+  @apply !text-gray-900;
+}
+
+/* single week name */
+.rdp-weekday {
+  font-family: "Inter", sans-serif;
+  @apply !text-gray-600 !opacity-100 !text-base !pb-2;
+}
+
+.rdp-weeks {
+  @apply !mt-5;
+}
+
+/* day color */
+.rdp-day {
+  @apply !text-gray-600 !text-center !text-base;
+}
+
+/* today */
+.rdp-today {
+  font-family: "Inter", sans-serif;
+}
+
+.non-selectable-datePicker .rdp-today {
+  @apply !text-main-600 !font-bold;
+}
+
+/* outside of months */
+.rdp-outside {
+  @apply !text-neutral-300;
+}
+
+/* inside day container -> the button */
+.rdp-day_button {
+  @apply !w-full !cursor-default p-[8px];
+}
+
+/* non selectable or clickable */
+.non-clickable-daypicker .rdp-day {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ================================= */
+.dayPickerCustom .rdp-today {
+  @apply !text-gray-600 !font-normal;
+}
+
+.dayPickerCustom .rdp-day_button {
+  @apply !border-none !outline-none;
+}
+
+/* Custom selected date background */
+.dayPickerCustom .rdp-selected {
+  @apply !bg-violet-400 !text-white !rounded-[90px] !font-bold;
+}
+
+/* non selectable calender today design */
+.non-selectable-datePicker .rdp-today {
+  @apply !text-white !flex !items-center !justify-center !w-full;
+}
+
+.non-selectable-datePicker .rdp-today .rdp-day_button {
+  @apply !bg-violet-400 !w-[28px] !h-[28px] !rounded-full;
+}
