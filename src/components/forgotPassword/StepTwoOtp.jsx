@@ -39,7 +39,7 @@ const StepTwoOtp = ({ goToStep, email }) => {
         <button
           type="button"
           onClick={handleResend}
-          className="self-stretch text-center justify-start text-gray-800 text-base font-normal leading-snug cursor-pointer hover:text-main-600 transition_common"
+          className="self-stretch text-center justify-start text-gray-800 text-base font-normal leading-snug cursor-pointer hover:text-main-700 transition_common"
         >
           Resend
         </button>

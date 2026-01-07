@@ -25,8 +25,8 @@ function DashboardCards() {
     setFilter(newFilter);
   };
   return (
-    <div className=" p-4 bg-white rounded-2xl">
-      <div className="flex justify-between items-center mb-4">
+    <div className="flex flex-col lg:flex-row gap-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <h4 className="text-text-700 text-lg font-bold leading-normal">
           Overview
         </h4>
@@ -42,42 +42,49 @@ function DashboardCards() {
             triggerClassName="w-26 !border-none p-1 font-semibold truncate !border-white text-sm"
           />
         </div>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      </div> */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-[65%]">
         <DashboardCard
-          title="Total Orders"
+          title="Total eSIM"
           amount={dashboardCardData?.total_orders || 0}
           isFetching={isFetching}
           icon={<DashboardCardOneIcon />}
-          className="bg-[#FFECD3]"
-          animateClass="text-[#E47A48]"
+          // className="bg-[#FFECD3]"
+          // animateClass="text-[#00C896]"
         />
         <DashboardCard
-          title="Total Revenue"
-          amount={`৳${formatNumberIN(dashboardCardData?.total_revenue) || 0}`}
+          title="Total Spent"
+          amount={`$${formatNumberIN(dashboardCardData?.total_revenue) || 0}`}
           isFetching={isFetching}
           icon={<DashboardCardTwoIcon />}
-          className="bg-[#C6FFBC]"
-          animateClass="text-[#E47A48]"
-
+          // className="bg-[#C6FFBC]"
+          // animateClass="text-[#00C896]"
         />
         <DashboardCard
-          title="Total Products"
+          title="Users"
           amount={dashboardCardData?.total_products || 0}
           isFetching={isFetching}
           icon={<DashboardCardThreeIcon />}
-          className="bg-[#DDF1FF]"
-          animateClass="text-[#E47A48]"
-
+          // className="bg-[#DDF1FF]"
+          // animateClass="text-[#00C896]"
         />
         <DashboardCard
-          title="Total Staffs"
-          amount={dashboardCardData?.total_staffs || 0}
+          title="Revenue"
+          amount={`$${formatNumberIN(dashboardCardData?.total_revenue) || 0}`}
           isFetching={isFetching}
           icon={<DashboardCardFourIcon />}
-          className="bg-[#FFF3C5]"
-          animateClass="text-[#E47A48]"
-
+          // className="bg-[#FFF3C5]"
+          // animateClass="text-[#00C896]"
+        />
+      </div>
+      <div className=" gap-4 w-full lg:w-[35%]">
+        <DashboardCard
+          title="-"
+          amount={`-`}
+          isFetching={isFetching}
+          icon={<DashboardCardFourIcon />}
+          className="bg-[#F9D3D3]"
+          // animateClass="text-[#00C896]"
         />
       </div>
     </div>

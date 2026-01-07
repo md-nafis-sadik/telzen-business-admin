@@ -24,7 +24,7 @@ function NavigateItem({
     <Link
       to={path ? path : menu?.path}
       className={`relative text-white flex items-center gap-3 rounded-[8px] w-full pr-4 py-3 duration-300 group link-item transition-colors ease-in-out self-stretch justify-start leading-none text-sm ${
-        isActive ? "bg-main-600" : "hover:bg-main-950"
+        isActive ? "bg-main-700" : "hover:bg-main-950"
       }`}
       onClick={() => setter(menu?.name?.toLowerCase())}
       {...rest}

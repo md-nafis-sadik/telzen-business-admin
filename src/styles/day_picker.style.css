@@ -60,7 +60,7 @@
 }
 
 .non-selectable-datePicker .rdp-today {
-  @apply !text-main-600 !font-bold;
+  @apply !text-main-700 !font-bold;
 }
 
 /* outside of months */

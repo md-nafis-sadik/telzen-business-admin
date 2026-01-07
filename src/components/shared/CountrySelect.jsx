@@ -98,9 +98,7 @@ const CountrySelect = ({
         className={`px-4 cursor-pointer flex items-center gap-3 
           ${isFocused ? "bg-blue-50 text-black-100" : "hover:bg-gray-50"}
           ${
-            isSelected
-              ? "bg-main-600 text-white font-medium"
-              : "text-black-100"
+            isSelected ? "bg-main-700 text-white font-medium" : "text-black-100"
           }
         `}
         onClick={() => handleSelect(option)}

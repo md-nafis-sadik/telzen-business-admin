@@ -14,10 +14,10 @@ const Input = ({
   ...rest
 }) => {
   return (
-    <div className={`flex flex-col w-full gap-2 font-hindSiliguri ${wrapper}`}>
+    <div className={`flex flex-col w-full gap-2 font-inter ${wrapper}`}>
       {label && (
         <div className="flex items-center gap-2">
-          <label className={`label font-hindSiliguri ${labelClass}`} htmlFor={id}>
+          <label className={`label font-inter ${labelClass}`} htmlFor={id}>
             {label}
           </label>
           {labelChildren && (
@@ -35,7 +35,9 @@ const Input = ({
             type={type}
             id={id}
             name={rest.name || id}
-            className={`input disabled:opacity-60 relative font-hindSiliguri ${className} ${icon ? "pl-10" : ""}`}
+            className={`input disabled:opacity-60 relative font-inter ${className} ${
+              icon ? "pl-10" : ""
+            }`}
             onWheel={(e) => e.target.blur()}
             {...rest}
           />

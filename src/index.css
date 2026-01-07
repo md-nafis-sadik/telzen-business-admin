@@ -22,14 +22,14 @@
   }
 
   .btn_violet {
-    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-4 bg-main-600 max-w-max hover:bg-main-700 text-white text-sm sm:text-base font-bold rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out uppercase leading-tight;
+    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-4 bg-main-700 max-w-max hover:bg-main-700 text-white text-sm sm:text-base font-bold rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out uppercase leading-tight;
     &:active {
       @apply scale-95;
     }
   }
 
   .btn_save {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 bg-main-600 hover:bg-main-500 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out text-white text-sm font-medium leading-tight;
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 bg-main-700 hover:bg-main-500 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out text-white text-sm font-medium leading-tight;
     &:active {
       @apply scale-95;
     }
@@ -46,7 +46,7 @@
   }
 
   .btn_cancel {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 text-sm font-medium leading-tight bg-white border border-main-600 hover:bg-main-50 text-main-600 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out;
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 text-sm font-medium leading-tight bg-white border border-main-700 hover:bg-main-50 text-main-700 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-150 ease-in-out;
     &:active {
       @apply scale-95;
     }
@@ -66,7 +66,7 @@
   }
 
   .btn_success {
-    @apply justify-center text-white px-10 py-4 rounded-[8px] cursor-pointer transition-transform duration-300 ease-in-out text-sm font-medium leading-tight min-w-[207px] !bg-main-600 hover:!bg-main-700;
+    @apply justify-center text-white px-10 py-4 rounded-[8px] cursor-pointer transition-transform duration-300 ease-in-out text-sm font-medium leading-tight min-w-[207px] !bg-main-700 hover:!bg-main-700;
     &:active {
       @apply scale-95;
     }
@@ -92,19 +92,27 @@
   }
 
   .table_row {
-    @apply table-row align-[inherit] border-inherit odd:bg-white even:bg-neutral-100;
+    @apply table-row align-[inherit] border-inherit;
+  }
+
+  .table_row td {
+    @apply border-b border-neutral-200;
+  }
+
+  .table_row:last-child td {
+    @apply border-b-0;
   }
 
   .table_th {
-    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none;
   }
 
   .table_th_first {
-    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none rounded-tl-lg;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tl-lg;
   }
 
   .table_th_last {
-    @apply p-4 text-center whitespace-nowrap bg-main-50 text-text-700 self-stretch justify-start text-sm font-semibold leading-none rounded-tr-lg;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tr-lg;
   }
 
   .table_td {
@@ -122,7 +130,7 @@
   .pulse {
     @apply bg-white-300 animate-pulse;
   }
-  
+
   .transition_common {
     @apply transition-all duration-300 ease-in-out;
   }
@@ -248,7 +256,7 @@
 
 .sidebar .active {
   font-weight: 600;
-  color: #e47a48;
+  color: #00c896;
 }
 
 @layer base {
@@ -289,8 +297,8 @@
 }
 
 .page-item.active .page-link {
-  border: 1px solid #e47a48 !important;
-  background-color: #e47a48 !important;
+  border: 1px solid #616161 !important;
+  background-color: #616161 !important;
   color: #fff !important;
 }
 
@@ -353,18 +361,15 @@ input[type="number"] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff3f1;
+  background: #e9fffa;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #e47a48;
+  background: #616161;
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #e47a48;
-}
 
 ::-webkit-scrollbar-corner {
   background: #f1f1f1;
@@ -373,13 +378,13 @@ input[type="number"] {
 /* Firefox scrollbar */
 /* * {
   scrollbar-width: medium;
-  scrollbar-color: #E47A48 #ffffff;
+  scrollbar-color: #00C896 #ffffff;
 } */
 
 .custom-bullet {
   width: 12px;
   height: 12px;
-  background: #9d7859;
+  background: #006B4F;
   border-radius: 50%;
   opacity: 1;
   margin: 0 6px;
@@ -388,7 +393,7 @@ input[type="number"] {
 .custom-bullet-active {
   width: 32px;
   height: 12px;
-  background: #d8ccb6;
+  background: #99FFE0;
   border-radius: 6px;
 }
 
@@ -402,6 +407,6 @@ input[type="number"] {
   z-index: 1000;
 }
 
-.recharts-text .recharts-cartesian-axis-tick-value {
+.recharts-cartesian-axis-tick-value {
   font-size: 10px !important;
 }

@@ -28,14 +28,16 @@ function PaymentModal({
 
   const handleSubmit = async () => {
     const amount = parseFloat(commissionAmount);
-    
+
     if (!commissionAmount || amount <= 0) {
       errorNotify("Please enter a valid commission amount");
       return;
     }
 
     if (amount > pendingCommission) {
-      errorNotify(`Amount cannot exceed pending commission (${pendingCommission.toLocaleString()})`);
+      errorNotify(
+        `Amount cannot exceed pending commission (${pendingCommission.toLocaleString()})`
+      );
       return;
     }
 
@@ -55,9 +57,9 @@ function PaymentModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="p-8 gap-6 select-none rounded-2xl w-full max-w-xl font-hindSiliguri">
+      <DialogContent className="p-8 gap-6 select-none rounded-2xl w-full max-w-xl font-inter">
         <DialogHeader>
-          <DialogTitle className="text-[28px] font-bold text-text-950 text-center font-hindSiliguri">
+          <DialogTitle className="text-[28px] font-bold text-text-950 text-center font-inter">
             {title}
           </DialogTitle>
         </DialogHeader>
@@ -101,14 +103,14 @@ function PaymentModal({
           <div className="flex gap-3 border-t border-natural-200 pt-6">
             <button
               onClick={handleClose}
-              className="flex-1 py-3 px-4 border border-main-600 text-main-600 rounded-lg font-medium hover:bg-main-50 transition-colors"
+              className="flex-1 py-3 px-4 border border-main-700 text-main-700 rounded-lg font-medium hover:bg-main-50 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={isLoading || !commissionAmount}
-              className="flex-1 py-3 px-4 bg-main-600 text-white rounded-lg font-medium hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 px-4 bg-main-700 text-white rounded-lg font-medium hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? "Saving..." : "Save"}
             </button>

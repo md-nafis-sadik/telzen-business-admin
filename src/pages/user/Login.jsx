@@ -29,7 +29,7 @@ function Login() {
   const slides = [
     {
       image: images.LoginImage,
-      title: "Welcome to Easy Brick Dashboard",
+      title: "Welcome to Telzen Dashboard",
       description:
         "Take control of your business, track sales, deliveries, and performance efficiently.",
     },
@@ -48,7 +48,7 @@ function Login() {
           <Link to={userRouteLinks.home.path}>
             <img
               src={images.LoginLogo}
-              alt="Easy Bricks Logo"
+              alt="Telzen Logo"
               className="w-[149px]"
             />
           </Link>
@@ -57,11 +57,11 @@ function Login() {
           <div className="w-full max-w-[440px] flex flex-col gap-4 md:gap-8">
             <div className="flex flex-col items-center gap-2">
               <h1 className="text-gray-700 text-xl md:text-3xl font-bold leading-tight tracking-wide text-center md:text-left">
-                Login to Easy Brick
+                Login to Telzen
               </h1>
               <p className="text-gray-600 text-sm md:text-base font-normal leading-relaxed text-center max-w-[300px]">
-                Manage orders, track commissions, and grow your income with Easy
-                Brick.
+                Manage orders, track commissions, and grow your income with
+                Telzen.
               </p>
             </div>
 
@@ -154,7 +154,7 @@ function Login() {
                       //   console.log("Image loaded successfully:", slide.image);
                       // }}
                     />
-                    <img
+                    {/* <img
                       src={images.ellipse}
                       alt={`Slide ${index + 1}`}
                       className="absolute bottom-[82px] left-9 w-max h-max object-contain -z-10"
@@ -164,7 +164,13 @@ function Login() {
                       // onLoad={() => {
                       //   console.log("Image loaded successfully:", slide.image);
                       // }}
-                    />
+                    /> */}
+
+                    <div
+                      className="absolute bottom-[70px] left-5 -z-10 w-16 h-16 rounded-full 
+                        bg-[radial-gradient(circle_at_30%_30%,#CCFFF0_0%,#2AF2B6_25%,#00D6A0_55%,#00C896_75%,#006B4F_100%)]
+                      "
+                    ></div>
                   </div>
 
                   <div className="max-w-full px-4">

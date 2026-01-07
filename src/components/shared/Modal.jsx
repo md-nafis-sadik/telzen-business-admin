@@ -78,7 +78,7 @@ const Modal = forwardRef(
               )}
               {confirmButton && (
                 <button
-                  className={`${confirmButtonClass} bg-main-600 hover:bg-main-700`}
+                  className={`${confirmButtonClass} bg-main-700 hover:bg-main-700`}
                   onClick={confirmHandeler}
                 >
                   {confirmButton}

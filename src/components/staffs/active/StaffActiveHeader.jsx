@@ -21,8 +21,13 @@ function StaffActiveHeader() {
     if (value === "all") {
       handleFilterChange({ division: "all", district: "all", upazila: "all" });
     } else {
-      const divisionName = divisions.find(d => d.id === value)?.bn_name || value;
-      handleFilterChange({ division: divisionName, district: "all", upazila: "all" });
+      const divisionName =
+        divisions.find((d) => d.id === value)?.bn_name || value;
+      handleFilterChange({
+        division: divisionName,
+        district: "all",
+        upazila: "all",
+      });
     }
   };
 
@@ -30,8 +35,13 @@ function StaffActiveHeader() {
     if (value === "all") {
       handleFilterChange({ ...activeFilter, district: "all", upazila: "all" });
     } else {
-      const districtName = districts.find(d => d.id === value)?.bn_name || value;
-      handleFilterChange({ ...activeFilter, district: districtName, upazila: "all" });
+      const districtName =
+        districts.find((d) => d.id === value)?.bn_name || value;
+      handleFilterChange({
+        ...activeFilter,
+        district: districtName,
+        upazila: "all",
+      });
     }
   };
 
@@ -39,15 +49,25 @@ function StaffActiveHeader() {
     if (value === "all") {
       handleFilterChange({ ...activeFilter, upazila: "all" });
     } else {
-      const upazilaName = upazilas.find(u => u.id === value)?.bn_name || value;
+      const upazilaName =
+        upazilas.find((u) => u.id === value)?.bn_name || value;
       handleFilterChange({ ...activeFilter, upazila: upazilaName });
     }
   };
 
   // Convert filter bn_name to ID for display
-  const divisionId = divisions.find(d => d.bn_name === activeFilter?.division)?.id || activeFilter?.division || "all";
-  const districtId = districts.find(d => d.bn_name === activeFilter?.district)?.id || activeFilter?.district || "all";
-  const upazilaId = upazilas.find(u => u.bn_name === activeFilter?.upazila)?.id || activeFilter?.upazila || "all";
+  const divisionId =
+    divisions.find((d) => d.bn_name === activeFilter?.division)?.id ||
+    activeFilter?.division ||
+    "all";
+  const districtId =
+    districts.find((d) => d.bn_name === activeFilter?.district)?.id ||
+    activeFilter?.district ||
+    "all";
+  const upazilaId =
+    upazilas.find((u) => u.bn_name === activeFilter?.upazila)?.id ||
+    activeFilter?.upazila ||
+    "all";
 
   return (
     <div className="w-full flex flex-col xl:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
@@ -72,7 +92,7 @@ function StaffActiveHeader() {
             className="w-full md:w-auto"
           />
           <Link to="/admin/staffs/active/add" className="w-full md:w-auto">
-            <button className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-600 rounded-lg text-white text-sm font-medium font-hindSiliguri tracking-wide whitespace-nowrap">
+            <button className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-700 rounded-lg text-white text-sm font-medium font-inter tracking-wide whitespace-nowrap">
               Add New
             </button>
           </Link>

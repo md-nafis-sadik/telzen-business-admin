@@ -63,13 +63,13 @@ function BrickListDetailsModal() {
     <Dialog open={showDetailsModal} onOpenChange={closeModal}>
       <DialogContent className="p-6 gap-0 select-none rounded-3xl w-full sm:w-[566px]">
         <DialogHeader>
-          <DialogTitle className="self-stretch justify-center w-full text-center text-zinc-800 text-2xl font-bold leading-normal mb-6 font-hindSiliguri">
+          <DialogTitle className="self-stretch justify-center w-full text-center text-zinc-800 text-2xl font-bold leading-normal mb-6 font-inter">
             BrickList Details
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="m-0" />
 
-        <div className="flex flex-col gap-4 font-hindSiliguri">
+        <div className="flex flex-col gap-4 font-inter">
           {/* BrickList Details */}
           <div className="space-y-3">
             <div className="grid grid-cols-2">

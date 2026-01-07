@@ -99,7 +99,10 @@ const TagsInput = ({
               {value.map((tag, index) => (
                 <span
                   key={index}
-                  className={cn("inline-flex items-center gap-1 px-[10px] py-1 bg-natural-50 text-text-700 border border-natural-200 rounded-md text-sm font-medium hover:bg-main-50 transition-colors", tagSelectedClassName)}
+                  className={cn(
+                    "inline-flex items-center gap-1 px-[10px] py-1 bg-natural-50 text-text-700 border border-natural-200 rounded-md text-sm font-medium hover:bg-main-50 transition-colors",
+                    tagSelectedClassName
+                  )}
                 >
                   {selector ? tag[selector] : tag}
                   <button
@@ -107,7 +110,7 @@ const TagsInput = ({
                       e.stopPropagation();
                       removeTag(selector ? tag[selector] : tag);
                     }}
-                    className="hover:bg-main-100 text-main-600 hover:text-main-600 rounded-full p-0.5 transition-colors ml-1"
+                    className="hover:bg-main-100 text-main-700 hover:text-main-700 rounded-full p-0.5 transition-colors ml-1"
                     aria-label={`Remove ${selector ? tag[selector] : tag} tag`}
                     type="button"
                   >

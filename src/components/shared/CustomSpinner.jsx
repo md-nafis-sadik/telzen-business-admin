@@ -14,10 +14,10 @@ const Spinner = styled.div`
   margin: 16px;
   animation: ${rotate360} 1s linear infinite;
   transform: translateZ(0);
-  border-top: 2px solid #e47a48;
-  border-right: 2px solid #e47a48;
-  border-bottom: 2px solid #e47a48;
-  border-left: 4px solid #c12b14;
+  border-top: 2px solid #00c896;
+  border-right: 2px solid #00c896;
+  border-bottom: 2px solid #00c896;
+  border-left: 4px solid #008f6a;
   background: transparent;
   width: 65px;
   height: 65px;
@@ -27,7 +27,7 @@ const Spinner = styled.div`
 const CustomSpinner = () => (
   <div className="flex flex-col items-center justify-center h-[300px]">
     <Spinner />
-    <div className="text-text-900 text-lg font-medium">Loading...</div>
+    <div className="text-text-900 font-semibold">Loading...</div>
   </div>
 );
 

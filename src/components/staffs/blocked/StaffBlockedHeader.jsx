@@ -92,7 +92,7 @@ function StaffBlockedHeader() {
             className="w-full md:w-auto"
           />
           {/* <Link to="/admin/staffs/blocked/add" className="w-full md:w-auto">
-            <button className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-600 rounded-lg text-white text-sm font-medium font-hindSiliguri tracking-wide whitespace-nowrap">
+            <button className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-700 rounded-lg text-white text-sm font-medium font-inter tracking-wide whitespace-nowrap">
               Add New
             </button>
           </Link> */}

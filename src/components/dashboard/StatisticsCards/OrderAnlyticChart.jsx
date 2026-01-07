@@ -35,7 +35,7 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
         <div className="relative">
           <div
             style={{
-              backgroundColor: "#E47A48",
+              backgroundColor: "#FFB94A",
               border: "none",
               borderRadius: "4px",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
@@ -62,7 +62,7 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
               height: 0,
               borderLeft: "6px solid transparent",
               borderRight: "6px solid transparent",
-              borderTop: "6px solid #E47A48",
+              borderTop: "6px solid #FFB94A",
             }}
           />
         </div>
@@ -72,12 +72,12 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
   };
 
   return (
-    <div className={cn("w-full lg:w-[60%] rounded-2xl shadow-lg", wrapper)}>
+    <div className={cn("w-full lg:w-[65%] rounded-2xl shadow-lg", wrapper)}>
       <div className="w-full  bg-white p-4 sm:p-6 rounded-2xl flex flex-col justify-between gap-6 sm:gap-8 md:gap-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
             <h2 className="text-text-700 text-lg font-bold leading-normal">
-              Order Overview
+              Sales
             </h2>
           </div>
           <div className="flex items-center gap-2">
@@ -94,19 +94,20 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
           </div>
         </div>
 
-        <section className="overflow-x-auto overflow-y-hidden flex items-center justify-center h-64 focus-visible:outline-none">
+        <section className="flex items-center justify-center h-64 focus-visible:outline-none">
+          {/* overflow-x-auto overflow-y-hidden*/}
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart height={252} data={chartData} margin={0}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} />
+              <XAxis dataKey="name" axisLine={true} tickLine={true} />
               <YAxis
                 tickFormatter={(value) => `${value}`}
                 allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
+                axisLine={true}
+                tickLine={true}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="orders" fill="#E47A48" radius={[0, 0, 0, 0]} />
+              <Bar dataKey="orders" fill="#00C896" radius={[0, 0, 0, 0]} />
             </ComposedChart>
           </ResponsiveContainer>
         </section>

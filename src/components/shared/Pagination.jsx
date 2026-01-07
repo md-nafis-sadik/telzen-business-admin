@@ -50,7 +50,7 @@ function Pagination({
         placeHolder="Filter by status"
         labelKey="per_page"
         selector="id"
-        triggerClassName="w-20 !border-none px-3 py-0 truncate !border-white text-base bg-natural-50"
+        triggerClassName="w-20 min-h-[32px] !border-none px-3 py-0 truncate !border-white text-base bg-natural-50"
         dropdownClassName="!w-16"
       />
     </div>

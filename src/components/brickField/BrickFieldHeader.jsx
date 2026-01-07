@@ -14,20 +14,36 @@ function BrickFieldHeader() {
     total_items,
   } = useBrickField();
 
-  const { divisions, districts, upazilas } = useLocation(filter?.division, filter?.district);
+  const { divisions, districts, upazilas } = useLocation(
+    filter?.division,
+    filter?.district
+  );
 
   const handleDivisionChange = (value) => {
-    const divisionName = value === "all" ? "" : divisions.find(d => d.id === value)?.bn_name || "";
-    handleFilterChange({ division: divisionName, district: "", sub_district: "" });
+    const divisionName =
+      value === "all"
+        ? ""
+        : divisions.find((d) => d.id === value)?.bn_name || "";
+    handleFilterChange({
+      division: divisionName,
+      district: "",
+      sub_district: "",
+    });
   };
 
   const handleDistrictChange = (value) => {
-    const districtName = value === "all" ? "" : districts.find(d => d.id === value)?.bn_name || "";
+    const districtName =
+      value === "all"
+        ? ""
+        : districts.find((d) => d.id === value)?.bn_name || "";
     handleFilterChange({ ...filter, district: districtName, sub_district: "" });
   };
 
   const handleSubDistrictChange = (value) => {
-    const upazilaName = value === "all" ? "" : upazilas.find(u => u.id === value)?.bn_name || "";
+    const upazilaName =
+      value === "all"
+        ? ""
+        : upazilas.find((u) => u.id === value)?.bn_name || "";
     handleFilterChange({ ...filter, sub_district: upazilaName });
   };
 
@@ -39,11 +55,23 @@ function BrickFieldHeader() {
 
       <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
         <LocationSelect
-          divisionValue={filter?.division ? divisions.find(d => d.bn_name === filter.division)?.id : "all"}
+          divisionValue={
+            filter?.division
+              ? divisions.find((d) => d.bn_name === filter.division)?.id
+              : "all"
+          }
           onDivisionChange={handleDivisionChange}
-          districtValue={filter?.district ? districts.find(d => d.bn_name === filter.district)?.id : "all"}
+          districtValue={
+            filter?.district
+              ? districts.find((d) => d.bn_name === filter.district)?.id
+              : "all"
+          }
           onDistrictChange={handleDistrictChange}
-          upazilaValue={filter?.sub_district ? upazilas.find(u => u.bn_name === filter.sub_district)?.id : "all"}
+          upazilaValue={
+            filter?.sub_district
+              ? upazilas.find((u) => u.bn_name === filter.sub_district)?.id
+              : "all"
+          }
           onUpazilaChange={handleSubDistrictChange}
           className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4"
         />
@@ -56,7 +84,7 @@ function BrickFieldHeader() {
           />
           <Link
             to="/admin/brick-field/add"
-            className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-600 rounded-lg text-white text-sm font-medium font-hindSiliguri tracking-wide whitespace-nowrap"
+            className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-700 rounded-lg text-white text-sm font-medium font-inter tracking-wide whitespace-nowrap"
           >
             Add New
           </Link>

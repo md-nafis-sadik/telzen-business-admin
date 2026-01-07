@@ -64,7 +64,7 @@ function BrickSkeleton() {
 
       <div className="flex justify-end gap-3">
         <div className="w-28 h-12 bg-main-50 rounded animate-pulse" />
-        <div className="w-28 h-12 bg-main-600 rounded animate-pulse" />
+        <div className="w-28 h-12 bg-main-700 rounded animate-pulse" />
       </div>
     </div>
   );

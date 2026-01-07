@@ -21,13 +21,13 @@ function BrickStockDetailsModal() {
     <Dialog open={showDetailsModal} onOpenChange={closeModal}>
       <DialogContent className="p-10 gap-0 select-none rounded-3xl w-full sm:w-[566px]">
         <DialogHeader>
-          <DialogTitle className="self-stretch w-full text-text-950 text-2xl font-bold leading-normal mb-6 font-hindSiliguri">
+          <DialogTitle className="self-stretch w-full text-text-950 text-2xl font-bold leading-normal mb-6 font-inter">
             Brick Stock Details
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="m-0" />
 
-        <div className="flex flex-col gap-4 font-hindSiliguri">
+        <div className="flex flex-col gap-4 font-inter">
           <div className="font-bold text-text-950 text-lg">
             Stock Information
           </div>

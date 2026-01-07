@@ -21,13 +21,13 @@ function BrickFieldDetailsModal() {
     <Dialog open={showDetailsModal} onOpenChange={closeModal}>
       <DialogContent className="p-10 gap-0 select-none rounded-3xl w-full sm:w-[566px]">
         <DialogHeader>
-          <DialogTitle className="self-stretch w-full text-text-950 text-2xl font-bold leading-normal mb-6 font-hindSiliguri">
+          <DialogTitle className="self-stretch w-full text-text-950 text-2xl font-bold leading-normal mb-6 font-inter">
             Brick Field Details
           </DialogTitle>
         </DialogHeader>
         <DialogDescription className="m-0" />
 
-        <div className="flex flex-col gap-4 font-hindSiliguri">
+        <div className="flex flex-col gap-4 font-inter">
           <div className="font-bold text-text-950 text-lg">
             Brick Field Information
           </div>
@@ -81,7 +81,7 @@ function BrickFieldDetailsModal() {
           {/* <div className="flex justify-end mt-6">
             <button
               onClick={closeModal}
-              className="px-6 py-2 bg-main-600 text-white rounded-lg hover:bg-main-700 transition-colors"
+              className="px-6 py-2 bg-main-700 text-white rounded-lg hover:bg-main-700 transition-colors"
             >
               Close
             </button>

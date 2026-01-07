@@ -5,13 +5,13 @@ const ToggleSwitch = ({
   checked = false,
   onChange = () => {},
   className,
-  activeColor = "bg-main-600",
+  activeColor = "bg-main-700",
   blockedColor = "bg-natural-500",
   knobColor = "bg-white",
   isLoading = false,
 }) => {
   if (isLoading)
-    return <span className={cn("w-6 h-4 animate-spin bg-main-600")}></span>;
+    return <span className={cn("w-6 h-4 animate-spin bg-main-700")}></span>;
   return (
     <button
       onClick={onChange}

@@ -41,7 +41,7 @@ function BrickStockEditModal({
 
   return (
     <CustomModal showModal={isOpen} onClose={handleClose} width="566px">
-      <div className="flex flex-col gap-6 font-hindSiliguri">
+      <div className="flex flex-col gap-6 font-inter">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
@@ -76,14 +76,14 @@ function BrickStockEditModal({
         <div className="flex items-center gap-4 mt-2">
           <button
             onClick={handleClose}
-            className="flex-1 h-12 rounded-lg border border-main-600 text-main-600 text-sm font-semibold hover:bg-main-50 transition-colors"
+            className="flex-1 h-12 rounded-lg border border-main-700 text-main-700 text-sm font-semibold hover:bg-main-50 transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!editedStock || isSubmitting}
-            className="flex-1 h-12 rounded-lg bg-main-600 text-white text-sm font-semibold hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 h-12 rounded-lg bg-main-700 text-white text-sm font-semibold hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Update
           </button>

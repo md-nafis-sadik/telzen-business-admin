@@ -63,7 +63,7 @@ function InputModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="px-10 py-12 gap-4 select-none rounded-2xl w-full max-w-xl font-hindSiliguri">
+      <DialogContent className="px-10 py-12 gap-4 select-none rounded-2xl w-full max-w-xl font-inter">
         <DialogHeader>
           {showIcon && (
             <div className="flex justify-center mb-4">{popupIcon}</div>
@@ -127,14 +127,14 @@ function InputModal({
           <div className="flex gap-3 pt-8">
             <button
               onClick={handleClose}
-              className="flex-1 py-3 px-4 border border-main-600 text-main-600 rounded-lg font-medium hover:bg-main-50 transition-colors text-sm"
+              className="flex-1 py-3 px-4 border border-main-700 text-main-700 rounded-lg font-medium hover:bg-main-50 transition-colors text-sm"
             >
               {cancelText}
             </button>
             <button
               onClick={handleConfirm}
               disabled={isLoading || !inputValue}
-              className="flex-1 py-3 px-4 bg-main-600 text-white rounded-lg font-medium hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+              className="flex-1 py-3 px-4 bg-main-700 text-white rounded-lg font-medium hover:bg-main-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {isLoading ? "Updating..." : confirmText}
             </button>

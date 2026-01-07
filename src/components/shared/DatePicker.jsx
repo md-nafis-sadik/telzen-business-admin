@@ -97,7 +97,7 @@ const DatePicker = ({
       return selectedDate.map((timestamp, i) => (
         <span
           key={`${timestamp}-${i}`}
-          className="inline-flex items-center gap-1 px-3 py-1 bg-main-600 text-white rounded-full text-sm font-medium"
+          className="inline-flex items-center gap-1 px-3 py-1 bg-main-700 text-white rounded-full text-sm font-medium"
         >
           {timestampConverter(
             timestamp,
@@ -121,7 +121,7 @@ const DatePicker = ({
     }
     if (!isMultiple && selectedDate) {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 bg-main-600 text-white rounded-full text-sm font-medium">
+        <span className="inline-flex items-center gap-1 px-3 py-1 bg-main-700 text-white rounded-full text-sm font-medium">
           {timestampConverter(
             selectedDate,
             TimestampConvertTypeEnum.From_Unix_To_MMM_DD_YYYY

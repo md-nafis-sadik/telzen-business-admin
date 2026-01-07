@@ -11,6 +11,7 @@ import {
   BrickFieldIconSvg,
   BrickListIconSvg,
   BrickStckIconSvg,
+  CartIconSvg,
   CustomerIconSvg,
   DashboardIconSvg,
   images,
@@ -60,7 +61,7 @@ function Sidebar() {
   return (
     <aside className="relative h-full overflow-auto no-scrollbar shrink-0 select-none sidebar">
       <div
-        className={`w-[232px] bg-natural-950 px-4 py-8 shrink-0 h-full flex flex-col gap-12 fixed lg:relative top-0 left-0 ${
+        className={`w-[232px] bg-natural-950 px-4 pt-10 pb-6 shrink-0 h-full flex flex-col fixed lg:relative top-0 left-0 ${
           showSidebar ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } duration-300 z-[99]`}
       >
@@ -69,10 +70,14 @@ function Sidebar() {
           className="max-w-max sticky top-0"
         >
           <div className="flex items-center gap-[10px]">
-            <img src={images.mainLogo} alt="EasyBrick Logo" className="w-[149px]" />
+            <img
+              src={images.mainLogo}
+              alt="EasyBrick Logo"
+              className="w-[119px]"
+            />
           </div>
         </Link>
-        <div className="h-full overflow-auto no-scrollbar">
+        <div className="h-full overflow-auto no-scrollbar mt-[52px]">
           {/* nav items  */}
           <div className="flex flex-col text-base gap-1 text-black-900">
             {/* Dashboard - Always visible for authenticated users */}
@@ -88,6 +93,23 @@ function Sidebar() {
                   />
                 }
                 onClick={hideSidebar}
+              />
+            )}
+
+            {/* Staff - Available for admin only */}
+            {canAccessStaff() && (
+              <NavigationDropdownItem
+                ref={submenuRef}
+                name="staff"
+                title="My eSIM"
+                onClick={() => handleDropdown("staff")}
+                icon={<CartIconSvg />}
+                isActive={activePath == adminRouteLinks?.staff.activePath}
+                links={[
+                  adminRouteLinks?.staffActive,
+                  adminRouteLinks?.staffBlocked,
+                ]}
+                isSubmenuOpen={sidebarSubmenuOpen}
               />
             )}
 
@@ -181,7 +203,7 @@ function Sidebar() {
             )}
 
             {/* Staff - Available for admin only */}
-            {canAccessStaff() && (
+            {/* {canAccessStaff() && (
               <NavigationDropdownItem
                 ref={submenuRef}
                 name="staff"
@@ -195,7 +217,7 @@ function Sidebar() {
                 ]}
                 isSubmenuOpen={sidebarSubmenuOpen}
               />
-            )}
+            )} */}
           </div>
         </div>
 
@@ -208,7 +230,7 @@ function Sidebar() {
           <span>
             <LogoutDownIconSvg />
           </span>
-          <span className={`duration-300 whitespace-nowrap text-main-600`}>
+          <span className={`duration-300 whitespace-nowrap text-main-700`}>
             Log Out
           </span>
         </label>

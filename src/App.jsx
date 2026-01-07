@@ -10,14 +10,13 @@ function App() {
   return !authChecked ? (
     <AuthLoader />
   ) : (
-    <div className="font-hindSiliguri bg-white-500">
+    <div className="font-inter bg-white-500">
       <RouterProvider router={Router} />
       <NotifyContainer />
-      
+
       {/* <AuthRequireModal /> */}
     </div>
   );
 }
 
 export default App;
-

@@ -85,7 +85,7 @@ function CustomerBlockedHeader() {
         </div>
         <button
           onClick={handleExportToExcel}
-          className="w-full md:w-auto flex items-center gap-2 justify-center px-5 h-10 bg-natural-950 rounded-lg text-white text-sm font-medium font-hindSiliguri tracking-wide whitespace-nowrap hover:bg-natural-800 transition-colors"
+          className="w-full md:w-auto flex items-center gap-2 justify-center px-5 h-10 bg-natural-950 rounded-lg text-white text-sm font-medium font-inter tracking-wide whitespace-nowrap hover:bg-natural-800 transition-colors"
         >
           <span>
             <ExportIconSvg />{" "}

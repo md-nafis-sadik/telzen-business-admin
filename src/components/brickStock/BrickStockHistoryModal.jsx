@@ -31,7 +31,7 @@ function BrickStockHistoryModal({ isOpen, onClose, selectedBrick, onEdit }) {
 
   return (
     <CustomModal showModal={isOpen} onClose={onClose} width="566px">
-      <div className="flex flex-col gap-6 font-hindSiliguri">
+      <div className="flex flex-col gap-6 font-inter">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
@@ -43,7 +43,7 @@ function BrickStockHistoryModal({ isOpen, onClose, selectedBrick, onEdit }) {
             </p>
           </div>
           <div>
-            <h2 className="text-main-600 text-lg leading-normal">
+            <h2 className="text-main-700 text-lg leading-normal">
               {selectedBrick?.brick_field_name || "-"}
             </h2>
           </div>
@@ -114,7 +114,7 @@ function BrickStockHistoryModal({ isOpen, onClose, selectedBrick, onEdit }) {
         {/* Okay Button */}
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-lg bg-main-600 text-white text-sm font-semibold hover:bg-main-700 transition-colors"
+          className="w-full h-12 rounded-lg bg-main-700 text-white text-sm font-semibold hover:bg-main-700 transition-colors"
         >
           Okay
         </button>

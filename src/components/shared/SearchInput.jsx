@@ -22,7 +22,7 @@ const SearchInput = ({
         placeholder={placeholder}
         className={cn(
           "w-full px-3 py-2 min-h-[40px] pr-10 rounded-lg border border-natural-400 outline-none text-sm",
-          "focus:ring-0 focus:border-main-600 transition-all duration-200",
+          "focus:ring-0 focus:border-main-700 transition-all duration-200",
           inputClassName
         )}
         {...props}

@@ -30,12 +30,12 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
   };
 
   const formatYAxis = (value) => {
-    if (value >= 10000000) {
-      return `${(value / 10000000).toFixed(1)}Cr`;
-    } else if (value >= 100000) {
-      return `${(value / 100000).toFixed(1)}Lk`;
-    } else if (value >= 1000) {
-      return `${(value / 1000).toFixed(1)}k`;
+    if (value >= 1_000_000_000) {
+      return `${(value / 1_000_000_000).toFixed(1)}B`;
+    } else if (value >= 1_000_000) {
+      return `${(value / 1_000_000).toFixed(1)}M`;
+    } else if (value >= 1_000) {
+      return `${(value / 1_000).toFixed(1)}K`;
     }
     return value;
   };
@@ -46,7 +46,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
         <div className="relative">
           <div
             style={{
-              backgroundColor: "#E47A48",
+              backgroundColor: "#FFB94A",
               border: "none",
               borderRadius: "4px",
               boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
@@ -73,7 +73,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
               height: 0,
               borderLeft: "6px solid transparent",
               borderRight: "6px solid transparent",
-              borderTop: "6px solid #E47A48",
+              borderTop: "6px solid #FFB94A",
             }}
           />
         </div>
@@ -85,7 +85,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
   return (
     <div
       className={cn(
-        "w-full lg:w-[40%] shadow-lg rounded-2xl max-w-[772px]",
+        "w-full lg:w-[35%] shadow-lg rounded-2xl max-w-[772px]",
         wrapper
       )}
     >
@@ -110,25 +110,26 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
           </div>
         </div>
 
-        <section className="overflow-x-auto overflow-y-hidden flex items-center justify-center h-64 focus:outline-none">
+        <section className="flex items-center justify-center h-64 focus:outline-none">
+          {/* overflow-x-auto overflow-y-hidden*/}
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart height={252} data={chartData} margin={0}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} />
+              <XAxis dataKey="name" axisLine={false} tickLine={true} />
               <YAxis
                 tickFormatter={formatYAxis}
                 allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
+                axisLine={true}
+                tickLine={true}
               />
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="linear"
                 dataKey="revenue"
-                stroke="#E47A48"
-                strokeWidth={2}
-                dot={{ fill: "white", strokeWidth: 2, r: 3 }}
-                activeDot={{ r: 6, stroke: "#E47A48", strokeWidth: 2 }}
+                stroke="#EA3218"
+                strokeWidth={1}
+                dot={{ fill: "white", strokeWidth: 1, r: 3 }}
+                activeDot={{ r: 6, stroke: "#EA3218", strokeWidth: 1 }}
               />
             </ComposedChart>
           </ResponsiveContainer>

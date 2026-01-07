@@ -57,7 +57,7 @@ function DashboardHeader() {
             ref={dropdownRef}
             className="flex gap-3 focus-visible:outline-none"
           >
-            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2  outline-none">
+            <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full outline-none">
               <img
                 src={auth?.image || images.profileAvatar}
                 alt=""

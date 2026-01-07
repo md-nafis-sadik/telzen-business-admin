@@ -21,7 +21,7 @@ const NavigationDropdownItem = forwardRef(
       <div className="w-full overflow-hidden capitalize shrink-0 cursor-pointer">
         <div
           className={`relative text-white flex items-center gap-3 w-full pr-4 py-3 duration-300 group link-item transition-colors ease-in-out self-stretch text-sm leading-none ${
-            isActive ? "bg-main-600" : "hover:bg-main-950"
+            isActive ? "bg-main-700" : "hover:bg-main-950"
           } ${isSubmenuOpen[name] ? "rounded-t-[8px]" : "rounded-[8px]"}`}
           onClick={onClick}
         >
@@ -59,7 +59,7 @@ const NavigationDropdownItem = forwardRef(
             <NavLink
               key={link.name}
               to={link.path}
-              className="py-3 pl-11 text-white hover:bg-main-950 hover:text-main-600 transition-colors duration-300 text-sm rounded-md transition_common"
+              className="py-3 pl-11 text-white hover:bg-main-950 hover:text-main-700 transition-colors duration-300 text-sm rounded-md transition_common"
             >
               <p>{link.name}</p>
             </NavLink>

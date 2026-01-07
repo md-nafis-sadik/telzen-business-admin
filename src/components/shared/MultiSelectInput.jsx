@@ -58,11 +58,13 @@ function MultiSelectInput({
 
   const triggerContent = useMemo(() => {
     if (selectedItems.length === 0) {
-      return <span className="text-gray-800 text-left text-sm">{placeholder}</span>;
+      return (
+        <span className="text-gray-800 text-left text-sm">{placeholder}</span>
+      );
     }
     if (chips) {
       return (
-        <div className="flex flex-wrap gap-2 font-hindSiliguri">
+        <div className="flex flex-wrap gap-2 font-inter">
           {selectedItems.map((item) => (
             <span
               key={item[selector]}
@@ -84,7 +86,7 @@ function MultiSelectInput({
                     toggle(item[selector]);
                   }
                 }}
-                className="hover:bg-main-100 text-main-600 hover:text-main-600 rounded-full p-0.5 transition-colors ml-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-main-300"
+                className="hover:bg-main-100 text-main-700 hover:text-main-700 rounded-full p-0.5 transition-colors ml-1 cursor-pointer focus:outline-none focus:ring-2 focus:ring-main-300"
               >
                 <X className="h-3 w-3" />
               </span>
@@ -139,7 +141,7 @@ function MultiSelectInput({
                 contentClassName
               )}
             >
-              <div className="font-hindSiliguri flex items-center justify-between gap-2 px-2 py-2 border-b border-natural-200 text-text-700">
+              <div className="font-inter flex items-center justify-between gap-2 px-2 py-2 border-b border-natural-200 text-text-700">
                 <button
                   type="button"
                   className="text-xs hover:underline"
@@ -163,7 +165,7 @@ function MultiSelectInput({
                   return (
                     <li
                       key={id}
-                      className="font-hindSiliguri border-b last:border-b-0 border-natural-200 text-text-700"
+                      className="font-inter border-b last:border-b-0 border-natural-200 text-text-700"
                     >
                       <button
                         type="button"
@@ -177,7 +179,7 @@ function MultiSelectInput({
                           className={cn(
                             "flex h-3.5 w-3.5 items-center justify-center rounded-sm border",
                             checked
-                              ? "bg-main-600 text-white border-main-600"
+                              ? "bg-main-700 text-white border-main-700"
                               : "border-gray-300 bg-white text-transparent"
                           )}
                         >

@@ -3,12 +3,8 @@ import SearchInput from "../shared/SearchInput";
 import { useBrickList } from "@/hooks/useBrickList";
 
 function BrickListHeader() {
-  const {
-    search,
-    handleSearchChange,
-    isFetching,
-    total_items,
-  } = useBrickList();
+  const { search, handleSearchChange, isFetching, total_items } =
+    useBrickList();
 
   return (
     <div className="w-full flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-0 justify-start md:justify-between">
@@ -26,7 +22,7 @@ function BrickListHeader() {
           />
           <Link
             to="/admin/brick-list/add"
-            className="flex items-center justify-center px-5 h-10 bg-main-600 rounded-lg text-white text-sm font-medium font-hindSiliguri tracking-wide whitespace-nowrap"
+            className="flex items-center justify-center px-5 h-10 bg-main-700 rounded-lg text-white text-sm font-medium font-inter tracking-wide whitespace-nowrap"
           >
             Add New
           </Link>

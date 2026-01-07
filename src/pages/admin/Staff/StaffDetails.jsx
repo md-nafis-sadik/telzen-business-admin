@@ -44,7 +44,7 @@ function StaffDetails() {
 
   if (isError) {
     return (
-      <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl font-hindSiliguri">
+      <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl font-inter">
         <BackToPrev path={`/admin/staffs/${slug}`} />
         <div className="flex items-center justify-center h-64">
           <p className="text-red-500">Error loading staff details</p>
@@ -87,7 +87,7 @@ function StaffDetails() {
 
             <button
               onClick={handlePayCommissionClick}
-              className="w-max h-max bg-main-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-main-700 transition-colors text-sm"
+              className="w-max h-max bg-main-700 text-white py-3 px-4 rounded-lg font-semibold hover:bg-main-700 transition-colors text-sm"
             >
               Pay Commission
             </button>

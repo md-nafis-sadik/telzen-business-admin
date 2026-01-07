@@ -86,7 +86,7 @@ function Register() {
                   <div className="text-gray-800">Already have an account?</div>
                   <Link
                     to={userRouteLinks.home.path}
-                    className="self-stretch text-center justify-start text-main-600 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
+                    className="self-stretch text-center justify-start text-main-700 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
                   >
                     Login
                   </Link>
@@ -99,14 +99,14 @@ function Register() {
                   <div className="text-gray-800 flex items-center justify-center gap-1">
                     <Link
                       to="/"
-                      className="self-stretch text-center justify-start text-main-600 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
+                      className="self-stretch text-center justify-start text-main-700 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
                     >
                       Terms of Service
                     </Link>
                     &
                     <Link
                       to="/"
-                      className="self-stretch text-center justify-start text-main-600 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
+                      className="self-stretch text-center justify-start text-main-700 font-bold text-base leading-snug cursor-pointer hover:text-text-600 transition_common"
                     >
                       Privacy Policy.
                     </Link>

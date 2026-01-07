@@ -42,7 +42,7 @@ const StepOneEmail = ({ goToStep }) => {
       <div className="flex items-center justify-center gap-1 -mt-2">
         <Link
           to={userRouteLinks.home.path}
-          className="self-stretch text-center justify-start text-gray-800 text-base font-normal leading-snug cursor-pointer hover:text-main-600 transition_common"
+          className="self-stretch text-center justify-start text-gray-800 text-base font-normal leading-snug cursor-pointer hover:text-main-700 transition_common"
         >
           Try Login
         </Link>
