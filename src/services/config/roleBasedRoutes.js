@@ -24,6 +24,13 @@ export const rolePermissions = {
     "brickStock",
     "brickField",
     "orders",
+    "myEsim",
+    "inventory",
+    "users",
+    "accountBalance",
+    "businessProfile",
+    "contactSupport",
+    "apiSettings",
   ],
   [ROLES.MANAGER]: [
     "dashboard",

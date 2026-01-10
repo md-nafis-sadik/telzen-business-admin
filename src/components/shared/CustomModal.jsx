@@ -25,7 +25,9 @@ const CustomModal = forwardRef(
 
     return (
       <Dialog open={showModal} onOpenChange={closeModal}>
-        <DialogContent className={`p-6 sm:p-10 gap-0 select-none rounded-3xl ${className} ${widthClass}`}>
+        <DialogContent
+          className={`p-6 sm:p-10 gap-0 select-none rounded-3xl ${className} ${widthClass}`}
+        >
           <DialogHeader>
             <DialogTitle className="hidden"></DialogTitle>
           </DialogHeader>

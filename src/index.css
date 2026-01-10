@@ -134,6 +134,14 @@
   .transition_common {
     @apply transition-all duration-300 ease-in-out;
   }
+
+  .rounded_button {
+    @apply flex h-[52px] px-6 py-2 justify-center items-center gap-2.5 self-stretch bg-main-700 border border-main-700 hover:bg-main-600 hover:border-main-600 transition-colors duration-300 text-white rounded-full font-semibold;
+  }
+
+  .rounded_button_cancel {
+    @apply flex h-[52px] px-6 py-2 justify-center items-center gap-2.5 self-stretch bg-white border border-black hover:bg-natural-100 transition-colors duration-300 text-black rounded-full font-semibold;
+  }
 }
 
 @layer base {
@@ -370,7 +378,6 @@ input[type="number"] {
   border-radius: 4px;
 }
 
-
 ::-webkit-scrollbar-corner {
   background: #f1f1f1;
 }
@@ -384,7 +391,7 @@ input[type="number"] {
 .custom-bullet {
   width: 12px;
   height: 12px;
-  background: #006B4F;
+  background: #006b4f;
   border-radius: 50%;
   opacity: 1;
   margin: 0 6px;
@@ -393,7 +400,7 @@ input[type="number"] {
 .custom-bullet-active {
   width: 32px;
   height: 12px;
-  background: #99FFE0;
+  background: #99ffe0;
   border-radius: 6px;
 }
 

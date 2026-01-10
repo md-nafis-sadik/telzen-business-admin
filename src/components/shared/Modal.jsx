@@ -44,7 +44,7 @@ const Modal = forwardRef(
         <DialogContent className="p-6 sm:p-10 gap-0 select-none rounded-2xl w-full sm:w-[566px]">
           <DialogHeader>
             <DialogTitle
-              className={`${labelClass} self-stretch justify-start text-black/80 text-2xl font-bold leading-normal`}
+              className={`${labelClass} self-stretch justify-start text-[#004534E5]/80 text-2xl font-bold leading-normal`}
             >
               {label}
             </DialogTitle>

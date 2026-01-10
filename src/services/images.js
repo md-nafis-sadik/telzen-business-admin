@@ -15,6 +15,8 @@ import LoginImage2 from "@/assets/images/Staff_Details.webp";
 import LoginImage3 from "@/assets/images/Login_2.webp";
 import ellipse from "@/assets/images/Ellipse.webp";
 import staffDetailsAvatar from "@/assets/images/staff-details-avatar.webp";
+import qrCode from "@/assets/images/qr_code_2.png";
+import removeIcon from "@/assets/images/remove-icon.png";
 
 export {
   avatar,
@@ -33,5 +35,7 @@ export {
   customerAvatar,
   staffDetailsAvatar,
   LoginImage2,
-  LoginImage3
+  LoginImage3,
+  qrCode,
+  removeIcon,
 };

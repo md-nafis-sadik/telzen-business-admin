@@ -19,6 +19,21 @@ export const adminRouteLinks = {
     path: "/admin/staffs/blocked",
     activePath: "staff",
   },
+  myEsim: {
+    name: "My eSIM",
+    path: "/admin/my-esim",
+    activePath: "myEsim",
+  },
+  regularEsim: {
+    name: "Regular",
+    path: "/admin/my-esim/regular",
+    activePath: "myEsim",
+  },
+  groupEsim: {
+    name: "Group eSIM",
+    path: "/admin/my-esim/group",
+    activePath: "myEsim",
+  },
   addStaff: {
     name: "Add Staff",
     path: "/admin/staffs/:slug/add",

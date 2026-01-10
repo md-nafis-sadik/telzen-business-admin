@@ -27,6 +27,8 @@ import { adminRouteLinks } from "../services";
 import PrivateRouter from "./PrivateRouter";
 import OrdersValidation from "@/pages/admin/Orders/OrdersValidation";
 import OrdersProcessing from "@/pages/admin/Orders/OrdersProcessing";
+import MyEsimRegular from "@/pages/admin/MyESim/RegularEsim";
+import MyEsimGroup from "@/pages/admin/MyESim/GroupEsim";
 
 const {
   dashboard,
@@ -53,6 +55,8 @@ const {
   ordersProcessing,
   ordersCompleted,
   ordersCancelled,
+  regularEsim,
+  groupEsim,
   editOrder: editOrderRoute,
 } = adminRouteLinks || {};
 
@@ -72,7 +76,6 @@ export const adminRoutes = {
         </RoleBasedRoute>
       ),
     },
-
     {
       path: staffActive?.path,
       element: (
@@ -86,6 +89,22 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="staff">
           <StaffBlocked />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: regularEsim?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="myEsim">
+          <MyEsimRegular />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: groupEsim?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="myEsim">
+          <MyEsimGroup />
         </RoleBasedRoute>
       ),
     },

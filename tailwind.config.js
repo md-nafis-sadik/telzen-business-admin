@@ -182,6 +182,7 @@ export default {
       fontFamily: {
         inter: ["inter", "sans-serif"],
         hindSiliguri: ["hindSiliguri", "sans-serif"],
+        barlowCondensed: ["barlowCondensed", "sans-serif"],
       },
       backgroundImage: {
         mainGradient: "linear-gradient(90deg, #2A6AE8 4.19%, #772ADB 58.84%)",

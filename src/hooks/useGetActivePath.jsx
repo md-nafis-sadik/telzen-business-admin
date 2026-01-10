@@ -1,4 +1,7 @@
-import { setActivePath, forceSidebarSubmenuOpen } from "@/features/shared/sharedSlice";
+import {
+  setActivePath,
+  forceSidebarSubmenuOpen,
+} from "@/features/shared/sharedSlice";
 import { adminRouteLinks } from "@/services";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,12 +18,14 @@ export default function useGetActivePath() {
       dispatch(setActivePath(adminRouteLinks.dashboard.activePath));
     } else if (pathname?.includes(adminRouteLinks.orders.activePath)) {
       dispatch(setActivePath(adminRouteLinks.orders.activePath));
-      dispatch(forceSidebarSubmenuOpen({ menu: 'orders' }));
+      dispatch(forceSidebarSubmenuOpen({ menu: "orders" }));
     } else if (pathname?.includes(adminRouteLinks.staff.activePath)) {
       dispatch(setActivePath(adminRouteLinks.staff.activePath));
-      dispatch(forceSidebarSubmenuOpen({ menu: 'staff' }));
+      dispatch(forceSidebarSubmenuOpen({ menu: "staff" }));
     } else if (pathname?.includes("/admin/brick-list")) {
       dispatch(setActivePath(adminRouteLinks.brickList.activePath));
+    } else if (pathname?.includes("/admin/my-esim")) {
+      dispatch(setActivePath(adminRouteLinks.myEsim.activePath));
     } else if (pathname?.includes("/admin/brick-stock")) {
       dispatch(setActivePath(adminRouteLinks.brickStock.activePath));
     } else if (pathname?.includes("/admin/brick-field")) {
@@ -29,7 +34,7 @@ export default function useGetActivePath() {
       dispatch(setActivePath(adminRouteLinks.profile.activePath));
     } else if (pathname?.includes(adminRouteLinks.customers.activePath)) {
       dispatch(setActivePath(adminRouteLinks.customers.activePath));
-      dispatch(forceSidebarSubmenuOpen({ menu: 'customers' }));
+      dispatch(forceSidebarSubmenuOpen({ menu: "customers" }));
     } else {
       dispatch(setActivePath(adminRouteLinks.dashboard.activePath));
     }

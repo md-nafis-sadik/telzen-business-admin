@@ -42,6 +42,7 @@ function Sidebar() {
     canAccessBrickStock,
     canAccessBrickField,
     canAccessOrders,
+    canAccessMyEsim,
     userRole,
   } = useNavigationAccess();
 
@@ -97,17 +98,17 @@ function Sidebar() {
             )}
 
             {/* Staff - Available for admin only */}
-            {canAccessStaff() && (
+            {canAccessMyEsim() && (
               <NavigationDropdownItem
                 ref={submenuRef}
-                name="staff"
+                name="myEsim"
                 title="My eSIM"
-                onClick={() => handleDropdown("staff")}
+                onClick={() => handleDropdown("myEsim")}
                 icon={<CartIconSvg />}
-                isActive={activePath == adminRouteLinks?.staff.activePath}
+                isActive={activePath == adminRouteLinks?.myEsim.activePath}
                 links={[
-                  adminRouteLinks?.staffActive,
-                  adminRouteLinks?.staffBlocked,
+                  adminRouteLinks?.regularEsim,
+                  adminRouteLinks?.groupEsim,
                 ]}
                 isSubmenuOpen={sidebarSubmenuOpen}
               />
@@ -203,7 +204,7 @@ function Sidebar() {
             )}
 
             {/* Staff - Available for admin only */}
-            {/* {canAccessStaff() && (
+            {canAccessStaff() && (
               <NavigationDropdownItem
                 ref={submenuRef}
                 name="staff"
@@ -217,7 +218,7 @@ function Sidebar() {
                 ]}
                 isSubmenuOpen={sidebarSubmenuOpen}
               />
-            )} */}
+            )}
           </div>
         </div>
 

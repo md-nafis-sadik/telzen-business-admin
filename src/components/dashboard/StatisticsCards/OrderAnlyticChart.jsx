@@ -72,7 +72,7 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
   };
 
   return (
-    <div className={cn("w-full lg:w-[65%] rounded-2xl shadow-lg", wrapper)}>
+    <div className={cn("w-full lg:w-[65%] rounded-2xl", wrapper)}>
       <div className="w-full  bg-white p-4 sm:p-6 rounded-2xl flex flex-col justify-between gap-6 sm:gap-8 md:gap-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">

@@ -11,7 +11,7 @@ function StaffPerformance({
   filterOptions,
 }) {
   return (
-    <div className="p-4 flex flex-col gap-4 bg-white shadow-md rounded-2xl overflow-auto w-full lg:w-[65%]">
+    <div className="p-4 flex flex-col gap-4 bg-white rounded-2xl overflow-auto w-full lg:w-[65%]">
       <div className="flex justify-between items-center">
         <h2 className="self-stretch h-6 justify-start text-text-700 text-lg font-bold leading-normal">
           Recent Sales

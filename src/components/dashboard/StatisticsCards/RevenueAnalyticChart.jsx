@@ -85,7 +85,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
   return (
     <div
       className={cn(
-        "w-full lg:w-[35%] shadow-lg rounded-2xl max-w-[772px]",
+        "w-full lg:w-[35%] rounded-2xl max-w-[772px]",
         wrapper
       )}
     >
