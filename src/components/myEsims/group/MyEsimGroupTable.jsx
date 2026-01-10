@@ -1,18 +1,12 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
-import HoverTooltip from "@/components/shared/HoverTooltip";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMyEsims } from "@/hooks/useMyEsim";
 import {
-  ActiveIconSvg,
-  adminRouteLinks,
   DeleteIconSvg,
   DownloadIconSvg,
-  EditIconSvg,
   QRIconSvg,
-  ViewIconSvg,
 } from "@/services";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
 
 function MyEsimGroupTable() {
   const {
@@ -25,7 +19,6 @@ function MyEsimGroupTable() {
     total_page,
     total_items,
     updatePage,
-    handleShowBlockModal,
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,

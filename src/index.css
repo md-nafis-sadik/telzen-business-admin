@@ -310,29 +310,10 @@
   color: #fff !important;
 }
 
-.page-item .page-link[aria-label="Previous"]::after {
-  content: url("./assets/images/arrow-left.webp");
-}
-
-.page-item .page-link[aria-label="Next"]::after {
-  content: url("./assets/images/arrow-right.webp");
-}
-
-.page-item .page-link[aria-label="Previous"] span,
-.page-item .page-link[aria-label="Next"] span {
+/* Hide default Previous/Next buttons from ResponsivePagination */
+.page-item .page-link[aria-label="Previous"],
+.page-item .page-link[aria-label="Next"] {
   display: none !important;
-}
-
-.page-item .page-link[aria-label="Previous"]::after,
-.page-item .page-link[aria-label="Next"]::after {
-  position: absolute;
-  top: 0px;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 }
 
 .twemoji {

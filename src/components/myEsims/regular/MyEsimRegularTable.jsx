@@ -1,20 +1,12 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
-import HoverTooltip from "@/components/shared/HoverTooltip";
 import Pagination from "@/components/shared/Pagination";
 import { useRegularMyEsims } from "@/hooks/useMyEsim";
 import {
-  adminRouteLinks,
-  BlockIconSvg,
   DeleteIconSvg,
-  DownArrowIconSvg,
   DownloadIconSvg,
-  EditIconSvg,
-  images,
   QRIconSvg,
-  ViewIconSvg,
 } from "@/services";
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
 
 function MyEsimRegularTable() {
   const {
@@ -27,7 +19,6 @@ function MyEsimRegularTable() {
     total_page,
     total_items,
     updatePage,
-    handleShowBlockModal,
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,

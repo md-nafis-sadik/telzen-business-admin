@@ -1,20 +1,12 @@
-import { toggleDeleteModal } from "@/features/shared/sharedSlice";
 import {
   useGetRegularMyEsimQuery,
   useGetGroupMyEsimQuery,
-  useChangeMyEsimStatusMutation,
-  useReassignMyEsimMutation,
-  useGetReassignMyEsimListQuery,
 } from "@/features/myEsim/myEsimApi";
 import {
   updateRegularSearch,
   updateRegularPage,
   updateGroupSearch,
   updateGroupPage,
-  setMyEsimSelectedData,
-  setSuccessModal,
-  openReassignModal,
-  closeReassignModal,
   openQrModal,
   openRemoveModal,
 } from "@/features/myEsim/myEsimSlice";
@@ -28,8 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "./useDebounce";
 
 export const useRegularMyEsims = () => {
-  const { regularData, selectedMyEsimForBlock, showReassignModal } =
-    useSelector((state) => state.myEsim);
+  const { regularData } = useSelector(
+    (state) => state.myEsim
+  );
 
   const dispatch = useDispatch();
 
@@ -49,17 +42,6 @@ export const useRegularMyEsims = () => {
     }
   );
 
-  const {
-    data: myEsimList = [],
-    isLoading: isLoadingMyEsimList,
-    isFetching: isFetchingMyEsimList,
-  } = useGetReassignMyEsimListQuery(
-    { myEsim_id: selectedMyEsimForBlock?._id },
-    {
-      skip: !selectedMyEsimForBlock?._id,
-      refetchOnMountOrArgChange: true,
-    }
-  );
   const isTyping = search !== debouncedSearch;
   const displayData = data?.data || lists;
 
@@ -124,9 +106,6 @@ export const useRegularMyEsims = () => {
     regularSearch: search,
     updatePage: handlePageChange,
     isLoading: false,
-    selectedMyEsim: selectedMyEsimForBlock,
-    myEsimList,
-    isLoadingMyEsimList,
     handleSearchChange,
     handleOpenQrModal,
     handleOpenRemoveModal,
@@ -135,7 +114,7 @@ export const useRegularMyEsims = () => {
 };
 
 export const useGroupMyEsims = () => {
-  const { groupData, selectedData } = useSelector((state) => state.myEsim);
+  const { groupData } = useSelector((state) => state.myEsim);
 
   const dispatch = useDispatch();
   const { showDeleteModal } = useSelector((state) => state.shared);
@@ -159,14 +138,12 @@ export const useGroupMyEsims = () => {
   const isTyping = search !== debouncedSearch;
   const displayData = data?.data || lists;
 
-
   const handlePageChange = (page) => {
     dispatch(updateGroupPage(page.current_page));
 
     if (page.per_page && page.per_page !== pageSize) {
     }
   };
-
 
   const handleSearchChange = (value) => {
     dispatch(updateGroupSearch(value));

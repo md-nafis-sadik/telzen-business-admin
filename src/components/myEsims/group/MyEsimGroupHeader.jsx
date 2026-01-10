@@ -1,17 +1,11 @@
 import SearchInput from "@/components/shared/SearchInput";
-import LocationSelect from "@/components/shared/LocationSelect";
-import { useGroupMyEsims, useLocation } from "@/hooks";
-import { Link } from "react-router-dom";
+import { useGroupMyEsims } from "@/hooks";
 
 function MyEsimGroupHeader() {
   const {
-    myEsims,
     groupSearch,
-    groupFilter,
     handleSearchChange,
-    handleFilterChange,
     isFetching,
-    total_items,
   } = useGroupMyEsims();
 
   return (
@@ -31,7 +25,7 @@ function MyEsimGroupHeader() {
             className="w-full md:w-auto"
           />
 
-          <button className="w-full md:w-auto flex items-center justify-center px-5 h-10 bg-main-700 rounded-lg text-white text-sm font-inter tracking-wide whitespace-nowrap font-semibold">
+          <button className="w-full md:w-auto flex items-center justify-center px-5 h-12 bg-main-700 rounded-lg text-white text-sm font-inter tracking-wide whitespace-nowrap font-semibold">
             Buy eSIM
           </button>
         </div>

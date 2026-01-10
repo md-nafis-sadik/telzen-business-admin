@@ -1,17 +1,11 @@
 import SearchInput from "@/components/shared/SearchInput";
-import LocationSelect from "@/components/shared/LocationSelect";
-import { useLocation, useRegularMyEsims } from "@/hooks";
-import { Link } from "react-router-dom";
+import { useRegularMyEsims } from "@/hooks";
 
 function MyEsimRegularHeader() {
   const {
-    myEsims,
     regularSearch,
-    regularFilter,
     handleSearchChange,
-    handleFilterChange,
     isFetching,
-    total_items,
   } = useRegularMyEsims();
 
   return (
