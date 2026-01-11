@@ -7,18 +7,12 @@ import { useLogout } from "@/hooks";
 import useGetActivePath from "@/hooks/useGetActivePath";
 import useNavigationAccess from "@/hooks/useNavigationAccess";
 import {
+  AccountBalanceIconSvg,
   adminRouteLinks,
-  BrickFieldIconSvg,
-  BrickListIconSvg,
-  BrickStckIconSvg,
   CartIconSvg,
-  CustomerIconSvg,
   DashboardIconSvg,
   images,
-  LogoBrickSvg,
-  LogoTextSvg,
   LogoutDownIconSvg,
-  OrdersIconSvg,
   StaffIconSvg,
   UserIconSvg,
 } from "@/services";
@@ -39,9 +33,8 @@ function Sidebar() {
     canAccessDashboard,
     canAccessStaff,
     canAccessUsers,
-    canAccessBrickList,
     canAccessMyEsim,
-    userRole,
+    canAccessAccountBalance,
   } = useNavigationAccess();
 
   const dispatch = useDispatch();
@@ -52,7 +45,7 @@ function Sidebar() {
   const handleDropdown = (menu) => {
     dispatch(setSidebarSubmenuOpen({ menu }));
   };
-  const { performLogout, isLoggingOut } = useLogout();
+  const { isLoggingOut } = useLogout();
   const handleLogoutClick = () => {
     dispatch(toggleLogoutModal(true));
   };
@@ -129,28 +122,24 @@ function Sidebar() {
               />
             )}
 
+            {/* Account Balance - Available for admin only */}
+            {canAccessAccountBalance() && (
+              <NavigateItem
+                menu={adminRouteLinks?.accountBalance}
+                isActive={
+                  activePath == adminRouteLinks?.accountBalance.activePath
+                }
+                icon={<AccountBalanceIconSvg />}
+                onClick={hideSidebar}
+              />
+            )}
+
             {/* Staff - Available for admin only */}
             {canAccessStaff() && (
               <NavigateItem
                 menu={adminRouteLinks?.staff}
                 isActive={activePath == adminRouteLinks?.staff.activePath}
                 icon={<StaffIconSvg />}
-                onClick={hideSidebar}
-              />
-            )}
-
-            {/* Brick List - Available for admin only */}
-            {canAccessBrickList() && (
-              <NavigateItem
-                menu={adminRouteLinks?.brickList}
-                isActive={activePath == adminRouteLinks?.brickList.activePath}
-                icon={
-                  <BrickListIconSvg
-                    isActive={
-                      activePath == adminRouteLinks?.brickList.activePath
-                    }
-                  />
-                }
                 onClick={hideSidebar}
               />
             )}

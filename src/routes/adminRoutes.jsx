@@ -1,7 +1,4 @@
-import BrickList from "@/pages/admin/BricKList";
 import Dashboard from "@/pages/admin/Dashboard";
-import AddBrick from "@/pages/admin/Forms/brickList/AddBrick";
-import EditBrick from "@/pages/admin/Forms/brickList/EditBrick";
 import Profile from "@/pages/admin/Forms/profile/Profile";
 import AddStaff from "@/pages/admin/Forms/staffs/AddStaff";
 import EditStaff from "@/pages/admin/Forms/staffs/EditStaff";
@@ -16,6 +13,7 @@ import { adminRouteLinks } from "../services";
 import PrivateRouter from "./PrivateRouter";
 import MyEsimRegular from "@/pages/admin/MyESim/RegularEsim";
 import MyEsimGroup from "@/pages/admin/MyESim/GroupEsim";
+import AccountBalance from "@/pages/admin/AccountBalance/AccountBalance";
 
 const {
   dashboard,
@@ -27,12 +25,9 @@ const {
   profile,
   addStaff,
   editStaff,
-  brickList,
-  addBrick,
-  editBrick,
-  brickStock,
   regularEsim,
   groupEsim,
+  accountBalance,
 } = adminRouteLinks || {};
 
 export const adminRoutes = {
@@ -72,6 +67,14 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="myEsim">
           <MyEsimGroup />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: accountBalance?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="accountBalance">
+          <AccountBalance />
         </RoleBasedRoute>
       ),
     },
@@ -120,30 +123,6 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="users">
           <UsersGroupMembers />
-        </RoleBasedRoute>
-      ),
-    },
-    {
-      path: brickList?.path,
-      element: (
-        <RoleBasedRoute requiredActivePath="brickList">
-          <BrickList />
-        </RoleBasedRoute>
-      ),
-    },
-    {
-      path: addBrick?.path,
-      element: (
-        <RoleBasedRoute requiredActivePath="brickList">
-          <AddBrick />
-        </RoleBasedRoute>
-      ),
-    },
-    {
-      path: editBrick?.path,
-      element: (
-        <RoleBasedRoute requiredActivePath="brickList">
-          <EditBrick />
         </RoleBasedRoute>
       ),
     },

@@ -1,6 +1,5 @@
 import authSlice from "@/features/auth/authSlice";
 import forgotPasswordSlice from "@/features/auth/forgotPasswordSlice";
-import brickListSlice from "@/features/brickList/brickListSlice";
 import dashboardSlice from "@/features/dashboard/dashboardSlice";
 import { locationApiSlice } from "@/features/location/locationApi";
 import locationSlice from "@/features/location/locationSlice";
@@ -9,6 +8,7 @@ import staffDetailsSlice from "@/features/staffs/staffDetailsSlice";
 import staffSlice from "@/features/staffs/staffSlice";
 import myEsimSlice from "@/features/myEsim/myEsimSlice";
 import usersSlice from "@/features/users/usersSlice";
+import accountBalanceSlice from "@/features/accountBalance/accountBalanceSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
 
@@ -22,8 +22,8 @@ export const store = configureStore({
     staffs: staffSlice,
     myEsim: myEsimSlice,
     users: usersSlice,
+    accountBalance: accountBalanceSlice,
     staffDetails: staffDetailsSlice,
-    brickList: brickListSlice,
     dashboard: dashboardSlice,
     location: locationSlice,
   },

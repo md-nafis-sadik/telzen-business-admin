@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import { hasRouteAccess } from '@/services';
+import { useSelector } from "react-redux";
+import { hasRouteAccess } from "@/services";
 
 export const useNavigationAccess = () => {
   const { userRole } = useSelector((state) => state.auth);
@@ -8,32 +8,22 @@ export const useNavigationAccess = () => {
     return hasRouteAccess(userRole, activePath);
   };
 
-  const canAccessDashboard = () => hasAccess('dashboard');
-  const canAccessPayments = () => hasAccess('payments');
-  const canAccessBrickList = () => hasAccess('brickList');
-  const canAccessBrickStock = () => hasAccess('brickStock');
-  const canAccessBrickField = () => hasAccess('brickField');
-  const canAccessOrders = () => hasAccess('orders');
-  const canAccessStaff = () => hasAccess('staff');
-  const canAccessMyEsim = () => hasAccess('myEsim');
-  const canAccessUsers = () => hasAccess('users');
-  const canAccessCustomers = () => hasAccess('customers');
-  const canAccessProfile = () => hasAccess('profile');
+  const canAccessDashboard = () => hasAccess("dashboard");
+  const canAccessStaff = () => hasAccess("staff");
+  const canAccessMyEsim = () => hasAccess("myEsim");
+  const canAccessAccountBalance = () => hasAccess("accountBalance");
+  const canAccessUsers = () => hasAccess("users");
+  const canAccessProfile = () => hasAccess("profile");
 
   return {
     hasAccess,
     canAccessDashboard,
-    canAccessPayments,
     canAccessStaff,
     canAccessMyEsim,
+    canAccessAccountBalance,
     canAccessUsers,
-    canAccessCustomers,
     canAccessProfile,
-    canAccessBrickList,
-    canAccessBrickStock,
-    canAccessBrickField,
-    canAccessOrders,
-    userRole
+    userRole,
   };
 };
 

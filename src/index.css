@@ -104,15 +104,15 @@
   }
 
   .table_th {
-    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none print:px-1 print:py-1 print:text-xs print:break-words print:whitespace-normal;
   }
 
   .table_th_first {
-    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tl-lg;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tl-lg print:px-1 print:py-1 print:text-xs print:break-words print:whitespace-normal;
   }
 
   .table_th_last {
-    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tr-lg;
+    @apply p-4 text-center whitespace-nowrap bg-white-200 border border-b-2 border-neutral-200 text-text-700 self-stretch justify-start text-sm font-bold leading-none rounded-tr-lg print:px-1 print:py-1 print:text-xs print:break-words print:whitespace-normal;
   }
 
   .table_td {
