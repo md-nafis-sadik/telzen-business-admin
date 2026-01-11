@@ -149,6 +149,31 @@ export const adminRouteLinks = {
     path: "/admin/customers/blocked",
     activePath: "customers",
   },
+  users: {
+    name: "Users",
+    path: "/admin/users",
+    activePath: "users",
+  },
+  usersActive: {
+    name: "Active",
+    path: "/admin/users/active",
+    activePath: "users",
+  },
+  usersBlocked: {
+    name: "Blocked",
+    path: "/admin/users/blocked",
+    activePath: "users",
+  },
+  usersDetails: {
+    name: "User Details",
+    path: "/admin/users/:slug/details/:id",
+    activePath: "users",
+  },
+  usersGroupMembers: {
+    name: "Group Members",
+    path: "/admin/users/:slug/group/:id",
+    activePath: "users",
+  },
   profile: {
     name: "Profile",
     path: "/admin/profile",

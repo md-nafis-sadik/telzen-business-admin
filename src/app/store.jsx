@@ -13,6 +13,7 @@ import sharedSlice from "@/features/shared/sharedSlice";
 import staffDetailsSlice from "@/features/staffs/staffDetailsSlice";
 import staffSlice from "@/features/staffs/staffSlice";
 import myEsimSlice from "@/features/myEsim/myEsimSlice";
+import usersSlice from "@/features/users/usersSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
 
@@ -25,6 +26,7 @@ export const store = configureStore({
     shared: sharedSlice,
     staffs: staffSlice,
     myEsim: myEsimSlice,
+    users: usersSlice,
     staffDetails: staffDetailsSlice,
     customers: customersSlice,
     customerDetails: customerDetailsSlice,

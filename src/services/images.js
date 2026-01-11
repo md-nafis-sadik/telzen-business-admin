@@ -17,6 +17,7 @@ import ellipse from "@/assets/images/Ellipse.webp";
 import staffDetailsAvatar from "@/assets/images/staff-details-avatar.webp";
 import qrCode from "@/assets/images/qr_code_2.png";
 import removeIcon from "@/assets/images/remove-icon.png";
+import logoIcon from "@/assets/images/Vector.webp";
 
 export {
   avatar,
@@ -38,4 +39,5 @@ export {
   LoginImage3,
   qrCode,
   removeIcon,
+  logoIcon,
 };

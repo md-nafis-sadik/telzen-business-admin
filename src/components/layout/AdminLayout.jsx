@@ -25,7 +25,7 @@ function AdminLayout() {
         {/* <SidebarTour /> */}
         <div className="w-full h-full flex flex-col overflow-x-hidden">
           <DashboardHeader />
-          <div className="flex-1 justify-between md:overflow-auto no-scrollbar bg-neutral-100 p-4 flex flex-col gap-6">
+          <div className="flex-1 justify-between md:overflow-auto no-scrollbar bg-neutral-100 p-6 flex flex-col gap-6">
             <Outlet />
             <DashboardFooter />
             <Modal

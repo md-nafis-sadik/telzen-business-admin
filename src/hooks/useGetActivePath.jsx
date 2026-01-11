@@ -26,6 +26,10 @@ export default function useGetActivePath() {
       dispatch(setActivePath(adminRouteLinks.brickList.activePath));
     } else if (pathname?.includes("/admin/my-esim")) {
       dispatch(setActivePath(adminRouteLinks.myEsim.activePath));
+      dispatch(forceSidebarSubmenuOpen({ menu: "myEsim" }));
+    } else if (pathname?.includes("/admin/users")) {
+      dispatch(setActivePath(adminRouteLinks.users.activePath));
+      dispatch(forceSidebarSubmenuOpen({ menu: "users" }));
     } else if (pathname?.includes("/admin/brick-stock")) {
       dispatch(setActivePath(adminRouteLinks.brickStock.activePath));
     } else if (pathname?.includes("/admin/brick-field")) {

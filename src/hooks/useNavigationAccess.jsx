@@ -16,6 +16,7 @@ export const useNavigationAccess = () => {
   const canAccessOrders = () => hasAccess('orders');
   const canAccessStaff = () => hasAccess('staff');
   const canAccessMyEsim = () => hasAccess('myEsim');
+  const canAccessUsers = () => hasAccess('users');
   const canAccessCustomers = () => hasAccess('customers');
   const canAccessProfile = () => hasAccess('profile');
 
@@ -25,6 +26,7 @@ export const useNavigationAccess = () => {
     canAccessPayments,
     canAccessStaff,
     canAccessMyEsim,
+    canAccessUsers,
     canAccessCustomers,
     canAccessProfile,
     canAccessBrickList,

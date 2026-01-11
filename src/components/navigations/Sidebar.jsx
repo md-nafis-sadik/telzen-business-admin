@@ -20,6 +20,7 @@ import {
   LogoutDownIconSvg,
   OrdersIconSvg,
   StaffIconSvg,
+  UserIconSvg,
 } from "@/services";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -37,6 +38,7 @@ function Sidebar() {
   const {
     canAccessDashboard,
     canAccessStaff,
+    canAccessUsers,
     canAccessCustomers,
     canAccessBrickList,
     canAccessBrickStock,
@@ -109,6 +111,23 @@ function Sidebar() {
                 links={[
                   adminRouteLinks?.regularEsim,
                   adminRouteLinks?.groupEsim,
+                ]}
+                isSubmenuOpen={sidebarSubmenuOpen}
+              />
+            )}
+
+            {/* Users - Available for admin only */}
+            {canAccessUsers() && (
+              <NavigationDropdownItem
+                ref={submenuRef}
+                name="users"
+                title="Users"
+                onClick={() => handleDropdown("users")}
+                icon={<UserIconSvg />}
+                isActive={activePath == adminRouteLinks?.users.activePath}
+                links={[
+                  adminRouteLinks?.usersActive,
+                  adminRouteLinks?.usersBlocked,
                 ]}
                 isSubmenuOpen={sidebarSubmenuOpen}
               />

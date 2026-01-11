@@ -21,6 +21,10 @@ import OrdersPending from "@/pages/admin/Orders/OrdersPending";
 import StaffActive from "@/pages/admin/Staff/StaffActive";
 import StaffBlocked from "@/pages/admin/Staff/StaffBlocked";
 import StaffDetails from "@/pages/admin/Staff/StaffDetails";
+import UsersActive from "@/pages/admin/Users/UsersActive";
+import UsersBlocked from "@/pages/admin/Users/UsersBlocked";
+import UserDetails from "@/pages/admin/Users/UserDetails";
+import UsersGroupMembers from "@/pages/admin/Users/UsersGroupMembers";
 import AdminLayout from "../components/layout/AdminLayout";
 import RoleBasedRoute from "../components/shared/RoleBasedRoute";
 import { adminRouteLinks } from "../services";
@@ -35,6 +39,10 @@ const {
   staffActive,
   staffBlocked,
   staffDetails,
+  usersActive,
+  usersBlocked,
+  usersDetails,
+  usersGroupMembers,
   customersActive,
   customersPending,
   customersRejected,
@@ -129,6 +137,38 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="staff">
           <StaffDetails />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: usersActive?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <UsersActive />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: usersBlocked?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <UsersBlocked />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: usersDetails?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <UserDetails />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: usersGroupMembers?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <UsersGroupMembers />
         </RoleBasedRoute>
       ),
     },
