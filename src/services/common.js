@@ -118,6 +118,13 @@ const getCustomerFileNameFromUrl = (url) => {
   return url.split("/").pop();
 };
 
+const roleOptions = [
+  { id: "manager", name: "Manager" },
+  { id: "admin", name: "Admin" },
+  { id: "supervisor", name: "Supervisor" },
+  { id: "staff", name: "Staff" },
+];
+
 export {
   arrayToCommaSeparated,
   checkEmailValidity,
@@ -133,4 +140,5 @@ export {
   maskedArray,
   strongPasswordRgx,
   timestampConverter,
+  roleOptions,
 };

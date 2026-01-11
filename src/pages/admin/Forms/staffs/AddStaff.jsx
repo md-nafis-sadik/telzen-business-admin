@@ -3,30 +3,19 @@ import Input from "@/components/shared/Input";
 import RequestLoader from "@/components/shared/RequestLoader";
 import PhoneInput from "@/components/shared/PhoneInput";
 import SelectInput from "@/components/shared/SelectInput";
-import { useStaffMutations, usePhoneInput } from "@/hooks";
-import { useState } from "react";
+import { useAddStaff } from "@/hooks";
 import { Link } from "react-router-dom";
 
 function AddStaff() {
-  const { handleAddStaff, isAdding } = useStaffMutations();
-  const [selectedRole, setSelectedRole] = useState("");
-  const { phone, handlePhoneChange } = usePhoneInput("", "bd");
-
-  const roleOptions = [
-    { id: "manager", name: "Manager" },
-    { id: "admin", name: "Admin" },
-    { id: "supervisor", name: "Supervisor" },
-    { id: "staff", name: "Staff" },
-  ];
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.set("role", selectedRole);
-    formData.set("phone", phone);
-    const data = Object.fromEntries(formData);
-    await handleAddStaff(data);
-  };
+  const {
+    selectedRole,
+    setSelectedRole,
+    phone,
+    handlePhoneChange,
+    roleOptions,
+    handleSubmit,
+    isAdding,
+  } = useAddStaff();
 
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">

@@ -4,41 +4,23 @@ import Input from "@/components/shared/Input";
 import RequestLoader from "@/components/shared/RequestLoader";
 import PhoneInput from "@/components/shared/PhoneInput";
 import SelectInput from "@/components/shared/SelectInput";
-import { useStaffMutations, useSingleStaff, usePhoneInput } from "@/hooks";
-import { useState, useEffect } from "react";
+import { useEditStaff } from "@/hooks";
 import { Link } from "react-router-dom";
 
 function EditStaff() {
-  const { staff: singleStaff, isFetching, isError, error } = useSingleStaff();
-  const { handleUpdateStaff, isUpdating } = useStaffMutations();
-  const [selectedRole, setSelectedRole] = useState("");
-  const { phone, setPhone, handlePhoneChange } = usePhoneInput("", "bd");
-
-  const roleOptions = [
-    { id: "manager", name: "Manager" },
-    { id: "admin", name: "Admin" },
-    { id: "supervisor", name: "Supervisor" },
-    { id: "staff", name: "Staff" },
-  ];
-
-  useEffect(() => {
-    if (singleStaff?.role) {
-      const roleValue = typeof singleStaff.role === 'object' ? singleStaff.role.id || singleStaff.role.name : singleStaff.role;
-      setSelectedRole(roleValue?.toLowerCase() || "");
-    }
-    if (singleStaff?.phone) {
-      setPhone(singleStaff.phone);
-    }
-  }, [singleStaff, setPhone]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.set("role", selectedRole);
-    formData.set("phone", phone);
-    const data = Object.fromEntries(formData);
-    await handleUpdateStaff(singleStaff._id, data);
-  };
+  const {
+    singleStaff,
+    isFetching,
+    isError,
+    error,
+    selectedRole,
+    setSelectedRole,
+    phone,
+    handlePhoneChange,
+    roleOptions,
+    handleSubmit,
+    isUpdating,
+  } = useEditStaff();
 
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">

@@ -45,7 +45,6 @@ function StaffTable() {
               <th className="table_th w-[150px]">Role</th>
               <th className="table_th w-[200px]">Email</th>
               <th className="table_th w-[150px]">Phone</th>
-              <th className="table_th w-[100px]">Status</th>
               <th className="table_th_last w-[120px]">Action</th>
             </tr>
           </thead>
@@ -76,29 +75,15 @@ function StaffTable() {
                   <td className="table_outline_td">
                     {staff?.role?.name || "-"}
                   </td>
-                  <td className="table_outline_td">
-                    {staff?.email || "-"}
-                  </td>
-                  <td className="table_outline_td">
-                    {staff?.phone || "-"}
-                  </td>
-                  <td className="table_outline_td">
-                    <span
-                      className={`px-2 py-1 rounded text-xs font-medium ${
-                        staff?.status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {staff?.status || "active"}
-                    </span>
-                  </td>
+                  <td className="table_outline_td">{staff?.email || "-"}</td>
+                  <td className="table_outline_td">{staff?.phone || "-"}</td>
+
                   <td className="table_outline_td">
                     <div className="flex gap-3 justify-center items-center">
                       <Link to={`/admin/staffs/edit/${staff._id}`}>
                         <EditIconSvg />
                       </Link>
-                      
+
                       {staff?.status === "active" ? (
                         <button
                           onClick={() => handleOpenBlockModal(staff)}
@@ -114,7 +99,7 @@ function StaffTable() {
                           <ActiveIconSvg color="#10B981" />
                         </button>
                       )}
-                      
+
                       <button
                         onClick={() => handleDelete(staff._id)}
                         disabled={isDeletingStaff}

@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
 import { useDebounce } from "./useDebounce";
+import { usePhoneInput } from "./usePhoneInput";
 import {
   useGetStaffQuery,
   useGetSingleStaffQuery,
@@ -16,7 +18,7 @@ import {
   closeBlockModal,
   setSuccessModal,
 } from "@/features/staffs/staffSlice";
-import { errorNotify, successNotify } from "@/services";
+import { errorNotify, roleOptions, successNotify } from "@/services";
 
 export const useStaffs = () => {
   const dispatch = useDispatch();
@@ -170,6 +172,95 @@ export const useStaffMutations = () => {
     handleAddStaff,
     handleUpdateStaff,
     isAdding,
+    isUpdating,
+  };
+};
+
+export const useAddStaff = () => {
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState("");
+  const { phone, handlePhoneChange } = usePhoneInput("", "bd");
+  const [addStaff, { isLoading: isAdding }] = useAddStaffMutation();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.set("role", selectedRole);
+    formData.set("phone", phone);
+    const data = Object.fromEntries(formData);
+
+    try {
+      await addStaff(data).unwrap();
+      successNotify("Staff added successfully");
+      navigate("/admin/staffs");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to add staff");
+    }
+  };
+
+  return {
+    selectedRole,
+    setSelectedRole,
+    phone,
+    handlePhoneChange,
+    roleOptions,
+    handleSubmit,
+    isAdding,
+  };
+};
+
+export const useEditStaff = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { singleStaff } = useSelector((state) => state.staffs);
+  const [updateStaff, { isLoading: isUpdating }] = useUpdateStaffMutation();
+
+  const { isFetching, isError, error } = useGetSingleStaffQuery(id, {
+    skip: !id,
+  });
+
+  const getRoleValue = () => {
+    if (!singleStaff?.role) return "";
+    const roleValue =
+      typeof singleStaff.role === "object"
+        ? singleStaff.role.id || singleStaff.role.name
+        : singleStaff.role;
+    return roleValue?.toLowerCase() || "";
+  };
+
+  const [selectedRole, setSelectedRole] = useState(getRoleValue());
+  const { phone, handlePhoneChange } = usePhoneInput(
+    singleStaff?.phone || "",
+    "bd"
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.set("role", selectedRole);
+    formData.set("phone", phone);
+    const data = Object.fromEntries(formData);
+
+    try {
+      await updateStaff({ id: singleStaff._id, data }).unwrap();
+      successNotify("Staff updated successfully");
+      navigate("/admin/staffs");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to update staff");
+    }
+  };
+
+  return {
+    singleStaff,
+    isFetching,
+    isError,
+    error,
+    selectedRole,
+    setSelectedRole,
+    phone,
+    handlePhoneChange,
+    roleOptions,
+    handleSubmit,
     isUpdating,
   };
 };
