@@ -5,18 +5,8 @@ export const adminRouteLinks = {
     activePath: "dashboard",
   },
   staff: {
-    name: "My Staff",
+    name: "My Staffs",
     path: "/admin/staffs",
-    activePath: "staff",
-  },
-  staffActive: {
-    name: "Active Staffs",
-    path: "/admin/staffs/active",
-    activePath: "staff",
-  },
-  staffBlocked: {
-    name: "Blocked Staffs",
-    path: "/admin/staffs/blocked",
     activePath: "staff",
   },
   myEsim: {
@@ -36,17 +26,12 @@ export const adminRouteLinks = {
   },
   addStaff: {
     name: "Add Staff",
-    path: "/admin/staffs/:slug/add",
+    path: "/admin/staffs/add",
     activePath: "staff",
   },
   editStaff: {
     name: "Edit Staff",
-    path: "/admin/staffs/:slug/edit/:id",
-    activePath: "staff",
-  },
-  staffDetails: {
-    name: "Staff Details",
-    path: "/admin/staffs/:slug/details/:id",
+    path: "/admin/staffs/edit/:id",
     activePath: "staff",
   },
   orders: {

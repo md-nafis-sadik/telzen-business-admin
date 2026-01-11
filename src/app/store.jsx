@@ -1,14 +1,9 @@
 import authSlice from "@/features/auth/authSlice";
 import forgotPasswordSlice from "@/features/auth/forgotPasswordSlice";
-import brickFieldSlice from "@/features/brickField/brickFieldSlice";
 import brickListSlice from "@/features/brickList/brickListSlice";
-import brickStockSlice from "@/features/brickStock/brickStockSlice";
-import customerDetailsSlice from "@/features/customers/customerDetailsSlice";
-import customersSlice from "@/features/customers/customerSlice";
 import dashboardSlice from "@/features/dashboard/dashboardSlice";
 import { locationApiSlice } from "@/features/location/locationApi";
 import locationSlice from "@/features/location/locationSlice";
-import ordersSlice from "@/features/orders/ordersSlice";
 import sharedSlice from "@/features/shared/sharedSlice";
 import staffDetailsSlice from "@/features/staffs/staffDetailsSlice";
 import staffSlice from "@/features/staffs/staffSlice";
@@ -28,12 +23,7 @@ export const store = configureStore({
     myEsim: myEsimSlice,
     users: usersSlice,
     staffDetails: staffDetailsSlice,
-    customers: customersSlice,
-    customerDetails: customerDetailsSlice,
     brickList: brickListSlice,
-    brickField: brickFieldSlice,
-    brickStock: brickStockSlice,
-    orders: ordersSlice,
     dashboard: dashboardSlice,
     location: locationSlice,
   },

@@ -1,45 +1,44 @@
 import BackToPrev from "@/components/shared/BackToPrev";
 import Input from "@/components/shared/Input";
 import RequestLoader from "@/components/shared/RequestLoader";
-import MultiSelectInput from "@/components/shared/MultiSelectInput";
-import SelectSkeleton from "@/components/shared/SelectSkeleton";
-import ImageUpload from "@/components/shared/ImageUpload";
-import { useAddStaff } from "@/hooks/useStaff";
+import PhoneInput from "@/components/shared/PhoneInput";
+import SelectInput from "@/components/shared/SelectInput";
+import { useStaffMutations, usePhoneInput } from "@/hooks";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function AddStaff() {
-  const {
-    handleSubmit,
-    isLoading,
-    divisions,
-    districts,
-    upazilas,
-    divisionsLoading,
-    districtsLoading,
-    upazilasLoading,
-    selectedDivisions,
-    selectedDistricts,
-    selectedSubDistricts,
-    handleDivisionChange,
-    handleDistrictChange,
-    handleSubDistrictChange,
-    imagePreviews,
-    handleImageUpload,
-    removeImage,
-    imageInputKey,
-  } = useAddStaff();
+  const { handleAddStaff, isAdding } = useStaffMutations();
+  const [selectedRole, setSelectedRole] = useState("");
+  const { phone, handlePhoneChange } = usePhoneInput("", "bd");
+
+  const roleOptions = [
+    { id: "manager", name: "Manager" },
+    { id: "admin", name: "Admin" },
+    { id: "supervisor", name: "Supervisor" },
+    { id: "staff", name: "Staff" },
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    formData.set("role", selectedRole);
+    formData.set("phone", phone);
+    const data = Object.fromEntries(formData);
+    await handleAddStaff(data);
+  };
 
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">
       <div className="flex gap-1">
-        <BackToPrev path="/admin/staffs/active" />
+        <BackToPrev path="/admin/staffs" />
         <h1 className="self-stretch justify-start text-text-700 text-lg font-bold leading-relaxed">
           Add New Staff
         </h1>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col justify-end gap-10">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="flex flex-col gap-10">
+          <div className="grid grid-cols-2 gap-6">
             <Input
               label="Full Name"
               labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
@@ -49,115 +48,48 @@ function AddStaff() {
             />
 
             <Input
-              label="Mobile Number"
+              label="Email"
               labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-              placeholder="Enter mobile number"
+              placeholder="Enter email address"
+              name="email"
+              type="email"
+              required
+            />
+
+            <PhoneInput
+              label="Phone"
+              labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
+              placeholder="Enter number"
               name="phone"
-              type="tel"
+              value={phone}
+              onChange={handlePhoneChange}
+              country="bd"
               required
             />
 
-            <Input
-              label="Commission Per Trip"
+            <SelectInput
+              label="Role"
               labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-              placeholder="Enter commission per trip"
-              name="commission_rate"
-              type="number"
-              required
-            />
-            <br />
-
-            {divisionsLoading ? (
-              <SelectSkeleton
-                label="Division"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                triggerClassName="w-full min-h-[48px]"
-              />
-            ) : (
-              <MultiSelectInput
-                label="Division"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                data={divisions}
-                placeholder="Select divisions"
-                labelKey="bn_name"
-                selector="id"
-                value={selectedDivisions}
-                onChange={handleDivisionChange}
-                chips={true}
-              />
-            )}
-
-            {districtsLoading ? (
-              <SelectSkeleton
-                label="District"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                triggerClassName="w-full min-h-[48px]"
-              />
-            ) : (
-              <MultiSelectInput
-                label="District"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                data={districts}
-                placeholder="Select districts"
-                labelKey="bn_name"
-                selector="id"
-                value={selectedDistricts}
-                onChange={handleDistrictChange}
-                chips={true}
-                disabled={selectedDivisions.length === 0}
-              />
-            )}
-
-            {upazilasLoading ? (
-              <SelectSkeleton
-                label="Upazila"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                triggerClassName="w-full min-h-[48px]"
-              />
-            ) : (
-              <MultiSelectInput
-                label="Upazila"
-                labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                data={upazilas}
-                placeholder="Select upazilas"
-                labelKey="bn_name"
-                selector="id"
-                value={selectedSubDistricts}
-                onChange={handleSubDistrictChange}
-                chips={true}
-                disabled={selectedDistricts.length === 0}
-              />
-            )}
-          </div>
-
-          {/* Avatar Upload Section */}
-          <div className="flex flex-col gap-4">
-            <label className="text-text-700 self-stretch justify-start text-base font-medium leading-normal">
-              Avatar
-            </label>
-
-            <ImageUpload
-              key={imageInputKey}
-              id="avatar-upload"
-              multiple={false}
-              maxFiles={1}
-              previews={imagePreviews}
-              onUpload={handleImageUpload}
-              onRemove={removeImage}
+              placeholder="Select role"
+              data={roleOptions}
+              labelKey="name"
+              selector="id"
+              value={selectedRole}
+              onValueChange={setSelectedRole}
             />
           </div>
 
-          <div className="flex justify-end gap-3">
-            <Link to="/admin/staffs/active" className="btn_cancel !w-[112px]">
-              Cancel
+          <div className="flex gap-3">
+            <Link to="/admin/staffs" className="btn_cancel !w-[112px]">
+              CANCEL
             </Link>
-            <button type="submit" className="btn_save w-[112px]">
-              Add
+            <button type="submit" className="btn_save w-[112px]" disabled={isAdding}>
+              {isAdding ? "SUBMITTING..." : "SUBMIT"}
             </button>
           </div>
         </div>
       </form>
-      {isLoading && <RequestLoader />}
+      {isAdding && <RequestLoader />}
     </section>
   );
 }

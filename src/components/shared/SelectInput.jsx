@@ -34,7 +34,7 @@ const SelectInput = memo(function SelectInput({
         {...rest}
       >
         <SelectTrigger
-          className={`w-full py-3 min-h-[48px] px-4 text-black-100 rounded-lg data-[placeholder]:text-text-500 border-natural-400 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 disabled:bg-natural-200 ${triggerClassName}`}
+          className={`w-full py-3 min-h-[50px] px-4 text-black-100 rounded-lg data-[placeholder]:text-text-500 border-natural-400 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 disabled:bg-natural-200 ${triggerClassName}`}
         >
           <SelectValue placeholder={`${placeHolder}`} />
         </SelectTrigger>

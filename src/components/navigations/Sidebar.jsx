@@ -39,11 +39,7 @@ function Sidebar() {
     canAccessDashboard,
     canAccessStaff,
     canAccessUsers,
-    canAccessCustomers,
     canAccessBrickList,
-    canAccessBrickStock,
-    canAccessBrickField,
-    canAccessOrders,
     canAccessMyEsim,
     userRole,
   } = useNavigationAccess();
@@ -133,6 +129,16 @@ function Sidebar() {
               />
             )}
 
+            {/* Staff - Available for admin only */}
+            {canAccessStaff() && (
+              <NavigateItem
+                menu={adminRouteLinks?.staff}
+                isActive={activePath == adminRouteLinks?.staff.activePath}
+                icon={<StaffIconSvg />}
+                onClick={hideSidebar}
+              />
+            )}
+
             {/* Brick List - Available for admin only */}
             {canAccessBrickList() && (
               <NavigateItem
@@ -146,96 +152,6 @@ function Sidebar() {
                   />
                 }
                 onClick={hideSidebar}
-              />
-            )}
-
-            {/* Brick Stock - Available for admin only */}
-            {canAccessBrickStock() && (
-              <NavigateItem
-                menu={adminRouteLinks?.brickStock}
-                isActive={activePath == adminRouteLinks?.brickStock.activePath}
-                icon={
-                  <BrickStckIconSvg
-                    isActive={
-                      activePath == adminRouteLinks?.brickStock.activePath
-                    }
-                  />
-                }
-                onClick={hideSidebar}
-              />
-            )}
-
-            {/* Brick Field - Available for admin only */}
-            {canAccessBrickField() && (
-              <NavigateItem
-                menu={adminRouteLinks?.brickField}
-                isActive={activePath == adminRouteLinks?.brickField.activePath}
-                icon={
-                  <BrickFieldIconSvg
-                    isActive={
-                      activePath == adminRouteLinks?.brickField.activePath
-                    }
-                  />
-                }
-                onClick={hideSidebar}
-              />
-            )}
-
-            {/* Orders - Available for admin only */}
-            {canAccessOrders() && (
-              <NavigationDropdownItem
-                ref={submenuRef}
-                name="orders"
-                title="Orders"
-                onClick={() => handleDropdown("orders")}
-                icon={<OrdersIconSvg />}
-                isActive={activePath === "orders"}
-                links={[
-                  adminRouteLinks?.ordersPending,
-                  adminRouteLinks?.ordersValidation,
-                  adminRouteLinks?.ordersProcessing,
-                  adminRouteLinks?.ordersCompleted,
-                  adminRouteLinks?.ordersCancelled,
-                ]}
-                isSubmenuOpen={sidebarSubmenuOpen}
-                maxHeightClass="280px"
-              />
-            )}
-
-            {/* All Customers - Available for admin only */}
-            {canAccessCustomers() && (
-              <NavigationDropdownItem
-                ref={submenuRef}
-                name="customers"
-                title="All Customer"
-                onClick={() => handleDropdown("customers")}
-                icon={<CustomerIconSvg />}
-                isActive={activePath == adminRouteLinks?.customers.activePath}
-                links={[
-                  adminRouteLinks?.customersPending,
-                  adminRouteLinks?.customersActive,
-                  adminRouteLinks?.customersBlocked,
-                  adminRouteLinks?.customersRejected,
-                ]}
-                isSubmenuOpen={sidebarSubmenuOpen}
-                maxHeightClass
-              />
-            )}
-
-            {/* Staff - Available for admin only */}
-            {canAccessStaff() && (
-              <NavigationDropdownItem
-                ref={submenuRef}
-                name="staff"
-                title="My Staff"
-                onClick={() => handleDropdown("staff")}
-                icon={<StaffIconSvg />}
-                isActive={activePath == adminRouteLinks?.staff.activePath}
-                links={[
-                  adminRouteLinks?.staffActive,
-                  adminRouteLinks?.staffBlocked,
-                ]}
-                isSubmenuOpen={sidebarSubmenuOpen}
               />
             )}
           </div>
