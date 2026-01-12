@@ -15,6 +15,8 @@ export const useNavigationAccess = () => {
   const canAccessBusinessProfile = () => hasAccess("businessProfile");
   const canAccessUsers = () => hasAccess("users");
   const canAccessProfile = () => hasAccess("profile");
+  const canAccessContactSupport = () => hasAccess("contactSupport");
+  const canAccessApiSettings = () => hasAccess("apiSettings");
 
   return {
     hasAccess,
@@ -25,6 +27,8 @@ export const useNavigationAccess = () => {
     canAccessBusinessProfile,
     canAccessUsers,
     canAccessProfile,
+    canAccessContactSupport,
+    canAccessApiSettings,
     userRole,
   };
 };

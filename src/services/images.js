@@ -18,6 +18,9 @@ import staffDetailsAvatar from "@/assets/images/staff-details-avatar.webp";
 import qrCode from "@/assets/images/qr_code_2.png";
 import removeIcon from "@/assets/images/remove-icon.png";
 import logoIcon from "@/assets/images/Vector.webp";
+import newZealand from "@/assets/images/new-zealand.webp";
+import palmTree from "@/assets/images/palm-tree.webp";
+import successful from "@/assets/images/successful.webp";
 
 export {
   avatar,
@@ -40,4 +43,7 @@ export {
   qrCode,
   removeIcon,
   logoIcon,
+  newZealand,
+  palmTree,
+  successful,
 };

@@ -8,7 +8,9 @@ import useGetActivePath from "@/hooks/useGetActivePath";
 import useNavigationAccess from "@/hooks/useNavigationAccess";
 import {
   AccountBalanceIconSvg,
+  ApiSettingsIconSvg,
   BusinessProfileIconSvg,
+  ContactSupportIconSvg,
   adminRouteLinks,
   CartIconSvg,
   DashboardIconSvg,
@@ -37,6 +39,8 @@ function Sidebar() {
     canAccessMyEsim,
     canAccessAccountBalance,
     canAccessBusinessProfile,
+    canAccessContactSupport,
+    canAccessApiSettings,
   } = useNavigationAccess();
   const { isLoggingOut } = useLogout();
 
@@ -160,6 +164,30 @@ function Sidebar() {
                   activePath == adminRouteLinks?.businessProfile.activePath
                 }
                 icon={<BusinessProfileIconSvg />}
+                onClick={handleNavigateItemClick}
+              />
+            )}
+
+            {/* Contact Support - Available for admin only */}
+            {canAccessContactSupport() && (
+              <NavigateItem
+                menu={adminRouteLinks?.contactSupport}
+                isActive={
+                  activePath == adminRouteLinks?.contactSupport.activePath
+                }
+                icon={<ContactSupportIconSvg />}
+                onClick={handleNavigateItemClick}
+              />
+            )}
+
+            {/* API Settings - Available for admin only */}
+            {canAccessApiSettings() && (
+              <NavigateItem
+                menu={adminRouteLinks?.apiSettings}
+                isActive={
+                  activePath == adminRouteLinks?.apiSettings.activePath
+                }
+                icon={<ApiSettingsIconSvg />}
                 onClick={handleNavigateItemClick}
               />
             )}

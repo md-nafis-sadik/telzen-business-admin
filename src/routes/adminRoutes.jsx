@@ -15,6 +15,8 @@ import MyEsimRegular from "@/pages/admin/MyESim/RegularEsim";
 import MyEsimGroup from "@/pages/admin/MyESim/GroupEsim";
 import AccountBalance from "@/pages/admin/AccountBalance/AccountBalance";
 import BusinessProfile from "@/pages/admin/BusinessProfile/BusinessProfile";
+import ContactSupport from "@/pages/admin/ContactSupport/ContactSupport";
+import ApiSettings from "@/pages/admin/ApiSettings/ApiSettings";
 
 const {
   dashboard,
@@ -30,6 +32,8 @@ const {
   groupEsim,
   accountBalance,
   businessProfile,
+  contactSupport,
+  apiSettings,
 } = adminRouteLinks || {};
 
 export const adminRoutes = {
@@ -141,6 +145,22 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="businessProfile">
           <BusinessProfile />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: contactSupport?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="contactSupport">
+          <ContactSupport />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: apiSettings?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="apiSettings">
+          <ApiSettings />
         </RoleBasedRoute>
       ),
     },

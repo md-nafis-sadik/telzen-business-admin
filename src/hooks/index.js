@@ -8,6 +8,8 @@ export * from "./useDebounce";
 export * from "./useLocation";
 export * from "./usePhoneInput";
 export * from "./useAccountBalance";
+export * from "./useContactSupport";
+export * from "./useApiSettings";
 export { default as useAuthCheck } from "./useAuthCheck";
 export { default as useGetActivePath } from "./useGetActivePath";
 export { default as useNavigationAccess } from "./useNavigationAccess";

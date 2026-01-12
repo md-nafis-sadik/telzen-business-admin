@@ -29,6 +29,10 @@ export default function useGetActivePath() {
       dispatch(setActivePath(adminRouteLinks.accountBalance.activePath));
     } else if (pathname?.includes("/admin/business-profile")) {
       dispatch(setActivePath(adminRouteLinks.businessProfile.activePath));
+    } else if (pathname?.includes("/admin/contact-support")) {
+      dispatch(setActivePath(adminRouteLinks.contactSupport.activePath));
+    } else if (pathname?.includes("/admin/api-settings")) {
+      dispatch(setActivePath(adminRouteLinks.apiSettings.activePath));
     } else if (pathname?.includes(adminRouteLinks.profile.activePath)) {
       dispatch(setActivePath(adminRouteLinks.profile.activePath));
     } else {

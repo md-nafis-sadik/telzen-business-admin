@@ -74,6 +74,16 @@ export const adminRouteLinks = {
     path: "/admin/business-profile",
     activePath: "businessProfile",
   },
+  contactSupport: {
+    name: "Contact Support",
+    path: "/admin/contact-support",
+    activePath: "contactSupport",
+  },
+  apiSettings: {
+    name: "API Settings",
+    path: "/admin/api-settings",
+    activePath: "apiSettings",
+  },
 };
 
 export const userRouteLinks = {
