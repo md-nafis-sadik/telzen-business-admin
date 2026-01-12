@@ -8,6 +8,7 @@ import useGetActivePath from "@/hooks/useGetActivePath";
 import useNavigationAccess from "@/hooks/useNavigationAccess";
 import {
   AccountBalanceIconSvg,
+  BusinessProfileIconSvg,
   adminRouteLinks,
   CartIconSvg,
   DashboardIconSvg,
@@ -35,7 +36,9 @@ function Sidebar() {
     canAccessUsers,
     canAccessMyEsim,
     canAccessAccountBalance,
+    canAccessBusinessProfile,
   } = useNavigationAccess();
+  const { isLoggingOut } = useLogout();
 
   const dispatch = useDispatch();
   const hideSidebar = () => {
@@ -45,7 +48,12 @@ function Sidebar() {
   const handleDropdown = (menu) => {
     dispatch(setSidebarSubmenuOpen({ menu }));
   };
-  const { isLoggingOut } = useLogout();
+
+  const handleNavigateItemClick = () => {
+    dispatch(setSidebarSubmenuOpen({ menu: null }));
+    hideSidebar();
+  };
+
   const handleLogoutClick = () => {
     dispatch(toggleLogoutModal(true));
   };
@@ -84,7 +92,7 @@ function Sidebar() {
                     }
                   />
                 }
-                onClick={hideSidebar}
+                onClick={handleNavigateItemClick}
               />
             )}
 
@@ -130,7 +138,7 @@ function Sidebar() {
                   activePath == adminRouteLinks?.accountBalance.activePath
                 }
                 icon={<AccountBalanceIconSvg />}
-                onClick={hideSidebar}
+                onClick={handleNavigateItemClick}
               />
             )}
 
@@ -140,7 +148,19 @@ function Sidebar() {
                 menu={adminRouteLinks?.staff}
                 isActive={activePath == adminRouteLinks?.staff.activePath}
                 icon={<StaffIconSvg />}
-                onClick={hideSidebar}
+                onClick={handleNavigateItemClick}
+              />
+            )}
+
+            {/* Business Profile - Available for admin only */}
+            {canAccessBusinessProfile() && (
+              <NavigateItem
+                menu={adminRouteLinks?.businessProfile}
+                isActive={
+                  activePath == adminRouteLinks?.businessProfile.activePath
+                }
+                icon={<BusinessProfileIconSvg />}
+                onClick={handleNavigateItemClick}
               />
             )}
           </div>

@@ -50,6 +50,7 @@ export default {
           200: "#EEEEEE",
           220: "#E3E3E3",
           250: "#E6E5E5",
+          300: "#E0E0E0",
           400: "#BDBDBD",
           450: "#CACACA",
           500: "#9E9E9E",

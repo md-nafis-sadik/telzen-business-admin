@@ -14,6 +14,7 @@ import PrivateRouter from "./PrivateRouter";
 import MyEsimRegular from "@/pages/admin/MyESim/RegularEsim";
 import MyEsimGroup from "@/pages/admin/MyESim/GroupEsim";
 import AccountBalance from "@/pages/admin/AccountBalance/AccountBalance";
+import BusinessProfile from "@/pages/admin/BusinessProfile/BusinessProfile";
 
 const {
   dashboard,
@@ -28,6 +29,7 @@ const {
   regularEsim,
   groupEsim,
   accountBalance,
+  businessProfile,
 } = adminRouteLinks || {};
 
 export const adminRoutes = {
@@ -131,6 +133,14 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="profile">
           <Profile />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: businessProfile?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="businessProfile">
+          <BusinessProfile />
         </RoleBasedRoute>
       ),
     },

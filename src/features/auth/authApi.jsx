@@ -18,12 +18,11 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: formData,
       }),
-      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch, getState }) {
         try {
           const { data } = await queryFulfilled;
           const results = data?.data;
-          const currentDate = moment();
-          const futureDate = currentDate.add(30, "days");
+          const futureDate = moment().add(30, "days");
           const expireAt = futureDate.unix();
           // Save all profile data from login response directly
           dispatch(saveAuthData({ ...results, expireAt }));
@@ -42,7 +41,13 @@ export const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          dispatch(saveAuthData(result?.data?.data));
+          const currentAuth = getState().auth.auth;
+          dispatch(
+            saveAuthData({
+              ...result?.data?.data,
+              expireAt: currentAuth?.expireAt,
+            })
+          );
         } catch (error) {
           return { error };
         }

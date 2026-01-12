@@ -15,7 +15,7 @@
   }
 
   .input {
-    @apply px-4 py-3.5 bg-white w-full text-sm  text-black-100 border border-natural-400  outline-none rounded-[8px] placeholder:text-gray-800 read-only:cursor-default focus:outline-none focus:shadow-none focus:ring-0 focus:ring-transparent disabled:bg-natural-100 disabled:text-black-100 read-only:text-black-400 read-only:bg-natural-150 read-only:border-natural-400;
+    @apply px-4 py-3.5 bg-white w-full text-sm  text-black-100 border border-natural-400 outline-none rounded-[8px] placeholder:text-gray-800 read-only:cursor-default focus:outline-none focus:shadow-none focus:ring-0 focus:ring-transparent disabled:bg-natural-300 disabled:text-black-100 read-only:text-black-400 read-only:bg-natural-150 read-only:border-natural-400;
   }
   .Country-list {
     @apply p-4 bg-white w-full text-sm  text-black-100 border  outline-none rounded-[8px] placeholder:text-gray-800 read-only:cursor-default focus:outline-none focus:shadow-none focus:ring-0 focus:ring-transparent disabled:bg-natural-100 disabled:text-black-100 read-only:text-black-100 read-only:bg-white-100;
@@ -29,7 +29,7 @@
   }
 
   .btn_save {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 border border-black bg-black hover:bg-black-200 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out text-white text-sm font-bold leading-tight;
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-6 sm:py-4 h-12 border border-black bg-black hover:bg-black-200 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out text-white text-sm font-bold leading-tight;
     &:active {
       @apply scale-95;
     }
@@ -46,7 +46,7 @@
   }
 
   .btn_cancel {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-4 sm:py-4 h-12 text-sm font-bold leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out;
+    @apply flex items-center justify-center text-center px-6 py-3 sm:px-6 sm:py-4 h-12 text-sm font-bold leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out;
     &:active {
       @apply scale-95;
     }

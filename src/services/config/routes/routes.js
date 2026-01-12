@@ -69,6 +69,11 @@ export const adminRouteLinks = {
     path: "/admin/profile",
     activePath: "profile",
   },
+  businessProfile: {
+    name: "Business Profile",
+    path: "/admin/business-profile",
+    activePath: "businessProfile",
+  },
 };
 
 export const userRouteLinks = {
