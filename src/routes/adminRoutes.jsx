@@ -17,6 +17,9 @@ import AccountBalance from "@/pages/admin/AccountBalance/AccountBalance";
 import BusinessProfile from "@/pages/admin/BusinessProfile/BusinessProfile";
 import ContactSupport from "@/pages/admin/ContactSupport/ContactSupport";
 import ApiSettings from "@/pages/admin/ApiSettings/ApiSettings";
+import Inventory from "@/pages/admin/Inventory/Inventory";
+import Packages from "@/pages/admin/Inventory/Packages";
+import Checkout from "@/pages/admin/Inventory/Checkout";
 
 const {
   dashboard,
@@ -31,6 +34,9 @@ const {
   regularEsim,
   groupEsim,
   accountBalance,
+  inventory,
+  inventoryPackages,
+  inventoryCheckout,
   businessProfile,
   contactSupport,
   apiSettings,
@@ -81,6 +87,30 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="accountBalance">
           <AccountBalance />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: inventory?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="inventory">
+          <Inventory />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: inventoryPackages?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="inventory">
+          <Packages />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: inventoryCheckout?.path,
+      element: (
+        <RoleBasedRoute requiredActivePath="inventory">
+          <Checkout />
         </RoleBasedRoute>
       ),
     },

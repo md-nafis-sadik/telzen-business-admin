@@ -1,0 +1,96 @@
+import BackToPrev from "@/components/shared/BackToPrev";
+import PackageCard from "@/components/inventory/PackageCard";
+import PackageCardSkeleton from "@/components/inventory/PackageCardSkeleton";
+import { usePackages } from "@/hooks";
+
+function Packages() {
+  const {
+    data,
+    isLoading,
+    isError,
+    name,
+    formatDataSize,
+    handlePackageClick,
+    handleBackClick,
+  } = usePackages();
+
+  return (
+    <section className="w-full flex-1 flex flex-col overflow-auto rounded-2xl">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Country Image */}
+        <div className="w-full md:w-[350px] lg:w-[386px] md:shrink-0">
+          {isLoading ? (
+            <div className="w-full aspect-[5/6] rounded-2xl bg-gray-200 animate-pulse"></div>
+          ) : (
+            <div className="sticky top-4">
+              <div
+                className="aspect-[5/6] relative rounded-3xl overflow-hidden"
+                style={{
+                  backgroundImage: `url(${data?.data?.country?.image || data?.data?.region?.image || ""})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                {!data?.data?.country?.image && !data?.data?.region?.image && (
+                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                    <span className="text-gray-500">No Image</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Packages List */}
+        <div className="w-full mt-4">
+
+          {isLoading ? (
+            <div className="flex flex-col gap-2">
+              <div className="h-7 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-64 mb-6 animate-pulse"></div>
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-[900] font-barlowCondensed text-main-700 uppercase">
+                {name || "Packages"}
+              </h2>
+              <p className="text-text-700 mb-6 text-sm lg:text-base">
+                Here is the list of packages. You can see details upon selecting a package.
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, index) => (
+                  <PackageCardSkeleton key={index} />
+                ))
+              : data?.data?.packages?.map((packageItem, index) => (
+                  <PackageCard
+                    key={packageItem._id}
+                    packageItem={packageItem}
+                    onClick={handlePackageClick}
+                    formatDataSize={formatDataSize}
+                    index={index}
+                  />
+                ))}
+          </div>
+
+          {!isLoading && !isError && data?.data?.packages?.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No packages found</p>
+            </div>
+          )}
+
+          {isError && (
+            <div className="text-center py-12">
+              <p className="text-red-600">Failed to load packages. Please try again.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default Packages;

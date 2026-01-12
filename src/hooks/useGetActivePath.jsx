@@ -27,6 +27,8 @@ export default function useGetActivePath() {
       dispatch(forceSidebarSubmenuOpen({ menu: "users" }));
     } else if (pathname?.includes("/admin/account-balance")) {
       dispatch(setActivePath(adminRouteLinks.accountBalance.activePath));
+    } else if (pathname?.includes("/admin/inventory")) {
+      dispatch(setActivePath(adminRouteLinks.inventory.activePath));
     } else if (pathname?.includes("/admin/business-profile")) {
       dispatch(setActivePath(adminRouteLinks.businessProfile.activePath));
     } else if (pathname?.includes("/admin/contact-support")) {

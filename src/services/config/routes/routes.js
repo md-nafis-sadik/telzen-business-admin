@@ -29,6 +29,21 @@ export const adminRouteLinks = {
     path: "/admin/account-balance",
     activePath: "accountBalance",
   },
+  inventory: {
+    name: "Inventory",
+    path: "/admin/inventory",
+    activePath: "inventory",
+  },
+  inventoryPackages: {
+    name: "Packages",
+    path: "/admin/inventory/packages/:id",
+    activePath: "inventory",
+  },
+  inventoryCheckout: {
+    name: "Checkout",
+    path: "/admin/inventory/checkout/:id",
+    activePath: "inventory",
+  },
   addStaff: {
     name: "Add Staff",
     path: "/admin/staffs/add",

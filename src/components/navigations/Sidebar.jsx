@@ -9,6 +9,7 @@ import useNavigationAccess from "@/hooks/useNavigationAccess";
 import {
   AccountBalanceIconSvg,
   ApiSettingsIconSvg,
+  BrickFieldIconSvg,
   BusinessProfileIconSvg,
   ContactSupportIconSvg,
   adminRouteLinks,
@@ -18,12 +19,15 @@ import {
   LogoutDownIconSvg,
   StaffIconSvg,
   UserIconSvg,
+  SimIconSvg,
+  InventoryIconSvg,
 } from "@/services";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import NavigateItem from "./NavigateItem";
 import NavigationDropdownItem from "./NavigationDropdownItem";
+import Inventory from "@/pages/admin/Inventory/Inventory";
 
 function Sidebar() {
   const submenuRef = useRef({});
@@ -38,6 +42,7 @@ function Sidebar() {
     canAccessUsers,
     canAccessMyEsim,
     canAccessAccountBalance,
+    canAccessInventory,
     canAccessBusinessProfile,
     canAccessContactSupport,
     canAccessApiSettings,
@@ -142,6 +147,16 @@ function Sidebar() {
                   activePath == adminRouteLinks?.accountBalance.activePath
                 }
                 icon={<AccountBalanceIconSvg />}
+                onClick={handleNavigateItemClick}
+              />
+            )}
+
+            {/* Inventory - Available for admin only */}
+            {canAccessInventory() && (
+              <NavigateItem
+                menu={adminRouteLinks?.inventory}
+                isActive={activePath == adminRouteLinks?.inventory.activePath}
+                icon={<InventoryIconSvg />}
                 onClick={handleNavigateItemClick}
               />
             )}

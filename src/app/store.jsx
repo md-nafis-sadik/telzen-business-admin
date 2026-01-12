@@ -11,11 +11,13 @@ import usersSlice from "@/features/users/usersSlice";
 import accountBalanceSlice from "@/features/accountBalance/accountBalanceSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "../features/api/apiSlice";
+import { inventoryApi } from "@/features/inventory/inventoryApi";
 
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     [locationApiSlice.reducerPath]: locationApiSlice.reducer,
+    [inventoryApi.reducerPath]: inventoryApi.reducer,
     auth: authSlice,
     forgotPassword: forgotPasswordSlice,
     shared: sharedSlice,
@@ -44,5 +46,5 @@ export const store = configureStore({
           "institutions.selectedCoverImage",
         ],
       },
-    }).concat(apiSlice.middleware, locationApiSlice.middleware),
+    }).concat(apiSlice.middleware, locationApiSlice.middleware, inventoryApi.middleware),
 });
