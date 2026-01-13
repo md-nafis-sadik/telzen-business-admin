@@ -1779,7 +1779,7 @@ export const StarPointSvg = ({ className = "" }) => (
   >
     <path
       d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z"
-      fill="url(#paint0_linear_1858_5038)"
+      fill="url(#paint0_linear_2192_6555)"
     />
     <path
       d="M19.286 9.15711L14.3344 8.69786L12.3675 4.13048C12.2297 3.81067 11.7763 3.81067 11.6386 4.13048L9.67168 8.69783L4.72007 9.15711C4.37334 9.18924 4.23324 9.6205 4.49482 9.85031L8.23082 13.1323L7.13747 17.9835C7.06091 18.3232 7.42778 18.5897 7.72715 18.412L12.003 15.873L16.2789 18.412C16.5783 18.5898 16.9451 18.3232 16.8686 17.9835L15.7752 13.1323L19.5113 9.85031C19.7728 9.6205 19.6327 9.18924 19.286 9.15711Z"
@@ -1791,15 +1791,15 @@ export const StarPointSvg = ({ className = "" }) => (
     />
     <defs>
       <linearGradient
-        id="paint0_linear_1858_5038"
+        id="paint0_linear_2192_6555"
         x1="10.5"
         y1="21"
         x2="15"
         y2="-3"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stopColor="#FC9512" />
-        <stop offset="1" stopColor="#FBE878" />
+        <stop stop-color="#FC9512" />
+        <stop offset="1" stop-color="#FBE878" />
       </linearGradient>
     </defs>
   </svg>

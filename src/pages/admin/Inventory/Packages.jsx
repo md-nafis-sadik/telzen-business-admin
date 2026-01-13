@@ -15,14 +15,14 @@ function Packages() {
   } = usePackages();
 
   return (
-    <section className="w-full flex-1 flex flex-col overflow-auto rounded-2xl">
+    <section className="w-full flex-1 flex flex-col rounded-2xl">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Country Image */}
-        <div className="w-full md:w-[350px] lg:w-[386px] md:shrink-0">
+        <div className="w-full md:w-[300px] lg:w-[330px] xl:w-[386px] md:shrink-0">
           {isLoading ? (
             <div className="w-full aspect-[5/6] rounded-2xl bg-gray-200 animate-pulse"></div>
           ) : (
-            <div className="sticky top-4">
+            <div className="sticky top-0">
               <div
                 className="aspect-[5/6] relative rounded-3xl overflow-hidden"
                 style={{
@@ -42,7 +42,7 @@ function Packages() {
         </div>
 
         {/* Packages List */}
-        <div className="w-full mt-4">
+        <div className="w-full">
 
           {isLoading ? (
             <div className="flex flex-col gap-2">
@@ -51,7 +51,7 @@ function Packages() {
             </div>
           ) : (
             <div>
-              <h2 className="text-2xl lg:text-3xl font-[900] font-barlowCondensed text-main-700 uppercase">
+              <h2 className="text-2xl lg:text-[32px] font-[900] font-barlowCondensed text-main-700 uppercase mb-2">
                 {name || "Packages"}
               </h2>
               <p className="text-text-700 mb-6 text-sm lg:text-base">

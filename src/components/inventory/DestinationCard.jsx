@@ -6,12 +6,15 @@ function DestinationCard({ item, onClick, index }) {
   const formattedPrice =
     typeof displayPrice === "number" ? displayPrice.toFixed(2) : displayPrice;
 
+  const encodedImage = displayImage ? encodeURI(displayImage) : "";
+
   return (
     <div
       onClick={onClick}
       className="relative rounded-xl aspect-[5/6] overflow-hidden cursor-pointer group transition-all duration-300 ease-out hover:scale-105 hover:-translate-y-2 select-none"
       style={{
-        backgroundImage: `url(${displayImage})`,
+        backgroundImage: encodedImage ? `url(${encodedImage})` : "none",
+        backgroundColor: !encodedImage ? "#e5e7eb" : "transparent",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

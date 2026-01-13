@@ -17,13 +17,13 @@ function Inventory() {
   } = useInventory();
 
   return (
-    <section className="w-full flex-1 flex flex-col overflow-auto no-scrollbar">
+    <section className="w-full flex-1 flex flex-col">
       {/* Header with Tabs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex gap-3">
           <button
             onClick={() => setActiveTab("countries")}
-            className={`px-6 py-2.5 rounded-lg font-medium transition-colors ${
+            className={`px-5 py-3.5 rounded-lg font-semibold transition-colors ${
               activeTab === "countries"
                 ? "bg-main-700 text-white"
                 : "bg-black text-white"
@@ -33,7 +33,7 @@ function Inventory() {
           </button>
           <button
             onClick={() => setActiveTab("regional")}
-            className={`px-6 py-2.5 rounded-lg font-medium transition-colors ${
+            className={`px-5 py-3.5 rounded-lg font-semibold transition-colors ${
               activeTab === "regional"
                 ? "bg-main-700 text-white"
                 : "bg-black text-white"
@@ -58,7 +58,9 @@ function Inventory() {
       <div className="">
         {isError ? (
           <div className="text-center py-12">
-            <p className="text-red-600">Failed to load data. Please try again.</p>
+            <p className="text-red-600">
+              Failed to load data. Please try again.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
@@ -68,7 +70,7 @@ function Inventory() {
                 ))
               : data?.data?.map((item, index) => (
                   <DestinationCard
-                    key={item._id}
+                    key={`${activeTab}-${item._id}`}
                     item={item}
                     onClick={() => handleCardClick(item)}
                     index={index}

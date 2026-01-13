@@ -4,7 +4,6 @@ import {
   images,
   RectanglesIconSvg,
   SimIconSvg,
-  SmileGreenSvg,
   WorldIconSvg,
 } from "@/services";
 
@@ -49,7 +48,11 @@ function CheckoutCard({
             <WorldIconSvg className="w-5 h-5" />
             <span>Coverage</span>
           </div>
-          <div className="font-bold">{getCoverageText()}</div>
+          <div className="font-bold capitalize">
+            {packageData?.coverage_type === "country"
+              ? packageData?.coverage_countries?.join(", ")
+              : packageData?.coverage_region}
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
@@ -59,7 +62,7 @@ function CheckoutCard({
           </div>
           <div className="font-bold">
             {packageData
-              ? formatDataSize(packageData.total_data_plan_in_mb)
+              ? formatDataSize(packageData?.total_data_plan_in_mb)
               : "N/A"}
           </div>
         </div>
@@ -92,7 +95,9 @@ function CheckoutCard({
             >
               −
             </button>
-            <span className="w-8 h-8 flex justify-center items-center rounded font-bold border border-natural-400"><span>{quantity}</span></span>
+            <span className="w-8 h-8 flex justify-center items-center rounded font-bold border border-natural-400">
+              <span>{quantity}</span>
+            </span>
             <button
               onClick={incrementQuantity}
               className="w-8 h-8 rounded bg-main-50 border border-main-700 text-black hover:bg-main-100 transition-colors flex items-center justify-center font-bold"

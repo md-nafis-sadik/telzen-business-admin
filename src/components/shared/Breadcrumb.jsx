@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 import { adminRouteLinks } from "@/services";
 
 function Breadcrumb() {
@@ -24,9 +23,46 @@ function Breadcrumb() {
     }
 
     // Special handling for staff routes (active/blocked/details)
-    if (pathname.includes("/staffs/active")) {
+
+    if (pathname.includes("/my-esim/regular")) {
       breadcrumbs.push({
-        name: "My Staff",
+        name: "My eSIM",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Regular",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
+    if (pathname.includes("/my-esim/group")) {
+      breadcrumbs.push({
+        name: "My eSIM",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Group",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
+    if (pathname.includes("/inventory/packages")) {
+      breadcrumbs.push({
+        name: "Inventory",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Packages",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
+    if (pathname.includes("/users/active")) {
+      breadcrumbs.push({
+        name: "Users",
         isActive: false,
       });
       breadcrumbs.push({
@@ -36,9 +72,9 @@ function Breadcrumb() {
       return breadcrumbs;
     }
 
-    if (pathname.includes("/staffs/blocked")) {
+    if (pathname.includes("/users/blocked")) {
       breadcrumbs.push({
-        name: "My Staff",
+        name: "Users",
         isActive: false,
       });
       breadcrumbs.push({
@@ -48,123 +84,17 @@ function Breadcrumb() {
       return breadcrumbs;
     }
 
-    if (pathname.includes("/staffs/details")) {
+    if (pathname.includes("/inventory/checkout")) {
       breadcrumbs.push({
-        name: "My Staff",
+        name: "Inventory",
         isActive: false,
       });
       breadcrumbs.push({
-        name: "Staffs Details",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    // Handle customer routes
-    if (pathname.includes("/customers/pending")) {
-      breadcrumbs.push({
-        name: "Customers",
+        name: "Packages",
         isActive: false,
       });
       breadcrumbs.push({
-        name: "Pending",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/customers/active")) {
-      breadcrumbs.push({
-        name: "Customers",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Active",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/customers/blocked")) {
-      breadcrumbs.push({
-        name: "Customers",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Blocked",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/customers/rejected")) {
-      breadcrumbs.push({
-        name: "Customers",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Rejected",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    // Handle order routes
-    if (pathname.includes("/orders/pending")) {
-      breadcrumbs.push({
-        name: "Orders",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Pending",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/orders/validation")) {
-      breadcrumbs.push({
-        name: "Orders",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Validation",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/orders/processing")) {
-      breadcrumbs.push({
-        name: "Orders",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Processing",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/orders/completed")) {
-      breadcrumbs.push({
-        name: "Orders",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Completed",
-        isActive: true,
-      });
-      return breadcrumbs;
-    }
-
-    if (pathname.includes("/orders/cancelled")) {
-      breadcrumbs.push({
-        name: "Orders",
-        isActive: false,
-      });
-      breadcrumbs.push({
-        name: "Cancelled",
+        name: "Checkout",
         isActive: true,
       });
       return breadcrumbs;
@@ -231,46 +161,6 @@ function Breadcrumb() {
           name: "Edit",
           isActive: true,
         });
-      } else if (pathname.includes("/staffs/add")) {
-        // Special case for staff add
-        breadcrumbs.push({
-          name: "My Staff",
-          isActive: false,
-        });
-        breadcrumbs.push({
-          name: "Add New",
-          isActive: true,
-        });
-      } else if (pathname.includes("/staffs/edit")) {
-        // Special case for staff edit
-        breadcrumbs.push({
-          name: "My Staff",
-          isActive: false,
-        });
-        breadcrumbs.push({
-          name: "Edit",
-          isActive: true,
-        });
-      } else if (pathname.includes("/customers/add")) {
-        // Special case for customer add
-        breadcrumbs.push({
-          name: "All Customer",
-          isActive: false,
-        });
-        breadcrumbs.push({
-          name: "Add New",
-          isActive: true,
-        });
-      } else if (pathname.includes("/customers/edit")) {
-        // Special case for customer edit
-        breadcrumbs.push({
-          name: "All Customer",
-          isActive: false,
-        });
-        breadcrumbs.push({
-          name: "Edit",
-          isActive: true,
-        });
       } else {
         // For main routes like /admin/brick-field, /admin/dashboard, etc.
         breadcrumbs.push({
@@ -315,9 +205,9 @@ function Breadcrumb() {
   }
 
   return (
-    <div className="text-lg hidden items-center md:flex">
+    <div className="text-base hidden items-center md:flex font-semibold">
       {breadcrumbs.map((breadcrumb, index) => (
-        <div key={index} className="flex items-center">
+        <div key={index} className="flex items-center gap-1">
           <span
             className={
               breadcrumb.isActive
@@ -328,7 +218,20 @@ function Breadcrumb() {
             {breadcrumb.name}
           </span>
           {index < breadcrumbs.length - 1 && (
-            <ChevronRight className="h-4 mx-1 text-gray-500" />
+            <span className="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <path
+                  d="M4.34066 10.8333H13.649L9.58232 14.8999C9.25732 15.2249 9.25732 15.7583 9.58232 16.0833C9.90732 16.4083 10.4323 16.4083 10.7573 16.0833L16.249 10.5916C16.574 10.2666 16.574 9.7416 16.249 9.4166L10.7657 3.9166C10.4407 3.5916 9.91566 3.5916 9.59066 3.9166C9.26566 4.2416 9.26566 4.7666 9.59066 5.0916L13.649 9.1666H4.34066C3.88232 9.1666 3.50732 9.5416 3.50732 9.99994C3.50732 10.4583 3.88232 10.8333 4.34066 10.8333Z"
+                  fill="#9E9E9E"
+                />
+              </svg>
+            </span>
           )}
         </div>
       ))}

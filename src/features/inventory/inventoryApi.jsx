@@ -20,7 +20,7 @@ export const inventoryApi = createApi({
   endpoints: (builder) => ({
     // Get regions with pagination and search
     getRegions: builder.query({
-      query: ({ page = 1, limit = 12, search = "" }) => {
+      query: ({ page = 1, limit = 15, search = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
@@ -37,7 +37,7 @@ export const inventoryApi = createApi({
 
     // Get countries with pagination and search
     getCountries: builder.query({
-      query: ({ page = 1, limit = 12, search = "" }) => {
+      query: ({ page = 1, limit = 15, search = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
