@@ -64,19 +64,21 @@ function DashboardHeader() {
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
-            <div className="flex flex-col justify-center text-left">
-              <label className="self-stretch justify-start text-neutral-700 text-base font-bold font-['Inter'] leading-tight">
-                {auth?.name}
+            <div className="flex flex-col justify-center text-left gap-[2px]">
+              <label className="self-stretch justify-start text-text-700 text-base font-bold font-['Inter'] leading-tight">
+                {/* {auth?.name} */}
+                Business Name
               </label>
               <span
-                className="self-stretch justify-start text-neutral-700 text-xs font-normal font-['Inter'] leading-none"
+                className="self-stretch justify-start text-text-700 text-xs font-normal font-['Inter'] leading-none"
                 htmlFor=""
               >
-                {userRole}
+                {/* {userRole} */}
+                Control Panel
               </span>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
+          {/* <DropdownMenuContent
             side="bottom"
             align="end"
             className="w-48 border-none border-lg"
@@ -105,7 +107,7 @@ function DashboardHeader() {
                 <div className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-blue-600 rounded-full"></div>
               )}
             </DropdownMenuItem>
-          </DropdownMenuContent>
+          </DropdownMenuContent> */}
         </DropdownMenu>
       </div>
       {/* {isLoading && <RequestLoader />} */}
