@@ -9,7 +9,6 @@ import useNavigationAccess from "@/hooks/useNavigationAccess";
 import {
   AccountBalanceIconSvg,
   ApiSettingsIconSvg,
-  BrickFieldIconSvg,
   BusinessProfileIconSvg,
   ContactSupportIconSvg,
   adminRouteLinks,
@@ -19,7 +18,6 @@ import {
   LogoutDownIconSvg,
   StaffIconSvg,
   UserIconSvg,
-  SimIconSvg,
   InventoryIconSvg,
 } from "@/services";
 import { useRef } from "react";
@@ -27,7 +25,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import NavigateItem from "./NavigateItem";
 import NavigationDropdownItem from "./NavigationDropdownItem";
-import Inventory from "@/pages/admin/Inventory/Inventory";
 
 function Sidebar() {
   const submenuRef = useRef({});
@@ -67,6 +64,76 @@ function Sidebar() {
     dispatch(toggleLogoutModal(true));
   };
 
+  const menuItems = [
+    {
+      id: "dashboard",
+      menu: adminRouteLinks?.dashboard,
+      icon: (isActive) => <DashboardIconSvg isActive={isActive} />,
+      canAccess: canAccessDashboard,
+      type: "single",
+    },
+    {
+      id: "myEsim",
+      title: "My eSIM",
+      menu: adminRouteLinks?.myEsim,
+      icon: () => <CartIconSvg />,
+      canAccess: canAccessMyEsim,
+      type: "dropdown",
+      subLinks: [adminRouteLinks?.regularEsim, adminRouteLinks?.groupEsim],
+    },
+    {
+      id: "inventory",
+      menu: adminRouteLinks?.inventory,
+      icon: () => <InventoryIconSvg />,
+      canAccess: canAccessInventory,
+      type: "single",
+    },
+    {
+      id: "users",
+      title: "Users",
+      menu: adminRouteLinks?.users,
+      icon: () => <UserIconSvg />,
+      canAccess: canAccessUsers,
+      type: "dropdown",
+      subLinks: [adminRouteLinks?.usersActive, adminRouteLinks?.usersBlocked],
+    },
+    {
+      id: "accountBalance",
+      menu: adminRouteLinks?.accountBalance,
+      icon: () => <AccountBalanceIconSvg />,
+      canAccess: canAccessAccountBalance,
+      type: "single",
+    },
+    {
+      id: "staff",
+      menu: adminRouteLinks?.staff,
+      icon: () => <StaffIconSvg />,
+      canAccess: canAccessStaff,
+      type: "single",
+    },
+    {
+      id: "businessProfile",
+      menu: adminRouteLinks?.businessProfile,
+      icon: () => <BusinessProfileIconSvg />,
+      canAccess: canAccessBusinessProfile,
+      type: "single",
+    },
+    {
+      id: "contactSupport",
+      menu: adminRouteLinks?.contactSupport,
+      icon: () => <ContactSupportIconSvg />,
+      canAccess: canAccessContactSupport,
+      type: "single",
+    },
+    {
+      id: "apiSettings",
+      menu: adminRouteLinks?.apiSettings,
+      icon: () => <ApiSettingsIconSvg />,
+      canAccess: canAccessApiSettings,
+      type: "single",
+    },
+  ];
+
   return (
     <aside className="relative h-full overflow-auto no-scrollbar shrink-0 select-none sidebar">
       <div
@@ -89,123 +156,40 @@ function Sidebar() {
         <div className="h-full overflow-auto no-scrollbar mt-[52px]">
           {/* nav items  */}
           <div className="flex flex-col text-base gap-1 text-black-900">
-            {/* Dashboard - Always visible for authenticated users */}
-            {canAccessDashboard() && (
-              <NavigateItem
-                menu={adminRouteLinks?.dashboard}
-                isActive={activePath == adminRouteLinks?.dashboard.activePath}
-                icon={
-                  <DashboardIconSvg
-                    isActive={
-                      activePath == adminRouteLinks?.dashboard.activePath
-                    }
+            {menuItems.map((item) => {
+              // Check if user has access to this menu
+              if (!item.canAccess()) return null;
+
+              const isActive = activePath === item.menu?.activePath;
+
+              // Render dropdown menu
+              if (item.type === "dropdown") {
+                return (
+                  <NavigationDropdownItem
+                    key={item.id}
+                    ref={submenuRef}
+                    name={item.id}
+                    title={item.title}
+                    onClick={() => handleDropdown(item.id)}
+                    icon={item.icon(isActive)}
+                    isActive={isActive}
+                    links={item.subLinks}
+                    isSubmenuOpen={sidebarSubmenuOpen}
                   />
-                }
-                onClick={handleNavigateItemClick}
-              />
-            )}
+                );
+              }
 
-            {/* Staff - Available for admin only */}
-            {canAccessMyEsim() && (
-              <NavigationDropdownItem
-                ref={submenuRef}
-                name="myEsim"
-                title="My eSIM"
-                onClick={() => handleDropdown("myEsim")}
-                icon={<CartIconSvg />}
-                isActive={activePath == adminRouteLinks?.myEsim.activePath}
-                links={[
-                  adminRouteLinks?.regularEsim,
-                  adminRouteLinks?.groupEsim,
-                ]}
-                isSubmenuOpen={sidebarSubmenuOpen}
-              />
-            )}
-
-            {/* Users - Available for admin only */}
-            {canAccessUsers() && (
-              <NavigationDropdownItem
-                ref={submenuRef}
-                name="users"
-                title="Users"
-                onClick={() => handleDropdown("users")}
-                icon={<UserIconSvg />}
-                isActive={activePath == adminRouteLinks?.users.activePath}
-                links={[
-                  adminRouteLinks?.usersActive,
-                  adminRouteLinks?.usersBlocked,
-                ]}
-                isSubmenuOpen={sidebarSubmenuOpen}
-              />
-            )}
-
-            {/* Account Balance - Available for admin only */}
-            {canAccessAccountBalance() && (
-              <NavigateItem
-                menu={adminRouteLinks?.accountBalance}
-                isActive={
-                  activePath == adminRouteLinks?.accountBalance.activePath
-                }
-                icon={<AccountBalanceIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
-
-            {/* Inventory - Available for admin only */}
-            {canAccessInventory() && (
-              <NavigateItem
-                menu={adminRouteLinks?.inventory}
-                isActive={activePath == adminRouteLinks?.inventory.activePath}
-                icon={<InventoryIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
-
-            {/* Staff - Available for admin only */}
-            {canAccessStaff() && (
-              <NavigateItem
-                menu={adminRouteLinks?.staff}
-                isActive={activePath == adminRouteLinks?.staff.activePath}
-                icon={<StaffIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
-
-            {/* Business Profile - Available for admin only */}
-            {canAccessBusinessProfile() && (
-              <NavigateItem
-                menu={adminRouteLinks?.businessProfile}
-                isActive={
-                  activePath == adminRouteLinks?.businessProfile.activePath
-                }
-                icon={<BusinessProfileIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
-
-            {/* Contact Support - Available for admin only */}
-            {canAccessContactSupport() && (
-              <NavigateItem
-                menu={adminRouteLinks?.contactSupport}
-                isActive={
-                  activePath == adminRouteLinks?.contactSupport.activePath
-                }
-                icon={<ContactSupportIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
-
-            {/* API Settings - Available for admin only */}
-            {canAccessApiSettings() && (
-              <NavigateItem
-                menu={adminRouteLinks?.apiSettings}
-                isActive={
-                  activePath == adminRouteLinks?.apiSettings.activePath
-                }
-                icon={<ApiSettingsIconSvg />}
-                onClick={handleNavigateItemClick}
-              />
-            )}
+              // Render single menu item
+              return (
+                <NavigateItem
+                  key={item.id}
+                  menu={item.menu}
+                  isActive={isActive}
+                  icon={item.icon(isActive)}
+                  onClick={handleNavigateItemClick}
+                />
+              );
+            })}
           </div>
         </div>
 

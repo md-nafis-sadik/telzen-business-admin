@@ -1,4 +1,3 @@
-import BackToPrev from "@/components/shared/BackToPrev";
 import PackageCard from "@/components/inventory/PackageCard";
 import PackageCardSkeleton from "@/components/inventory/PackageCardSkeleton";
 import { usePackages } from "@/hooks";
@@ -11,7 +10,6 @@ function Packages() {
     name,
     formatDataSize,
     handlePackageClick,
-    handleBackClick,
   } = usePackages();
 
   return (

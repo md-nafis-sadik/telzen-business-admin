@@ -1,51 +1,51 @@
-import BrickListDashboard from "./Tables/BrickListDashboard";
-import StaffPerformanceDashboard from "./Tables/StaffPerformanceDashboard";
+import TopBuyerDashboard from "./Tables/TopBuyerDashboard";
+import RecentSalesDashboard from "./Tables/RecentSalesDashboard";
 import {
-  useGetStaffPerformanceQuery,
-  useGetTopBricksQuery,
+  useGetRecentSalesPerformanceQuery,
+  useGetTopBuyersQuery,
 } from "@/features/dashboard/dashboardApi";
 import { useState } from "react";
 
 function DashboardTables() {
-  const [staffFilter, setStaffFilter] = useState("last6months");
-  const [brickFilter, setBrickFilter] = useState("last6months");
+  const [recentSalesFilter, setRecentSalesFilter] = useState("last6months");
+  const [topBuyerFilter, setBrickFilter] = useState("last6months");
 
-    const filterOptions = [
+  const filterOptions = [
     { id: "this_month", timestamp: "This Month" },
     { id: "last6months", timestamp: "Last 6 Months" },
     { id: "yearly", timestamp: "Yearly" },
   ];
 
   const {
-    data: staffData,
-    isFetching: isStaffFetching,
-    isError: isStaffError,
-    error: staffError,
-  } = useGetStaffPerformanceQuery(staffFilter);
+    data: recentSalesData,
+    isFetching: isRecentSalesFetching,
+    isError: isRecentSalesError,
+    error: recentSalesError,
+  } = useGetRecentSalesPerformanceQuery(recentSalesFilter);
   const {
-    data: brickData,
+    data: topBuyerData,
     isFetching: isBrickFetching,
     isError: isBrickError,
-    error: brickError,
-  } = useGetTopBricksQuery(brickFilter);
+    error: topBuyerError,
+  } = useGetTopBuyersQuery(topBuyerFilter);
 
   return (
     <div className="flex flex-col lg:flex-row gap-4">
-      <StaffPerformanceDashboard
-        isFetching={isStaffFetching}
-        isError={isStaffError}
-        error={staffError}
-        data={staffData?.data || []}
-        filter={staffFilter}
-        onFilterChange={setStaffFilter}
+      <RecentSalesDashboard
+        isFetching={isRecentSalesFetching}
+        isError={isRecentSalesError}
+        error={recentSalesError}
+        data={recentSalesData?.data || []}
+        filter={recentSalesFilter}
+        onFilterChange={setRecentSalesFilter}
         filterOptions={filterOptions}
       />
-      <BrickListDashboard
+      <TopBuyerDashboard
         isFetching={isBrickFetching}
         isError={isBrickError}
-        error={brickError}
-        data={brickData?.data || []}
-        filter={brickFilter}
+        error={topBuyerError}
+        data={topBuyerData?.data || []}
+        filter={topBuyerFilter}
         onFilterChange={setBrickFilter}
         filterOptions={filterOptions}
       />

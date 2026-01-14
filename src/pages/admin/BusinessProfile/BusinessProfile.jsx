@@ -13,7 +13,7 @@ function BusinessProfile() {
         <div className="flex flex-col gap-4">
           <button
             onClick={() => setActiveTab("profile")}
-            className={`flex items-center w-52 gap-2 px-6 py-4 rounded-xl text-sm transition-colors ${
+            className={`flex items-center w-56 gap-2 px-6 py-4 rounded-xl text-sm transition-colors ${
               activeTab === "profile"
                 ? "bg-main-700 text-white"
                 : "bg-white text-gray-700"
@@ -25,13 +25,15 @@ function BusinessProfile() {
 
           <button
             onClick={() => setActiveTab("business")}
-            className={`flex items-center w-52 gap-2 px-6 py-4 rounded-xl text-sm transition-colors ${
+            className={`flex items-center w-56 gap-2 px-6 py-4 rounded-xl text-sm transition-colors ${
               activeTab === "business"
                 ? "bg-main-700 text-white"
                 : "bg-white text-gray-700"
             }`}
           >
-            <BuildingIconSvg color={activeTab === "business" ? "#fff" : "#4A4A4A"} />
+            <BuildingIconSvg
+              color={activeTab === "business" ? "#fff" : "#4A4A4A"}
+            />
             Business Settings
           </button>
         </div>

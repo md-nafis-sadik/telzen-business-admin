@@ -15,6 +15,7 @@ export const useInventory = () => {
   const {
     data: regionsData,
     isLoading: isLoadingRegions,
+    isFetching: isFetchingRegions,
     isError: isErrorRegions,
   } = useGetRegionsQuery(
     { page, limit, search: searchTerm },
@@ -24,6 +25,7 @@ export const useInventory = () => {
   const {
     data: countriesData,
     isLoading: isLoadingCountries,
+    isFetching: isFetchingCountries,
     isError: isErrorCountries,
   } = useGetCountriesQuery(
     { page, limit, search: searchTerm },
@@ -33,7 +35,7 @@ export const useInventory = () => {
   const data = isCountriesTab ? countriesData : regionsData;
   const isLoading = isCountriesTab ? isLoadingCountries : isLoadingRegions;
   const isError = isCountriesTab ? isErrorCountries : isErrorRegions;
-
+  const isFetching = isCountriesTab ? isFetchingCountries : isFetchingRegions;
   const handleCardClick = (item) => {
     if (isCountriesTab) {
       // Navigate to packages page with country_id
@@ -61,6 +63,7 @@ export const useInventory = () => {
     data,
     isLoading,
     isError,
+    isFetching,
     handleCardClick,
     page,
     setPage,

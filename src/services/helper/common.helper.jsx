@@ -174,7 +174,7 @@ const generateInvoiceHTML = (data, images, company) => {
         <div style="display: flex; flex-direction: column; justify-content: flex-end;">
           <p style="color:#888; font-size:10px; font-weight:400; line-height:120%; margin-bottom:4px;">Presented by</p>
           <p style="color:#1A1C21; font-size:12px; font-weight:600; line-height:120%; margin-bottom:2px;">${company.businessName}</p>
-          <p style="color:#1A1C21; font-size:10px; font-weight:600; line-height:120%; margin-bottom:25px;">${company.businessEmail}</p>
+          <p style="color:#1A1C21; font-size:10px; font-weight:400; line-height:120%; margin-bottom:25px;">${company.businessEmail}</p>
           <p style="color:#888; font-size:10px; font-weight:400; line-height:130%; margin-bottom:4px;">Terms & Conditions Applied</p>
           <p style="color:#1A1C21; font-size:10px; font-weight:400; line-height:130%;">Please reach our customer support for any queries.</p>
         </div>

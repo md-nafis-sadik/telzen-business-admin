@@ -1,5 +1,9 @@
 import SearchInput from "@/components/shared/SearchInput";
-import { useActiveRegularUsers, useActiveGroupUsers, useUserTabs } from "@/hooks";
+import {
+  useActiveRegularUsers,
+  useActiveGroupUsers,
+  useUserTabs,
+} from "@/hooks";
 
 function UsersActiveHeader() {
   const regularHook = useActiveRegularUsers();
@@ -15,7 +19,7 @@ function UsersActiveHeader() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => handleTabChange("regular")}
-          className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all ${
+          className={`px-4 py-2 h-[48px] rounded-lg font-semibold transition-all ${
             currentTab === "regular"
               ? "bg-main-700 text-white"
               : "bg-black text-white hover:bg-text-900"
@@ -25,7 +29,7 @@ function UsersActiveHeader() {
         </button>
         <button
           onClick={() => handleTabChange("group")}
-          className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all ${
+          className={`px-4 py-2 h-[48px] rounded-lg font-semibold transition-all ${
             currentTab === "group"
               ? "bg-main-700 text-white"
               : "bg-black text-white hover:bg-text-900"
@@ -39,7 +43,8 @@ function UsersActiveHeader() {
         value={activeSearch}
         onChange={handleSearchChange}
         isSearching={isFetching}
-        className="w-full md:w-auto bg-transparent"
+        className="w-full md:w-auto"
+        inputClassName="bg-transparent"
       />
     </div>
   );

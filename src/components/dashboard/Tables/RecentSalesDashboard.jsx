@@ -1,7 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import SelectInput from "@/components/shared/SelectInput";
 
-function BrickListDashboard({
+function RecentSalesDashboard({
   isFetching,
   isError,
   error,
@@ -11,12 +11,12 @@ function BrickListDashboard({
   filterOptions,
 }) {
   return (
-    <div className="p-4 flex flex-col gap-4 bg-white rounded-2xl overflow-auto w-full lg:w-[35%]">
+    <div className="p-4 flex flex-col gap-4 bg-white rounded-2xl overflow-auto w-full lg:w-[65%]">
       <div className="flex justify-between items-center">
         <h2 className="self-stretch h-6 justify-start text-text-700 text-lg font-bold leading-normal">
-          Top Buyer
+          Recent Sales
         </h2>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <div className="text-text-500 text-sm">Filter: </div>
           <SelectInput
             data={filterOptions}
@@ -27,13 +27,15 @@ function BrickListDashboard({
             selector="id"
             triggerClassName="w-32 !border-none p-1 font-semibold truncate !border-white text-sm"
           />
-        </div>
+        </div> */}
       </div>
       <table className="table">
         <thead className="table_head sticky top-0">
           <tr className="table_row bg-white-700">
-            <th className="table_th_first ">Name</th>
-            <th className="table_th ">Email</th>
+            <th className="table_th_first ">Customer</th>
+            <th className="table_th ">Package</th>
+            <th className="table_th ">Customer Email</th>
+            <th className="table_th ">Commission Earned</th>
             <th className="table_th_last ">Amount</th>
           </tr>
         </thead>
@@ -43,26 +45,31 @@ function BrickListDashboard({
             isError={isError}
             status={error?.status}
             dataLength={data?.length}
-            column={4}
+            column={5}
           >
             {data?.length > 0 ? (
               data.map((item, index) => (
                 <tr key={index} className="table_row group">
+                  <td className="table_outline_td">{item.full_name || "-"}</td>
+                  <td className="table_outline_td">{item.phone || "-"}</td>
+                  <td className="table_outline_td">${item.totalOrders || 0}</td>
+                  <td className="table_outline_td">${item.commission || 0}</td>
                   <td className="table_outline_td">
-                    {item.product_name || "-"}
-                  </td>
-                  <td className="table_outline_td">
-                    {item.brick_field_name || "-"}
-                  </td>
-                  {/* <td className="table_outline_td">{item.total_orders || 0}</td> */}
-                  <td className="table_outline_td">
-                    ${item.total_quantity || 0}
+                    <span
+                      className={`font-medium ${
+                        item.status === "active"
+                          ? "text-[#00AE5B]"
+                          : "text-red-500"
+                      }`}
+                    >
+                      {item.status === "active" ? "Active" : "Inactive"}
+                    </span>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="text-center text-red-300 py-4">
+                <td colSpan="5" className="text-center text-red-300 py-4">
                   No Data Found
                 </td>
               </tr>
@@ -74,4 +81,4 @@ function BrickListDashboard({
   );
 }
 
-export default BrickListDashboard;
+export default RecentSalesDashboard;

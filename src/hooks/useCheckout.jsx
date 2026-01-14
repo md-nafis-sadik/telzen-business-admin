@@ -67,14 +67,14 @@ export const useCheckout = () => {
         return false;
       }
     }
-    
+
     // Add to list if at least name and email are provided
     if (customerDetails.customerName && customerDetails.email) {
       setAddedCustomers((prev) => [...prev, customerDetails]);
       successNotify("Customer added successfully!");
       return true;
     }
-    
+
     return false;
   };
 

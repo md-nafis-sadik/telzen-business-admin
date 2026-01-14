@@ -5,7 +5,7 @@ function AccountBalanceCards() {
   return (
     <div className="w-full bg-white p-4 rounded-2xl mb-6">
       <div className="bg-white">
-        <h4 className="text-[20px] text-gray-100 font-bold mb-4">Overview</h4>
+        <h4 className="text-lg text-text-700 font-semibold mb-4">Overview</h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-stretch gap-4">
           {isFetching && dataList.length === 0
@@ -25,10 +25,10 @@ function AccountBalanceCards() {
                   key={i}
                   className={`${item.bgColor} p-5 rounded-lg flex flex-col justify-between h-full`}
                 >
-                  <div className="mb-2 text-sm text-gray-700">
+                  <div className="mb-2 text-xs font-medium text-text-700">
                     {item?.title}
                   </div>
-                  <div className="text-2xl font-semibold text-gray-900">
+                  <div className="text-base font-semibold text-text-900">
                     {item?.number}
                   </div>
                 </div>

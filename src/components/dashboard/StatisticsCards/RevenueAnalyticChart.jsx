@@ -58,7 +58,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
           >
             {payload.map((entry, index) => (
               <p key={index} style={{ margin: 0 }}>
-                Revenue: ৳{entry.value}
+                Revenue: ${entry.value}
               </p>
             ))}
           </div>

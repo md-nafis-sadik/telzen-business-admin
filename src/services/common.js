@@ -120,9 +120,6 @@ const getCustomerFileNameFromUrl = (url) => {
 
 const roleOptions = [
   { id: "manager", name: "Manager" },
-  { id: "admin", name: "Admin" },
-  { id: "supervisor", name: "Supervisor" },
-  { id: "staff", name: "Staff" },
 ];
 
 export {

@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import SelectInput from "@/components/shared/SelectInput";
 
-function OrderAnlyticChart({ data = [], wrapper = "" }) {
+function SalesAnlyticChart({ data = [], wrapper = "" }) {
   const [filter, setFilter] = useState("last6months");
   const { data: apiData, isFetching } = useGetOrderStatisticsQuery(filter);
 
@@ -47,7 +47,7 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
           >
             {payload.map((entry, index) => (
               <p key={index} style={{ margin: 0 }}>
-                Orders: {entry.value}
+                Total Order: {entry.value}
               </p>
             ))}
           </div>
@@ -116,4 +116,4 @@ function OrderAnlyticChart({ data = [], wrapper = "" }) {
   );
 }
 
-export default React.memo(OrderAnlyticChart);
+export default React.memo(SalesAnlyticChart);

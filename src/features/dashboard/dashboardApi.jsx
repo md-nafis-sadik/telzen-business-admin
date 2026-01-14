@@ -19,10 +19,10 @@ export const dashboardsApi = apiSlice.injectEndpoints({
         }
       },
     }),
-    getStaffPerformance: builder.query({
+    getRecentSalesPerformance: builder.query({
       query: (filter = "last6months") => `/admin/staff-performance?filter=${filter}`,
     }),
-    getTopBricks: builder.query({
+    getTopBuyers: builder.query({
       query: (filter = "last6months") => `/admin/top-bricks?filter=${filter}`,
     }),
     getOrderStatistics: builder.query({
@@ -72,8 +72,8 @@ export const dashboardsApi = apiSlice.injectEndpoints({
 
 export const {
   useGetDashboardCardDataQuery,
-  useGetStaffPerformanceQuery,
-  useGetTopBricksQuery,
+  useGetRecentSalesPerformanceQuery,
+  useGetTopBuyersQuery,
   useGetOrderStatisticsQuery,
   useGetRevenueStatisticsQuery,
 } = dashboardsApi;

@@ -78,14 +78,16 @@ function DashboardCards() {
         />
       </div>
       <div className=" gap-4 w-full lg:w-[35%]">
-        <DashboardCard
+        {/* <DashboardCard
           title="-"
           amount={`-`}
           isFetching={isFetching}
           icon={<DashboardCardFourIcon />}
           className="bg-[#F9D3D3]"
           // animateClass="text-[#00C896]"
-        />
+        /> */}
+
+        <section className="bg-[#F9D3D3] rounded-2xl px-6 py-7 h-full"></section>
       </div>
     </div>
   );

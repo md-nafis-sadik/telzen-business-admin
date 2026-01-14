@@ -26,7 +26,7 @@ function EditStaff() {
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">
       <div className="flex gap-1">
         <BackToPrev path="/admin/staffs" />
-        <h1 className="self-stretch justify-start text-text-700 text-lg font-bold leading-relaxed">
+        <h1 className="self-stretch justify-start text-text-700 text-lg font-semibold leading-relaxed">
           Edit Staff
         </h1>
       </div>
@@ -81,10 +81,10 @@ function EditStaff() {
             </div>
 
             <div className="flex justify-end gap-3">
-              <Link to="/admin/staffs" className="btn_cancel !w-[112px]">
+              <Link to="/admin/staffs" className="btn_cancel">
                 CANCEL
               </Link>
-              <button type="submit" className="btn_save w-[112px]" disabled={isUpdating}>
+              <button type="submit" className="btn_save" disabled={isUpdating}>
                 {isUpdating ? "UPDATING..." : "UPDATE"}
               </button>
             </div>

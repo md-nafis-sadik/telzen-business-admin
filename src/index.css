@@ -29,7 +29,7 @@
   }
 
   .btn_save {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-6 sm:py-4 h-12 border border-black bg-black hover:bg-black-200 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out text-white text-sm font-bold leading-tight;
+    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-2 h-12 border border-black bg-black hover:bg-black-200 sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out text-white text-sm font-bold leading-tight;
     &:active {
       @apply scale-95;
     }
@@ -46,7 +46,7 @@
   }
 
   .btn_cancel {
-    @apply flex items-center justify-center text-center px-6 py-3 sm:px-6 sm:py-4 h-12 text-sm font-bold leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out;
+    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-2 h-12 text-sm font-bold leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out;
     &:active {
       @apply scale-95;
     }
