@@ -3,7 +3,7 @@ import avatar from "@/assets/images/avatar.webp";
 import statOne from "@/assets/images/dash-stat-1.png";
 import statTwo from "@/assets/images/dash-stat-2.png";
 import empty from "@/assets/images/empty-box.webp";
-import LoginLogo from "@/assets/images/loginLogo.webp";
+import LoginLogo from "@/assets/images/LoginLogo.webp";
 import mainLogo from "@/assets/images/mainLogo.webp";
 import netroLogo from "@/assets/images/netroLogo.webp";
 import profileAvatar from "@/assets/images/profile-avatar.webp";
