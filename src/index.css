@@ -388,7 +388,7 @@ input[type="number"] {
 .swiper-pagination {
   position: fixed !important;
   bottom: 30px !important;
-  left: 75% !important;
+  left: 50% !important;
   transform: translateX(-50%) !important;
   width: auto !important;
   margin: 0 !important;

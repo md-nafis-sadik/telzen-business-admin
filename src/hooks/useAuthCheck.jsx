@@ -9,6 +9,7 @@ export default function useAuthCheck() {
   const [authChecked, setAuthChecked] = useState(false);
 
   const getAuthUserData = async () => {
+    // Normal auth check from localStorage
     const localAuth = localStorage?.getItem("easybricks_admin");
     if (localAuth) {
       const { data } = decryptValue(localAuth);

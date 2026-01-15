@@ -109,6 +109,33 @@ export const authApi = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    // Fetch profile data after auto-login
+    fetchProfile: builder.query({
+      query: () => ({
+        url: `/auth/profile`,
+        method: "GET",
+      }),
+      async onQueryStarted(_arg, { queryFulfilled, dispatch, getState }) {
+        try {
+          const { data } = await queryFulfilled;
+          const results = data?.data;
+          const currentAuth = getState().auth.auth;
+          const futureDate = moment().add(30, "days");
+          const expireAt = currentAuth?.expireAt || futureDate.unix();
+          
+          // Save complete profile data
+          dispatch(saveAuthData({ 
+            ...results, 
+            token: currentAuth?.token,
+            expireAt 
+          }));
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+          return { error };
+        }
+      },
+    }),
   }),
 });
 
@@ -119,4 +146,6 @@ export const {
   useGetUserProfileQuery,
   useUploadProfileImageMutation,
   useRegisterMutation,
+  useFetchProfileQuery,
+  useLazyFetchProfileQuery,
 } = authApi;

@@ -1,9 +1,10 @@
 import Input from "@/components/shared/Input";
 import Password from "@/components/shared/Password";
 import RequestLoader from "@/components/shared/RequestLoader";
+import AutoLoginRedirect from "@/components/shared/AutoLoginRedirect";
 import { useLogin } from "@/hooks";
 import { images, userRouteLinks } from "@/services";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { useState } from "react";
@@ -15,6 +16,11 @@ import "swiper/css/effect-fade";
 function Login() {
   const { handleSubmit, isLoading } = useLogin();
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const location = useLocation();
+  
+  // Check if there's a token in URL (auto-login scenario)
+  const searchParams = new URLSearchParams(location.search);
+  const hasToken = searchParams.get("token");
 
   const handleInputChange = (e) => {
     setFormData({
@@ -41,9 +47,16 @@ function Login() {
     },
   ];
 
+  // If auto-login is happening, just show the redirect component
+  if (hasToken) {
+    return <AutoLoginRedirect />;
+  }
+
   return (
-    <section className="h-screen overflow-hidden bg-white flex flex-col md:flex-row justify-center md:justify-start">
-      <div className="w-full md:w-1/2 h-max md:h-full p-8">
+    <>
+      <AutoLoginRedirect />
+      <section className="h-screen overflow-hidden  bg-main-700 flex flex-col justify-center md:justify-start p-4">
+      {/* <div className="w-full md:w-1/2 h-max md:h-full p-8">
         <div className="flex items-center md:items-start justify-center md:justify-start">
           <Link to={userRouteLinks.home.path}>
             <img
@@ -107,18 +120,16 @@ function Login() {
                 Login
               </button>
 
-              {/* <Link
-                to={userRouteLinks.forgotPassword.path}
-                className="self-stretch text-center justify-start text-gray-800 text-base font-normal leading-snug cursor-pointer hover:text-text-600 transition_common"
-              >
-                Forgot Password?
-              </Link> */}
             </form>
           </div>
         </div>
+      </div> */}
+      <div className="flex items-center md:items-start justify-center md:justify-start">
+        <Link to={userRouteLinks.home.path}>
+          <img src={images.whiteLogo} alt="Telzen Logo" className="w-[149px]" />
+        </Link>
       </div>
-
-      <div className="w-full md:w-1/2 h-full bg-main-700 relative items-center justify-center hidden md:flex">
+      <div className="w-full h-full relative items-center justify-center flex">
         <div className="w-full max-w-[576px] mx-auto">
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
@@ -190,6 +201,7 @@ function Login() {
 
       {isLoading && <RequestLoader />}
     </section>
+    </>
   );
 }
 

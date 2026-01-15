@@ -1,10 +1,8 @@
 import UserLayout from "@/components/layout/UserLayout";
 import Login from "@/pages/user/Login";
 import { userRouteLinks } from "../services";
-import { ForgotPassword } from "@/pages/user/ForgotPassword";
-import Register from "@/pages/user/Register";
 
-const { home, forgotPassword, register } = userRouteLinks || {};
+const { home } = userRouteLinks || {};
 
 export const userRoutes = {
   path: "/",
@@ -13,14 +11,6 @@ export const userRoutes = {
     {
       path: home.path,
       element: <Login />,
-    },
-    {
-      path: forgotPassword.path,
-      element: <ForgotPassword />,
-    },
-    {
-      path: register.path,
-      element: <Register />,
-    },
+    }
   ],
 };

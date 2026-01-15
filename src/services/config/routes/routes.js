@@ -106,12 +106,4 @@ export const userRouteLinks = {
     name: "Home",
     path: "/",
   },
-  forgotPassword: {
-    name: "Forgot Password",
-    path: "/forgot-password",
-  },
-  register: {
-    name: "Register",
-    path: "/register",
-  },
 };
