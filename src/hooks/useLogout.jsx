@@ -24,7 +24,7 @@ export const useLogout = () => {
       dispatch(clearAuthState());
 
       // Clear all auth and profile data from localStorage
-      localStorage.removeItem("easybricks_admin");
+      localStorage.removeItem("telzen_business_admin");
     } catch (error) {
       console.error("Logout error:", error);
       navigate("/", { replace: true });

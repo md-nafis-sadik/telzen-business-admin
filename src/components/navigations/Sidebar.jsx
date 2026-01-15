@@ -148,7 +148,7 @@ function Sidebar() {
           <div className="flex items-center gap-[10px]">
             <img
               src={images.mainLogo}
-              alt="EasyBrick Logo"
+              alt="Telzen Business Admin Logo"
               className="w-[119px]"
             />
           </div>

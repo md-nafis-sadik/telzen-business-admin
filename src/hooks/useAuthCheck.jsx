@@ -10,7 +10,7 @@ export default function useAuthCheck() {
 
   const getAuthUserData = async () => {
     // Normal auth check from localStorage
-    const localAuth = localStorage?.getItem("easybricks_admin");
+    const localAuth = localStorage?.getItem("telzen_business_admin");
     if (localAuth) {
       const { data } = decryptValue(localAuth);
       if (data) {

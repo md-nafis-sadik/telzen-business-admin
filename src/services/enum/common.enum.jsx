@@ -1,5 +1,5 @@
 export const LocalStorageKeyEnum = Object.freeze({
-    LocalAuth: "easybricks_vendor",
+    LocalAuth: "telzen_business_admin",
 });
 
 

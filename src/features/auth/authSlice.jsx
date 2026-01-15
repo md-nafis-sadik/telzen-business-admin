@@ -27,7 +27,7 @@ const authSlice = createSlice({
         state.auth.role = "admin";
       }
       const { data } = encryptValue(JSON.stringify(state.auth));
-      localStorage.setItem("easybricks_admin", data);
+      localStorage.setItem("telzen_business_admin", data);
       state.previews = state.auth?.image ? [state.auth?.image] : [];
     },
     initiateAuthData: (state, action) => {
@@ -41,7 +41,7 @@ const authSlice = createSlice({
         state.auth.role = "admin";
       }
       const { data } = encryptValue(JSON.stringify(state.auth));
-      localStorage.setItem("easybricks_admin", data);
+      localStorage.setItem("telzen_business_admin", data);
       state.previews = state.auth?.image ? [state.auth?.image] : [];
     },
     updateAuth: (state, action) => {
@@ -67,7 +67,7 @@ const authSlice = createSlice({
       state.selectedUser = {};
       state.users = [];
       state.userIds = [];
-      localStorage.removeItem("easybricks_admin");
+      localStorage.removeItem("telzen_business_admin");
     },
 
     setFiles: (state, action) => {
