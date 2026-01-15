@@ -8,7 +8,8 @@ import {
 export const dashboardsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardCardData: builder.query({
-      query: (filter = "last6months") => `/admin/dashboard-cards?filter=${filter}`,
+      query: () => `dashboard/stats`,
+      // query: (filter = "last6months") => `dashboard/stats?filter=${filter}`,
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
@@ -20,24 +21,26 @@ export const dashboardsApi = apiSlice.injectEndpoints({
       },
     }),
     getRecentSalesPerformance: builder.query({
-      query: (filter = "last6months") => `/admin/staff-performance?filter=${filter}`,
+      query: () => `/dashboard/recent-sales`,
+      // query: (filter = "last6months") => `/admin/staff-performance?filter=${filter}`,
     }),
     getTopBuyers: builder.query({
-      query: (filter = "last6months") => `/admin/top-bricks?filter=${filter}`,
+      query: () => `/dashboard/top-buyers`,
+      // query: (filter = "last6months") => `/admin/top-bricks?filter=${filter}`,
     }),
     getOrderStatistics: builder.query({
-      query: (filter = "last6months") =>
-        `/admin/order-overview-statistics?filter=${filter}`,
+      query: (filter = "6_months") =>
+        `dashboard/sales?filter=${filter}`,
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          const statsData = result?.data?.data;
+          const chartData = result?.data?.data;
 
-          if (statsData?.chart_data) {
+          if (chartData) {
             const analytics = {
-              month: statsData.chart_data || [],
-              year: statsData.chart_data || [],
+              month: chartData || [],
+              year: chartData || [],
             };
             dispatch(setAnalytics(analytics));
           }
@@ -47,18 +50,18 @@ export const dashboardsApi = apiSlice.injectEndpoints({
       },
     }),
     getRevenueStatistics: builder.query({
-      query: (filter = "last6months") =>
-        `/admin/revenue-statistics?filter=${filter}`,
+      query: (filter = "6_months") =>
+        `dashboard/revenue?filter=${filter}`,
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          const statsData = result?.data?.data;
+          const chartData = result?.data?.data;
 
-          if (statsData?.chart_data) {
+          if (chartData) {
             const userAnalytics = {
-              month: statsData.chart_data || [],
-              year: statsData.chart_data || [],
+              month: chartData || [],
+              year: chartData || [],
             };
             dispatch(setUserAnalytics(userAnalytics));
           }

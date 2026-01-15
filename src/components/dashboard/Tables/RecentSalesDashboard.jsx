@@ -11,7 +11,7 @@ function RecentSalesDashboard({
   filterOptions,
 }) {
   return (
-    <div className="p-4 flex flex-col gap-4 bg-white rounded-2xl overflow-auto w-full lg:w-[65%]">
+    <div className="p-4 flex flex-col gap-4 bg-white rounded-2xl overflow-auto w-full lg:w-[60%]">
       <div className="flex justify-between items-center">
         <h2 className="self-stretch h-6 justify-start text-text-700 text-lg font-bold leading-normal">
           Recent Sales
@@ -35,7 +35,7 @@ function RecentSalesDashboard({
             <th className="table_th_first ">Customer</th>
             <th className="table_th ">Package</th>
             <th className="table_th ">Customer Email</th>
-            <th className="table_th ">Commission Earned</th>
+            {/* <th className="table_th ">Commission Earned</th> */}
             <th className="table_th_last ">Amount</th>
           </tr>
         </thead>
@@ -50,20 +50,18 @@ function RecentSalesDashboard({
             {data?.length > 0 ? (
               data.map((item, index) => (
                 <tr key={index} className="table_row group">
-                  <td className="table_outline_td">{item.full_name || "-"}</td>
-                  <td className="table_outline_td">{item.phone || "-"}</td>
-                  <td className="table_outline_td">${item.totalOrders || 0}</td>
-                  <td className="table_outline_td">${item.commission || 0}</td>
                   <td className="table_outline_td">
-                    <span
-                      className={`font-medium ${
-                        item.status === "active"
-                          ? "text-[#00AE5B]"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {item.status === "active" ? "Active" : "Inactive"}
-                    </span>
+                    {item?.static_customer?.name || "-"}
+                  </td>
+                  <td className="table_outline_td">
+                    {item?.static_package?.name || "-"}
+                  </td>
+                  <td className="table_outline_td">
+                    {item?.static_customer?.email || "-"}
+                  </td>
+                  {/* <td className="table_outline_td">${item.commission || 0}</td> */}
+                  <td className="table_outline_td">
+                    ${item?.payment_amount?.USD || "-"}
                   </td>
                 </tr>
               ))

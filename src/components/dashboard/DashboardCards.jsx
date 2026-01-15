@@ -43,10 +43,10 @@ function DashboardCards() {
           />
         </div>
       </div> */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-[65%]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full lg:w-[60%]">
         <DashboardCard
           title="Total eSIM"
-          amount={dashboardCardData?.total_orders || 0}
+          amount={dashboardCardData?.total_esims || 0}
           isFetching={isFetching}
           icon={<DashboardCardOneIcon />}
           // className="bg-[#FFECD3]"
@@ -54,7 +54,7 @@ function DashboardCards() {
         />
         <DashboardCard
           title="Total Spent"
-          amount={`$${formatNumberIN(dashboardCardData?.total_revenue) || 0}`}
+          amount={`$${formatNumberIN(dashboardCardData?.total_spent) || 0}`}
           isFetching={isFetching}
           icon={<DashboardCardTwoIcon />}
           // className="bg-[#C6FFBC]"
@@ -62,7 +62,7 @@ function DashboardCards() {
         />
         <DashboardCard
           title="Users"
-          amount={dashboardCardData?.total_products || 0}
+          amount={dashboardCardData?.total_customers || 0}
           isFetching={isFetching}
           icon={<DashboardCardThreeIcon />}
           // className="bg-[#DDF1FF]"
@@ -77,7 +77,7 @@ function DashboardCards() {
           // animateClass="text-[#00C896]"
         />
       </div>
-      <div className=" gap-4 w-full lg:w-[35%]">
+      <div className=" gap-4 w-full lg:w-[40%]">
         {/* <DashboardCard
           title="-"
           amount={`-`}

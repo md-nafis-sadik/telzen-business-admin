@@ -13,20 +13,38 @@ import {
 import SelectInput from "@/components/shared/SelectInput";
 
 function RevenueAnalyticChart({ data = [], wrapper = "" }) {
-  const [filter, setFilter] = useState("last6months");
+  const [filter, setFilter] = useState("6_months");
   const { data: apiData, isFetching } = useGetRevenueStatisticsQuery(filter);
 
   const chartData = useMemo(() => {
-    return apiData?.data?.chart_data || [];
+    return apiData?.data || [];
   }, [apiData]);
 
+  const currentYear = new Date().getFullYear();
+  const lastYear = currentYear - 1;
+
   const filterOptions = [
-    { id: "last6months", timestamp: "Last 6 Months" },
-    { id: "yearly", timestamp: "Yearly" },
+    { id: "today", timestamp: "Today" },
+    { id: "this_week", timestamp: "This Week" },
+    { id: "this_month", timestamp: "This Month" },
+    { id: "last_month", timestamp: "Last Month" },
+    { id: "6_months", timestamp: "Last 6 Months" },
+    { id: String(currentYear), timestamp: String(currentYear) },
+    { id: String(lastYear), timestamp: String(lastYear) },
   ];
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
+  };
+
+  const formatXAxis = (value) => {
+    if (typeof value === "number") {
+      return value;
+    }
+    if (typeof value === "string") {
+      return value.substring(0, 3);
+    }
+    return value;
   };
 
   const formatYAxis = (value) => {
@@ -42,6 +60,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      const data = payload[0]?.payload;
       return (
         <div className="relative">
           <div
@@ -56,11 +75,13 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
               fontWeight: "500",
             }}
           >
-            {payload.map((entry, index) => (
-              <p key={index} style={{ margin: 0 }}>
-                Revenue: ${entry.value}
-              </p>
-            ))}
+            <p style={{ margin: 0 }}>
+              {data?.name} {data?.year && `(${data.year})`}
+            </p>
+            <p style={{ margin: 0 }}>
+              Revenue: {data?.currency || "$"}
+              {payload[0].value}
+            </p>
           </div>
           {/* Triangle pointer */}
           <div
@@ -83,12 +104,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
   };
 
   return (
-    <div
-      className={cn(
-        "w-full lg:w-[35%] rounded-2xl max-w-[772px]",
-        wrapper
-      )}
-    >
+    <div className={cn("w-full lg:w-[40%] rounded-2xl", wrapper)}>
       <div className="w-full bg-white p-4 sm:p-6 rounded-2xl flex flex-col justify-between gap-6 sm:gap-8 md:gap-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
@@ -113,9 +129,20 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
         <section className="flex items-center justify-center h-64 focus:outline-none">
           {/* overflow-x-auto overflow-y-hidden*/}
           <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart height={252} data={chartData} margin={0}>
+            <ComposedChart
+              height={252}
+              data={chartData}
+              margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis dataKey="name" axisLine={false} tickLine={true} />
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={true}
+                tickFormatter={formatXAxis}
+                angle={0}
+                textAnchor="middle"
+              />
               <YAxis
                 tickFormatter={formatYAxis}
                 allowDecimals={false}
@@ -125,7 +152,7 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="linear"
-                dataKey="revenue"
+                dataKey="value"
                 stroke="#EA3218"
                 strokeWidth={1}
                 dot={{ fill: "white", strokeWidth: 1, r: 3 }}

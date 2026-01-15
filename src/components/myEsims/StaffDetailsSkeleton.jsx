@@ -105,7 +105,7 @@ function StaffDetailsSkeleton() {
                 <span className="w-[40%] text-text-700">
                   Commission Per Trip:
                 </span>
-                <span className="w-[65%] font-medium skeleton"></span>
+                <span className="w-[60%] font-medium skeleton"></span>
               </div>
               <div className="flex">
                 <span className="w-[40%] text-text-700">Division:</span>
