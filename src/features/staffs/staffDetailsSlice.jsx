@@ -31,7 +31,7 @@ const staffDetailsSlice = createSlice({
 
       if (meta?.last_page === 0) return;
 
-      const cacheKey = `page${meta?.page}_${meta?.per_page}`;
+      const cacheKey = `page${meta?.page}_${meta?.limit}`;
 
       if (meta?.page <= meta?.last_page) {
         state.orderData[cacheKey] = data;
@@ -41,7 +41,7 @@ const staffDetailsSlice = createSlice({
           totalItems: meta?.total || 0,
           totalPages: meta?.last_page || 1,
           currentPage: meta?.page || 1,
-          pageSize: meta?.per_page || 10,
+          pageSize: meta?.limit || 10,
           hasNextPage: meta?.page < meta?.last_page,
           hasPreviousPage: meta?.page > 1,
         };
@@ -50,7 +50,7 @@ const staffDetailsSlice = createSlice({
           state.orderPageData.currentPage
         }_${state.orderPageData.pageSize}`;
         const otherData = state.orderData[fallbackCacheKey];
-        const sliceData = otherData?.slice(0, meta?.per_page) || [];
+        const sliceData = otherData?.slice(0, meta?.limit) || [];
         const currentPage = meta?.page - meta?.last_page;
         const page = meta?.page - currentPage;
 
@@ -82,7 +82,7 @@ const staffDetailsSlice = createSlice({
       if (state.staffDetails.dueCommission && paidAmount) {
         state.staffDetails.dueCommission = Math.max(
           0,
-          state.staffDetails.dueCommission - paidAmount
+          state.staffDetails.dueCommission - paidAmount,
         );
       }
     },

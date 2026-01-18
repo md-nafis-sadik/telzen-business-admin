@@ -121,7 +121,7 @@ function StaffTable() {
           current_page={currentPage}
           total_page={totalPages}
           updatePage={handlePageChange}
-          per_page={pageSize}
+          limit={pageSize}
           total_items={totalItems}
         />
       </div>

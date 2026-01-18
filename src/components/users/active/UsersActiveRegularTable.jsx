@@ -1,7 +1,12 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useActiveRegularUsers } from "@/hooks";
-import { adminRouteLinks, ViewIconSvg, DeleteIconSvg, BlockIconSvg } from "@/services";
+import {
+  adminRouteLinks,
+  ViewIconSvg,
+  DeleteIconSvg,
+  BlockIconSvg,
+} from "@/services";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
@@ -12,7 +17,7 @@ function UsersActiveRegularTable() {
     error,
     users,
     current_page,
-    per_page,
+    limit,
     total_page,
     total_items,
     updatePage,
@@ -58,9 +63,7 @@ function UsersActiveRegularTable() {
                   <td className="table_outline_td">
                     {user?.name || user?.full_name || "-"}
                   </td>
-                  <td className="table_outline_td">
-                    {user?.email || "-"}
-                  </td>
+                  <td className="table_outline_td">{user?.email || "-"}</td>
                   <td className="table_outline_td">
                     {user?.created_at
                       ? new Date(user.created_at).toLocaleDateString()
@@ -91,7 +94,7 @@ function UsersActiveRegularTable() {
 
       <Pagination
         current_page={current_page}
-        per_page={per_page}
+        limit={limit}
         total_page={total_page}
         total_items={total_items}
         onChange={updatePage}

@@ -37,12 +37,12 @@ export const useActiveRegularUsers = () => {
   const { data, isFetching, isError, error } = useGetActiveRegularUsersQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -60,7 +60,7 @@ export const useActiveRegularUsers = () => {
   return {
     users: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     activeSearch: search,
@@ -86,12 +86,12 @@ export const useActiveGroupUsers = () => {
   const { data, isFetching, isError, error } = useGetActiveGroupUsersQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -109,7 +109,7 @@ export const useActiveGroupUsers = () => {
   return {
     groups: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     activeSearch: search,
@@ -135,12 +135,12 @@ export const useBlockedRegularUsers = () => {
   const { data, isFetching, isError, error } = useGetBlockedRegularUsersQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -158,7 +158,7 @@ export const useBlockedRegularUsers = () => {
   return {
     users: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     blockedSearch: search,
@@ -184,12 +184,12 @@ export const useBlockedGroupUsers = () => {
   const { data, isFetching, isError, error } = useGetBlockedGroupUsersQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -207,7 +207,7 @@ export const useBlockedGroupUsers = () => {
   return {
     groups: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     blockedSearch: search,
@@ -226,9 +226,10 @@ export const useUserDetails = () => {
   const dispatch = useDispatch();
   const singleUser = useSelector((state) => state.users.singleUser);
 
-  const { data, isFetching, isError, error, isLoading } = useGetUserDetailsQuery(id, {
-    skip: !id,
-  });
+  const { data, isFetching, isError, error, isLoading } =
+    useGetUserDetailsQuery(id, {
+      skip: !id,
+    });
 
   const [esimPage, setEsimPage] = useState(1);
   const {
@@ -236,8 +237,8 @@ export const useUserDetails = () => {
     isFetching: isFetchingEsims,
     isError: isEsimError,
   } = useGetUserEsimBundlesQuery(
-    { userId: id, current_page: esimPage, per_page: 10 },
-    { skip: !id }
+    { userId: id, current_page: esimPage, limit: 10 },
+    { skip: !id },
   );
 
   return {
@@ -260,8 +261,8 @@ export const useGroupMembers = (groupId) => {
   const [page, setPage] = useState(1);
 
   const { data, isFetching, isError, error } = useGetGroupMembersQuery(
-    { groupId, current_page: page, per_page: 10 },
-    { skip: !groupId }
+    { groupId, current_page: page, limit: 10 },
+    { skip: !groupId },
   );
 
   return {

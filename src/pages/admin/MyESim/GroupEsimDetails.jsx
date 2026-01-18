@@ -1,22 +1,28 @@
-import MyEsimGroupHeader from "@/components/myEsims/group/MyEsimGroupHeader";
-import MyEsimGroupTable from "@/components/myEsims/group/MyEsimGroupTable";
+import MyEsimGroupDetailsTable from "@/components/myEsims/group/MyEsimGroupDetailsTable";
 import RequestLoader from "@/components/shared/RequestLoader";
-import { useGroupMyEsims } from "@/hooks/useMyEsim";
+import { useGroupEsimDetails } from "@/hooks/useMyEsim";
 import { images } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import { closeQrModal, closeRemoveModal } from "@/features/myEsim/myEsimSlice";
 import CustomModal from "@/components/shared/CustomModal";
+import { useParams, useNavigate } from "react-router-dom";
+import MyEsimGroupDetailsHeader from "@/components/myEsims/group/MyEsimGroupDetailsHeader";
 
-function MyEsimGroup() {
+function GroupEsimDetails() {
+  const { id: groupId } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { showQrModal, showRemoveModal, selectedData } = useSelector((state) => state.myEsim);
+  const { showQrModal, showRemoveModal, selectedData } = useSelector(
+    (state) => state.myEsim,
+  );
 
-  const { isLoading } = useGroupMyEsims();
+  const { isLoading } = useGroupEsimDetails(groupId);
 
   return (
     <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl">
-      <MyEsimGroupHeader />
-      <MyEsimGroupTable />
+      <MyEsimGroupDetailsHeader />
+
+      <MyEsimGroupDetailsTable />
 
       <CustomModal
         showModal={showQrModal}
@@ -26,10 +32,10 @@ function MyEsimGroup() {
       >
         <div className="flex flex-col items-center gap-4">
           <div className="p-6">
-            <img 
-              src={selectedData?.qr_code_url} 
-              alt="QR Code" 
-              className="w-full lg:w-[300px]" 
+            <img
+              src={selectedData?.qr_code_url}
+              alt="QR Code"
+              className="w-full lg:w-[300px]"
             />
           </div>
           <div className="text-center">
@@ -39,20 +45,10 @@ function MyEsimGroup() {
             <div className="font-inter text-lg">
               Download or scan the code to install eSIM
             </div>
-            {selectedData?.activation_code && (
-              <div className="mt-4 p-3 bg-gray-100 rounded text-sm font-mono break-all">
-                {selectedData.activation_code}
-              </div>
-            )}
-            {selectedData?.iccid && (
-              <div className="mt-2 text-sm text-gray-600">
-                ICCID: {selectedData.iccid}
-              </div>
-            )}
           </div>
           <a
             href={selectedData?.qr_code_url}
-            download={`esim-qr-${selectedData?.iccid || 'code'}.png`}
+            download={`esim-qr-${selectedData?.iccid || "code"}.png`}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded_button"
@@ -109,4 +105,4 @@ function MyEsimGroup() {
   );
 }
 
-export default MyEsimGroup;
+export default GroupEsimDetails;

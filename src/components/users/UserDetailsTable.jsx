@@ -18,7 +18,9 @@ function UserDetailsTable() {
   return (
     <Fragment>
       <div className="mb-4">
-        <h2 className="text-xl font-semibold">{user?.name || user?.full_name || "User Name"}</h2>
+        <h2 className="text-xl font-semibold">
+          {user?.name || user?.full_name || "User Name"}
+        </h2>
         <p className="text-gray-600">{user?.email || ""}</p>
       </div>
 
@@ -72,17 +74,25 @@ function UserDetailsTable() {
                       : bundle?.bundle_purchased || "-"}
                   </td>
                   <td className="table_outline_td">
-                    <span className={`font-semibold ${
-                      bundle?.smdp_status === "RELEASED" ? "text-green-600" : "text-gray-600"
-                    }`}>
+                    <span
+                      className={`font-semibold ${
+                        bundle?.smdp_status === "RELEASED"
+                          ? "text-green-600"
+                          : "text-gray-600"
+                      }`}
+                    >
                       {bundle?.smdp_status || "RELEASED"}
                     </span>
                   </td>
                   <td className="table_outline_td">
                     <div className="flex items-center gap-2">
-                      <span className={`font-semibold ${
-                        bundle?.line_status === "Registered" ? "text-green-600" : "text-gray-600"
-                      }`}>
+                      <span
+                        className={`font-semibold ${
+                          bundle?.line_status === "Registered"
+                            ? "text-green-600"
+                            : "text-gray-600"
+                        }`}
+                      >
                         {bundle?.line_status || "Registered"}
                       </span>
                       <button className="cursor-pointer">
@@ -99,7 +109,7 @@ function UserDetailsTable() {
 
       <Pagination
         current_page={esimMeta?.page || esimPage}
-        per_page={esimMeta?.per_page || 10}
+        limit={esimMeta?.limit || 10}
         total_page={esimMeta?.last_page || 1}
         total_items={esimMeta?.total || 0}
         onChange={setEsimPage}

@@ -45,7 +45,7 @@ const staffSlice = createSlice({
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        pageSize: meta?.limit || 10,
       };
 
       if (search !== undefined) {
@@ -80,7 +80,7 @@ const staffSlice = createSlice({
         (staff) =>
           staff._id === staff_id ||
           staff.staff_user_id === staff_id ||
-          staff.id === staff_id
+          staff.id === staff_id,
       );
 
       if (staffIndex !== -1) {
@@ -106,7 +106,7 @@ const staffSlice = createSlice({
         (staff) =>
           staff._id === staff_id ||
           staff.staff_user_id === staff_id ||
-          staff.id === staff_id
+          staff.id === staff_id,
       );
 
       if (staffIndex !== -1) {
@@ -133,7 +133,7 @@ const staffSlice = createSlice({
         (staff) =>
           staff._id === staff_id ||
           staff.staff_user_id === staff_id ||
-          staff.id === staff_id
+          staff.id === staff_id,
       );
 
       if (staffIndex !== -1) {
@@ -165,14 +165,14 @@ const staffSlice = createSlice({
         (staff) =>
           staff._id === staff_id ||
           staff.staff_user_id === staff_id ||
-          staff.id === staff_id
+          staff.id === staff_id,
       );
 
       if (staffIndex !== -1) {
         state.staffData.lists.splice(staffIndex, 1);
         state.staffData.meta.totalItems = Math.max(
           0,
-          state.staffData.meta.totalItems - 1
+          state.staffData.meta.totalItems - 1,
         );
       }
     },

@@ -1,8 +1,8 @@
 import SearchInput from "@/components/shared/SearchInput";
-import { useRegularMyEsims } from "@/hooks";
+import { useGroupEsimDetails } from "@/hooks";
 
-function MyEsimRegularHeader() {
-  const { regularSearch, handleSearchChange, isFetching } = useRegularMyEsims();
+function MyEsimGroupDetailsHeader() {
+  const { groupSearch, handleSearchChange, isFetching } = useGroupEsimDetails();
 
   return (
     <div className="w-full flex flex-col xl:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
@@ -15,22 +15,19 @@ function MyEsimRegularHeader() {
       <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-4">
         <div className="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4">
           <SearchInput
-            value={regularSearch}
+            value={groupSearch}
             onChange={handleSearchChange}
             isSearching={isFetching}
             className="w-full md:w-auto"
           />
 
-          <a
-            href="https://www.telzen.net/destinations"
-            className="w-full md:w-auto flex items-center justify-center px-5 h-[46px] bg-main-700 rounded-lg text-white text-sm font-semibold font-inter tracking-wide whitespace-nowrap"
-          >
+          <button className="w-full md:w-auto flex items-center justify-center px-5 h-12 bg-main-700 rounded-lg text-white text-sm font-inter tracking-wide whitespace-nowrap font-semibold">
             Buy eSIM
-          </a>
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-export default MyEsimRegularHeader;
+export default MyEsimGroupDetailsHeader;

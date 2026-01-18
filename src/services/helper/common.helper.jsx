@@ -3,6 +3,8 @@ import { twMerge } from "tailwind-merge";
 import { BRICK_TYPE_OPTIONS } from "../data";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
+import { qrCode } from "../images";
+import moment from "moment";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -32,11 +34,120 @@ export const getBrickTypeArrayLabels = (types = []) => {
     .filter(Boolean);
 };
 
+// Currncy helper
+let currentCurrency = "USD";
+
+const CURRENCY_SYMBOLS = {
+  USD: "$",
+  EUR: "€",
+  GBP: "£",
+  JPY: "¥",
+};
+
+// Setter for currency
+export const setCurrency = (currencyCode) => {
+  if (CURRENCY_SYMBOLS[currencyCode]) {
+    currentCurrency = currencyCode;
+  } else {
+    console.warn(`Unsupported currency: ${currencyCode}`);
+  }
+};
+
+// Get current symbol
+export const getSymbol = (currencyCode) =>
+  CURRENCY_SYMBOLS[currencyCode || currentCurrency] ||
+  currencyCode ||
+  currentCurrency;
+
+// Format amount with current currency
+export const format = (amount) => `${getSymbol()}${amount.toFixed(2)}`;
+
+// Export current currency (read-only)
+export const currency = () => currentCurrency;
+
+// Helper function to convert image URL to base64 using multiple proxy attempts
+const imageUrlToBase64 = async (url) => {
+  // List of CORS proxies to try in order
+  const proxies = [
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    url,
+  ];
+
+  // Try each proxy
+  for (let i = 0; i < proxies.length; i++) {
+    try {
+      const response = await fetch(proxies[i], {
+        mode: "cors",
+        cache: "no-cache",
+      });
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const blob = await response.blob();
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.log(`Attempt ${i + 1} error:`, error.message);
+      if (i === proxies.length - 1) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+            try {
+              const canvas = document.createElement("canvas");
+              canvas.width = img.width;
+              canvas.height = img.height;
+              const ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0);
+              const base64 = canvas.toDataURL("image/png");
+              console.log("Image element method succeeded");
+              resolve(base64);
+            } catch (err) {
+              console.error("Canvas conversion failed:", err);
+              resolve(null);
+            }
+          };
+          img.onerror = () => {
+            console.error("All methods failed to load QR code");
+            resolve(null);
+          };
+          img.src = url;
+        });
+      }
+    }
+  }
+
+  return null;
+};
+
+// Helper function to wait for all images to load
+const waitForImagesToLoad = (container) => {
+  const images = container.getElementsByTagName("img");
+  const promises = Array.from(images).map((img) => {
+    if (img.complete) return Promise.resolve();
+    return new Promise((resolve) => {
+      img.onload = resolve;
+      img.onerror = resolve;
+    });
+  });
+  return Promise.all(promises);
+};
+
 export const generateInvoicePDF = async (
   invoiceData,
   images,
   companyInfo = {},
-  errorCallback = null
+  errorCallback = null,
 ) => {
   try {
     const defaultCompanyInfo = {
@@ -49,22 +160,54 @@ export const generateInvoicePDF = async (
       ...companyInfo,
     };
 
+    // Download QR code separately to avoid canvas taint
+    let qrCodeBase64 = null;
+    const qrCodeUrl = invoiceData.qrCodeUrl;
+
+    if (qrCodeUrl && qrCodeUrl.startsWith("http")) {
+      try {
+        qrCodeBase64 = await imageUrlToBase64(qrCodeUrl);
+      } catch (error) {
+        console.error("Failed to fetch QR code:", error);
+      }
+    }
+
     const invoiceHTML = generateInvoiceHTML(
-      invoiceData,
+      { ...invoiceData, qrCodeUrl: null },
       images,
-      defaultCompanyInfo
+      defaultCompanyInfo,
     );
 
     const tempDiv = createTempContainer(invoiceHTML);
     document.body.appendChild(tempDiv);
 
+    await waitForImagesToLoad(tempDiv);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
     const canvas = await html2canvas(tempDiv, {
       scale: 2,
-      logging: false,
+      logging: true,
       useCORS: true,
+      allowTaint: false,
+      backgroundColor: "#ffffff",
+      imageTimeout: 15000,
     });
 
     const pdf = createPDFFromCanvas(canvas);
+
+    if (qrCodeBase64 && qrCodeBase64.startsWith("data:image")) {
+      try {
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        // Position QR code in bottom right to match the HTML layout
+        const qrSize = 105; // Size in PDF units (matching HTML: 105px)
+        const xPos = pdfWidth - qrSize - 48; // 48 units from right edge
+        const yPos = pdfHeight - qrSize - 75; // Position above bottom edge
+        pdf.addImage(qrCodeBase64, "PNG", xPos, yPos, qrSize, qrSize);
+      } catch (error) {
+        console.error("Failed to add QR code to PDF:", error);
+      }
+    }
 
     document.body.removeChild(tempDiv);
 
@@ -117,7 +260,7 @@ const generateInvoiceHTML = (data, images, company) => {
                 <div style="color: #191919; font-size: 12px; font-style: normal; font-weight: 600; line-height: 120%; margin-bottom: 4px;">${data.userName}</div>
             </div>
             <div>
-                <div style="color: #888; font-size: 10px; font-weight: 400; line-height: 130%; margin-bottom: 4px;">eSIM number</div>
+                <div style="color: #888; font-size: 10px; font-weight: 400; line-height: 130%; margin-bottom: 4px;">Invoice number</div>
                 <div style="color: #191919; font-size: 12px; font-style: normal; font-weight: 600; line-height: 120%;">${data.invoiceNumber}</div>
             </div>
             <div>
@@ -143,8 +286,8 @@ const generateInvoiceHTML = (data, images, company) => {
                         <div style="color: #888; font-size: 10px; font-style: normal; font-weight: 400; line-height: 130%;">${data.iccid}</div>
                     </td>
                     <td style="color: #191919; font-size: 10px; font-style: normal; font-weight: 400; line-height: 130%;">${data.quantity}</td>
-                    <td style="color: #191919; font-size: 10px; font-style: normal; font-weight: 400; line-height: 130%;">${data.rate}</td>
-                    <td style="color: #191919; font-size: 10px; font-style: normal; font-weight: 400; text-align: right; line-height: 130%;">${data.amount}</td>
+                    <td style="color: #191919; font-size: 10px; font-style: normal; font-weight: 400; line-height: 130%;">${data.currency}${data.rate}</td>
+                    <td style="color: #191919; font-size: 10px; font-style: normal; font-weight: 400; text-align: right; line-height: 130%;">${data.currency}${data.amount}</td>
                 </tr>
             </tbody>
         </table>
@@ -154,16 +297,16 @@ const generateInvoiceHTML = (data, images, company) => {
             <div style="width: 240px; font-size: 12px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                     <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">Subtotal</span>
-                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.amount}</span>
+                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.currency}${data.amount}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
                     <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">Tax</span>
-                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.tax}</span>
+                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.currency}${data.tax}</span>
                 </div>
                 <div style="height:1px; border-bottom: 1px solid #D7DAE0; padding-top: 6px;"></div>
                 <div style="display: flex; justify-content: space-between; margin-top: 6px;">
                     <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">Total</span>
-                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.total}</span>
+                    <span style="color: #191919; font-size: 10px; font-style: normal; font-weight: 600; line-height: 120%;">${data.currency}${data.total}</span>
                 </div>
             </div>
         </div>
@@ -180,7 +323,7 @@ const generateInvoiceHTML = (data, images, company) => {
         </div>
 
         <div style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center;">
-          <img src="${images.qrCode}" alt="QR Code" style="width:122px; height:122px; padding:11px;" />
+          ${data.qrCodeUrl ? `<img src="${data.qrCodeUrl}" alt="QR Code" style="width:122px; height:122px; padding:11px; object-fit: contain; display: block;" />` : '<div style="width:122px; height:122px;"></div>'}
           <p style="color:#00C896; font-size:11px; text-align:center; max-width:106px;">Scan the code for installing eSIM.</p>
         </div>
       </div>
@@ -200,23 +343,27 @@ const createPDFFromCanvas = (canvas) => {
 
 export const formatInvoiceData = (userDetails) => {
   return {
-    userName: userDetails?.user?.name || "User",
-    userPhone: userDetails?.user?.phone || "N/A",
-    invoiceNumber: userDetails?.invoiceNumber || "INV-0001",
-    invoiceDate: new Date(
-      userDetails?.order?.created_at * 1000
-    ).toLocaleDateString("en-US", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }),
+    userName: userDetails?.customer?.name || "User",
+    userPhone: userDetails?.customer?.phone || "N/A",
+    userEmail: userDetails?.customer?.email || "N/A",
+    invoiceNumber: userDetails?.evaluated_tax?.order_uid || "INV-0001",
+    invoiceDate:
+      moment
+        .unix(userDetails?.evaluated_tax?.order_created_at)
+        .format("DD MMM, YYYY") ||
+      moment.unix(userDetails?.created_at).format("DD MMM, YYYY"),
     isPercentage: userDetails?.evaluated_tax?.tax_rate_type === "percentage",
     quantity: 1,
     packageName: userDetails?.package?.name || "Package Name",
-    rate: userDetails?.package?.rate || "N/A",
-    amount: userDetails?.amount || "N/A",
-    tax: userDetails?.tax || "N/A",
-    total: userDetails?.total || 0,
+    rate: userDetails?.evaluated_tax?.payment_amount_without_tax || "N/A",
+    amount: userDetails?.evaluated_tax?.payment_amount_without_tax || "N/A",
+    tax: userDetails?.evaluated_tax?.tax_amount || 0,
+    total: userDetails?.evaluated_tax?.payment_amount_with_tax || 0,
     iccid: userDetails?.iccid || "ICCID",
+    qrCodeUrl: userDetails?.qr_code_url,
+    currency: getSymbol(),
   };
 };
+
+export const formatData = (mb) =>
+  mb >= 1024 ? `${(mb / 1024).toFixed(2)}GB` : `${mb}MB`;

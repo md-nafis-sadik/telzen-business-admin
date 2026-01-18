@@ -44,27 +44,27 @@ const ChevronRightIcon = ({ className = "", disabled = false }) => (
 );
 
 function Pagination({
-  per_page,
+  limit,
   current_page,
   total_page,
   total_items = 0,
   updatePage = () => {},
 }) {
-  // Convert per_page to string for SelectInput
-  const [filter, setFilter] = useState(String(per_page || 10));
+  // Convert limit to string for SelectInput
+  const [filter, setFilter] = useState(String(limit || 10));
 
   const filterOptions = [
-    { id: 10, per_page: "10" },
-    { id: 20, per_page: "20" },
-    { id: 50, per_page: "50" },
-    { id: 100, per_page: "100" },
-    { id: 250, per_page: "250" },
+    { id: 10, limit: "10" },
+    { id: 20, limit: "20" },
+    { id: 50, limit: "50" },
+    { id: 100, limit: "100" },
+    { id: 250, limit: "250" },
   ];
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
     // Convert back to number when updating page
-    updatePage({ current_page: 1, per_page: Number(newFilter) });
+    updatePage({ current_page: 1, limit: Number(newFilter) });
   };
 
   const handlePrevious = () => {
@@ -83,8 +83,8 @@ function Pagination({
   const isLastPage = current_page >= total_page || total_page === 0;
 
   // Calculate showing range
-  const fromEntry = total_items === 0 ? 0 : (current_page - 1) * per_page + 1;
-  const toEntry = Math.min(current_page * per_page, total_items);
+  const fromEntry = total_items === 0 ? 0 : (current_page - 1) * limit + 1;
+  const toEntry = Math.min(current_page * limit, total_items);
 
   return (
     <div className="flex items-center justify-end gap-6 py-2 px-6 rounded-b-lg ">
@@ -130,7 +130,7 @@ function Pagination({
         value={filter}
         onValueChange={handleFilterChange}
         placeHolder="Filter by status"
-        labelKey="per_page"
+        labelKey="limit"
         selector="id"
         triggerClassName="w-20 min-h-[32px] !border-none px-3 py-0 truncate !border-white text-base bg-natural-50"
         dropdownClassName="!w-16"

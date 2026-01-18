@@ -7,7 +7,8 @@ import { useParams } from "react-router-dom";
 
 function UsersGroupMembersTable() {
   const { id } = useParams();
-  const { members, meta, isFetching, isError, error, page, setPage } = useGroupMembers(id);
+  const { members, meta, isFetching, isError, error, page, setPage } =
+    useGroupMembers(id);
 
   return (
     <Fragment>
@@ -43,9 +44,7 @@ function UsersGroupMembersTable() {
                   <td className="table_outline_td">
                     {member?.mobile || member?.phone || "-"}
                   </td>
-                  <td className="table_outline_td">
-                    {member?.email || "-"}
-                  </td>
+                  <td className="table_outline_td">{member?.email || "-"}</td>
                   <td className="table_outline_td">
                     <span className="text-green-600 font-semibold">
                       {member?.status || "Active"}
@@ -68,7 +67,7 @@ function UsersGroupMembersTable() {
 
       <Pagination
         current_page={meta?.page || page}
-        per_page={meta?.per_page || 10}
+        limit={meta?.limit || 10}
         total_page={meta?.last_page || 1}
         total_items={meta?.total || 0}
         onChange={setPage}

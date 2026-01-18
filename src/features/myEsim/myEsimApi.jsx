@@ -8,12 +8,8 @@ import {
 const myEsimApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getRegularMyEsim: builder.query({
-      query: ({
-        current_page = 1,
-        per_page = 10,
-        search = "",
-      }) => {
-        let url = `/admin/staff-users/active?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/esim?type=regular&page=${current_page}&limit=${limit}`;
 
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
@@ -31,13 +27,13 @@ const myEsimApi = apiSlice.injectEndpoints({
             setRegularMyEsim({
               data: responseData?.data || [],
               meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
-                total: 0,
-                last_page: 0,
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           console.error("Regular MyEsim fetch error:", error);
@@ -45,25 +41,21 @@ const myEsimApi = apiSlice.injectEndpoints({
             setRegularMyEsim({
               data: [],
               meta: {
-                page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
-                total: 0,
-                last_page: 0,
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
     }),
 
     getGroupMyEsim: builder.query({
-      query: ({
-        current_page = 1,
-        per_page = 10,
-        search = "",
-      }) => {
-        let url = `/admin/staff-users/active?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/esim/purchase-group?page=${current_page}&limit=${limit}`;
 
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
@@ -81,13 +73,13 @@ const myEsimApi = apiSlice.injectEndpoints({
             setGroupMyEsim({
               data: responseData?.data || [],
               meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
-                total: 0,
-                last_page: 0,
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           console.error("Group MyEsim fetch error:", error);
@@ -95,13 +87,59 @@ const myEsimApi = apiSlice.injectEndpoints({
             setGroupMyEsim({
               data: [],
               meta: {
-                page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
-                total: 0,
-                last_page: 0,
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
               },
               search: arg.search || "",
-            })
+            }),
+          );
+        }
+      },
+    }),
+
+    getGroupEsimDetails: builder.query({
+      query: ({ group_id, current_page = 1, limit = 10, search = "" }) => {
+        let url = `/esim?type=group&group_id=${group_id}&page=${current_page}&limit=${limit}`;
+
+        if (search) {
+          url += `&search=${encodeURIComponent(search)}`;
+        }
+
+        return url;
+      },
+
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          const responseData = result?.data;
+
+          dispatch(
+            setGroupMyEsim({
+              data: responseData?.data || [],
+              meta: responseData?.meta || {
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
+              },
+              search: arg.search || "",
+            }),
+          );
+        } catch (error) {
+          console.error("Group eSIM details fetch error:", error);
+          dispatch(
+            setGroupMyEsim({
+              data: [],
+              meta: {
+                current_page: arg.current_page || 1,
+                page_size: arg.limit || 10,
+                total_items: 0,
+                total_pages: 0,
+              },
+              search: arg.search || "",
+            }),
           );
         }
       },
@@ -140,12 +178,12 @@ const myEsimApi = apiSlice.injectEndpoints({
     //     }
     //   },
     // }),
-
   }),
 });
 
 export const {
   useGetRegularMyEsimQuery,
   useGetGroupMyEsimQuery,
+  useGetGroupEsimDetailsQuery,
   useGetSingleMyEsimQuery,
 } = myEsimApi;

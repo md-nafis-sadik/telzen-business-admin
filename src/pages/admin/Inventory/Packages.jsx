@@ -7,15 +7,18 @@ function Packages() {
     data,
     isLoading,
     isError,
+    isFetching,
     name,
     formatDataSize,
     handlePackageClick,
   } = usePackages();
 
+  const packages = data?.data || [];
+
   return (
     <section className="w-full flex-1 flex flex-col rounded-2xl">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Country Image */}
+        {/* Country/Region Image */}
         <div className="w-full md:w-[300px] lg:w-[330px] xl:w-[386px] md:shrink-0">
           {isLoading ? (
             <div className="w-full aspect-[5/6] rounded-2xl bg-gray-200 animate-pulse"></div>
@@ -24,12 +27,12 @@ function Packages() {
               <div
                 className="aspect-[5/6] relative rounded-3xl overflow-hidden"
                 style={{
-                  backgroundImage: `url(${data?.data?.country?.image || data?.data?.region?.image || ""})`,
+                  backgroundImage: `url(${data?.country?.image || data?.region?.image || ""})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               >
-                {!data?.data?.country?.image && !data?.data?.region?.image && (
+                {!data?.country?.image && !data?.region?.image && (
                   <div className="w-full h-full bg-gray-300 flex items-center justify-center">
                     <span className="text-gray-500">No Image</span>
                   </div>
@@ -41,7 +44,6 @@ function Packages() {
 
         {/* Packages List */}
         <div className="w-full">
-
           {isLoading ? (
             <div className="flex flex-col gap-2">
               <div className="h-7 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
@@ -63,7 +65,7 @@ function Packages() {
               ? Array.from({ length: 4 }).map((_, index) => (
                   <PackageCardSkeleton key={index} />
                 ))
-              : data?.data?.packages?.map((packageItem, index) => (
+              : packages.map((packageItem, index) => (
                   <PackageCard
                     key={packageItem._id}
                     packageItem={packageItem}
@@ -74,7 +76,7 @@ function Packages() {
                 ))}
           </div>
 
-          {!isLoading && !isError && data?.data?.packages?.length === 0 && (
+          {!isLoading && !isError && packages.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-500">No packages found</p>
             </div>

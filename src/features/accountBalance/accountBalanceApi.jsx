@@ -5,8 +5,8 @@ const accountBalanceApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get Account Balance List
     getAccountBalance: builder.query({
-      query: ({ current_page = 1, per_page = 10 }) => {
-        return `/admin/account-balance?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10 }) => {
+        return `/admin/account-balance?page=${current_page}&limit=${limit}`;
       },
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -19,11 +19,11 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -31,11 +31,11 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
-            })
+            }),
           );
         }
       },
@@ -48,14 +48,14 @@ const accountBalanceApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const data = result?.data?.data || {};
-          
+
           dispatch(
             setSummaryData({
               packageSold: data.package_sold || 0,
               sellingValue: data.selling_value || 0,
               packageFee: data.package_fee || 0,
               grossRevenue: data.gross_revenue || 0,
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -64,7 +64,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               sellingValue: 0,
               packageFee: 0,
               grossRevenue: 0,
-            })
+            }),
           );
         }
       },
@@ -72,7 +72,5 @@ const accountBalanceApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAccountBalanceQuery,
-  useGetAccountBalanceSummaryQuery,
-} = accountBalanceApi;
+export const { useGetAccountBalanceQuery, useGetAccountBalanceSummaryQuery } =
+  accountBalanceApi;

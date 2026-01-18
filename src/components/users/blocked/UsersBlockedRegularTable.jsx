@@ -17,7 +17,7 @@ function UsersBlockedRegularTable() {
     error,
     users,
     current_page,
-    per_page,
+    limit,
     total_page,
     total_items,
     updatePage,
@@ -96,7 +96,7 @@ function UsersBlockedRegularTable() {
 
       <Pagination
         current_page={current_page}
-        per_page={per_page}
+        limit={limit}
         total_page={total_page}
         total_items={total_items}
         onChange={updatePage}

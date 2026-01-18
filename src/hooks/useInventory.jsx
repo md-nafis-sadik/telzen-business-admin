@@ -9,7 +9,7 @@ export const useInventory = () => {
   const [page, setPage] = useState(1);
 
   const isCountriesTab = activeTab === "countries";
-  const limit = 15;
+  const limit = 9999999;
 
   // Fetch regions or countries based on active tab
   const {

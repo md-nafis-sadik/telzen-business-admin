@@ -6,17 +6,16 @@ export const usePackages = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [searchParams] = useSearchParams();
-  const [page, setPage] = useState(1);
 
   const country_id = searchParams.get("country_id");
   const region_id = searchParams.get("region_id");
   const name = searchParams.get("name");
 
-  const { data, isLoading, isError } = useGetPackagesQuery({
+  const { data, isLoading, isError, isFetching } = useGetPackagesQuery({
     country_id,
     region_id,
-    page,
-    limit: 20,
+    page: 1,
+    limit: 99999,
   });
 
   const formatDataSize = (sizeInMB) => {
@@ -41,14 +40,13 @@ export const usePackages = () => {
     data,
     isLoading,
     isError,
+    isFetching,
     name,
     country_id,
     region_id,
     formatDataSize,
     handlePackageClick,
     handleBackClick,
-    page,
-    setPage,
   };
 };
 

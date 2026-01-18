@@ -40,10 +40,10 @@ const myEsimSlice = createSlice({
 
       state.regularData.lists = data || [];
       state.regularData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
@@ -64,10 +64,10 @@ const myEsimSlice = createSlice({
 
       state.groupData.lists = data || [];
       state.groupData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
@@ -100,7 +100,7 @@ const myEsimSlice = createSlice({
 
       const updateInArray = (array) => {
         return array.map((myEsim) =>
-          myEsim._id === myEsim_id ? { ...myEsim, ...updatedMyEsim } : myEsim
+          myEsim._id === myEsim_id ? { ...myEsim, ...updatedMyEsim } : myEsim,
         );
       };
 
@@ -158,13 +158,15 @@ const myEsimSlice = createSlice({
       state.selectedData = null;
     },
 
-    openQrModal: (state) => {
+    openQrModal: (state, action) => {
       state.showQrModal = true;
       state.showRemoveModal = false;
+      state.selectedData = action.payload;
     },
 
     closeQrModal: (state) => {
       state.showQrModal = false;
+      state.selectedData = null;
     },
   },
 });

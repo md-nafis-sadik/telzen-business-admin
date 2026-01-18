@@ -34,7 +34,7 @@ export const useStaffs = () => {
 
   const { isFetching, isError, error } = useGetStaffQuery({
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     search: debouncedSearch,
   });
 
@@ -231,7 +231,7 @@ export const useEditStaff = () => {
   const [selectedRole, setSelectedRole] = useState(getRoleValue());
   const { phone, handlePhoneChange } = usePhoneInput(
     singleStaff?.phone || "",
-    "bd"
+    "bd",
   );
 
   const handleSubmit = async (e) => {

@@ -13,8 +13,8 @@ const staffApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get All Staff
     getStaff: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/staff-users?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/admin/staff-users?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -31,12 +31,12 @@ const staffApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -44,12 +44,12 @@ const staffApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -99,7 +99,7 @@ const staffApi = apiSlice.injectEndpoints({
             updateStaff({
               staff_id: id,
               data: result?.data?.data || data,
-            })
+            }),
           );
         } catch (error) {
           console.error("Update staff failed:", error);
@@ -114,7 +114,10 @@ const staffApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { status },
       }),
-      async onQueryStarted({ id, status, staffData }, { queryFulfilled, dispatch }) {
+      async onQueryStarted(
+        { id, status, staffData },
+        { queryFulfilled, dispatch },
+      ) {
         try {
           await queryFulfilled;
           if (status === "blocked") {

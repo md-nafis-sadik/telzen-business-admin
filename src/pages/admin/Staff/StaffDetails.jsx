@@ -235,7 +235,7 @@ function StaffDetails() {
               isError={isErrorOrder}
               error={errorOrder}
               current_page={orderPageData?.currentPage || 1}
-              per_page={orderPageData?.pageSize || 10}
+              limit={orderPageData?.pageSize || 10}
               total_page={orderPageData?.totalPages || 1}
               total_items={orderPageData?.totalItems || 0}
               updatePage={handleOrdersPageChange}

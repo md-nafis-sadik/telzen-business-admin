@@ -11,8 +11,8 @@ const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get Active Regular Users
     getActiveRegularUsers: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/users/active/regular?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/admin/users/active/regular?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -29,12 +29,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -42,12 +42,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -55,8 +55,8 @@ const usersApi = apiSlice.injectEndpoints({
 
     // Get Active Group Users
     getActiveGroupUsers: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/users/active/group?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/admin/users/active/group?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -73,12 +73,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -86,12 +86,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -99,8 +99,8 @@ const usersApi = apiSlice.injectEndpoints({
 
     // Get Blocked Regular Users
     getBlockedRegularUsers: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/users/blocked/regular?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/admin/users/blocked/regular?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -117,12 +117,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -130,12 +130,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -143,8 +143,8 @@ const usersApi = apiSlice.injectEndpoints({
 
     // Get Blocked Group Users
     getBlockedGroupUsers: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/users/blocked/group?page=${current_page}&per_page=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/admin/users/blocked/group?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -161,12 +161,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -174,12 +174,12 @@ const usersApi = apiSlice.injectEndpoints({
               data: [],
               meta: {
                 page: arg.current_page || 1,
-                per_page: arg.per_page || 10,
+                limit: arg.limit || 10,
                 total: 0,
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -200,14 +200,14 @@ const usersApi = apiSlice.injectEndpoints({
 
     // Get Active Group Members (when clicking eye icon on a group)
     getGroupMembers: builder.query({
-      query: ({ groupId, current_page = 1, per_page = 10 }) =>
-        `/admin/users/groups/${groupId}/members?page=${current_page}&per_page=${per_page}`,
+      query: ({ groupId, current_page = 1, limit = 10 }) =>
+        `/admin/users/groups/${groupId}/members?page=${current_page}&limit=${limit}`,
     }),
 
     // Get User eSIM Bundles (for detail page)
     getUserEsimBundles: builder.query({
-      query: ({ userId, current_page = 1, per_page = 10 }) =>
-        `/admin/users/${userId}/esim-bundles?page=${current_page}&per_page=${per_page}`,
+      query: ({ userId, current_page = 1, limit = 10 }) =>
+        `/admin/users/${userId}/esim-bundles?page=${current_page}&limit=${limit}`,
     }),
   }),
 });

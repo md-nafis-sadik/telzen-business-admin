@@ -12,7 +12,7 @@ function UsersBlockedGroupTable() {
     error,
     groups,
     current_page,
-    per_page,
+    limit,
     total_page,
     total_items,
     updatePage,
@@ -42,7 +42,7 @@ function UsersBlockedGroupTable() {
               {groups.map((group, index) => (
                 <tr key={group._id || index} className="table_row group">
                   <td className="table_outline_td">
-                    {(current_page - 1) * per_page + index + 1}
+                    {(current_page - 1) * limit + index + 1}
                   </td>
                   <td className="table_outline_td">
                     {group?.created_at
@@ -72,7 +72,7 @@ function UsersBlockedGroupTable() {
 
       <Pagination
         current_page={current_page}
-        per_page={per_page}
+        limit={limit}
         total_page={total_page}
         total_items={total_items}
         onChange={updatePage}

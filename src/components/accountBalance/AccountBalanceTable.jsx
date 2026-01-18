@@ -36,7 +36,7 @@ function AccountBalanceTable() {
               onClick={handleExport}
               disabled={!hasData}
             >
-              <ExportExcelIconSvg/>
+              <ExportExcelIconSvg />
               <span className="text-sm font-semibold">Export to Excel</span>
             </button>
 
@@ -45,7 +45,7 @@ function AccountBalanceTable() {
               onClick={handlePrint}
               disabled={!hasData}
             >
-              <PrintIconSvg/>
+              <PrintIconSvg />
               <span className="text-sm font-semibold">Print</span>
             </button>
           </div>
@@ -118,7 +118,7 @@ function AccountBalanceTable() {
             current_page={currentPage}
             total_page={totalPages}
             updatePage={handlePageChange}
-            per_page={pageSize}
+            limit={pageSize}
             total_items={totalItems}
           />
         </div>

@@ -1,6 +1,7 @@
 import {
   useGetRegularMyEsimQuery,
   useGetGroupMyEsimQuery,
+  useGetGroupEsimDetailsQuery,
 } from "@/features/myEsim/myEsimApi";
 import {
   updateRegularSearch,
@@ -20,9 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "./useDebounce";
 
 export const useRegularMyEsims = () => {
-  const { regularData } = useSelector(
-    (state) => state.myEsim
-  );
+  const { regularData } = useSelector((state) => state.myEsim);
 
   const dispatch = useDispatch();
 
@@ -34,12 +33,12 @@ export const useRegularMyEsims = () => {
   const { data, isFetching, isError, error } = useGetRegularMyEsimQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -48,7 +47,7 @@ export const useRegularMyEsims = () => {
   const handlePageChange = (page) => {
     dispatch(updateRegularPage(page.current_page));
 
-    if (page.per_page && page.per_page !== pageSize) {
+    if (page.limit && page.limit !== pageSize) {
     }
   };
 
@@ -65,9 +64,9 @@ export const useRegularMyEsims = () => {
     dispatch(openRemoveModal(myEsim));
   };
 
-  const handleDownloadInvoice = async ({ user, userDetails }) => {
+  const handleDownloadInvoice = async (myEsim) => {
     try {
-      const invoiceData = formatInvoiceData(userDetails);
+      const invoiceData = formatInvoiceData(myEsim);
 
       const companyInfo = {
         name: "Kloud Apps LLC",
@@ -82,7 +81,7 @@ export const useRegularMyEsims = () => {
         invoiceData,
         images,
         companyInfo,
-        errorNotify
+        errorNotify,
       );
 
       if (result.success) {
@@ -100,7 +99,7 @@ export const useRegularMyEsims = () => {
     error,
     myEsims: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     regularSearch: search,
@@ -127,12 +126,12 @@ export const useGroupMyEsims = () => {
   const { data, isFetching, isError, error } = useGetGroupMyEsimQuery(
     {
       current_page: currentPage,
-      per_page: pageSize,
+      limit: pageSize,
       search: debouncedSearch,
     },
     {
       skip: false,
-    }
+    },
   );
 
   const isTyping = search !== debouncedSearch;
@@ -141,7 +140,7 @@ export const useGroupMyEsims = () => {
   const handlePageChange = (page) => {
     dispatch(updateGroupPage(page.current_page));
 
-    if (page.per_page && page.per_page !== pageSize) {
+    if (page.limit && page.limit !== pageSize) {
     }
   };
 
@@ -158,9 +157,9 @@ export const useGroupMyEsims = () => {
     dispatch(openRemoveModal(myEsim));
   };
 
-  const handleDownloadInvoice = async ({ user, userDetails }) => {
+  const handleDownloadInvoice = async (myEsim) => {
     try {
-      const invoiceData = formatInvoiceData(userDetails);
+      const invoiceData = formatInvoiceData(myEsim);
 
       const companyInfo = {
         name: "Kloud Apps LLC",
@@ -175,7 +174,7 @@ export const useGroupMyEsims = () => {
         invoiceData,
         images,
         companyInfo,
-        errorNotify
+        errorNotify,
       );
 
       if (result.success) {
@@ -193,13 +192,106 @@ export const useGroupMyEsims = () => {
     error,
     myEsims: isTyping || isError ? [] : displayData,
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     groupSearch: search,
     updatePage: handlePageChange,
     isLoading: false,
     showDeleteModal,
+    handleSearchChange,
+    handleOpenQrModal,
+    handleOpenRemoveModal,
+    handleDownloadInvoice,
+  };
+};
+
+export const useGroupEsimDetails = (groupId) => {
+  const { groupData } = useSelector((state) => state.myEsim);
+
+  const dispatch = useDispatch();
+
+  const { lists, meta, search } = groupData;
+  const { currentPage, pageSize, totalPages, totalItems } = meta;
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { data, isFetching, isError, error } = useGetGroupEsimDetailsQuery(
+    {
+      group_id: groupId,
+      current_page: currentPage,
+      limit: pageSize,
+      search: debouncedSearch,
+    },
+    {
+      skip: !groupId,
+    },
+  );
+
+  const isTyping = search !== debouncedSearch;
+  const displayData = data?.data || lists;
+
+  const handlePageChange = (page) => {
+    dispatch(updateGroupPage(page.current_page));
+
+    if (page.limit && page.limit !== pageSize) {
+    }
+  };
+
+  const handleSearchChange = (value) => {
+    dispatch(updateGroupSearch(value));
+    dispatch(updateGroupPage(1));
+  };
+
+  const handleOpenQrModal = (myEsim) => {
+    dispatch(openQrModal(myEsim));
+  };
+
+  const handleOpenRemoveModal = (myEsim) => {
+    dispatch(openRemoveModal(myEsim));
+  };
+
+  const handleDownloadInvoice = async (myEsim) => {
+    try {
+      const invoiceData = formatInvoiceData(myEsim);
+
+      const companyInfo = {
+        name: "Kloud Apps LLC",
+        address1: "254 Chapman Rd, Suite 101-B, Newark,",
+        address2: "DE 19702",
+        email: "support@telzen.net",
+        businessName: "Business Name",
+        businessEmail: "Business Email",
+      };
+
+      const result = await generateInvoicePDF(
+        invoiceData,
+        images,
+        companyInfo,
+        errorNotify,
+      );
+
+      if (result.success) {
+        console.log("Invoice generated successfully");
+      }
+    } catch (error) {
+      console.error("Error in handleDownloadInvoice:", error);
+      errorNotify("Failed to generate invoice");
+    }
+  };
+
+  return {
+    isFetching: isFetching || isTyping,
+    isError,
+    error,
+    myEsims: isTyping || isError ? [] : displayData,
+    current_page: currentPage,
+    limit: pageSize,
+    total_page: totalPages,
+    total_items: totalItems,
+    groupSearch: search,
+    updatePage: handlePageChange,
+    isLoading: false,
     handleSearchChange,
     handleOpenQrModal,
     handleOpenRemoveModal,

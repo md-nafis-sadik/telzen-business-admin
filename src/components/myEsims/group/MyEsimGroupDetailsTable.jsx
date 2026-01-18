@@ -1,6 +1,6 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
-import { useRegularMyEsims } from "@/hooks/useMyEsim";
+import { useGroupEsimDetails } from "@/hooks/useMyEsim";
 import {
   DeleteIconSvg,
   DownloadIconSvg,
@@ -9,8 +9,10 @@ import {
 } from "@/services";
 import moment from "moment";
 import { Fragment } from "react";
+import { useParams } from "react-router-dom";
 
-function MyEsimRegularTable() {
+function MyEsimGroupDetailsTable() {
+  const { id: groupId } = useParams();
   const {
     isFetching,
     isError,
@@ -24,7 +26,7 @@ function MyEsimRegularTable() {
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,
-  } = useRegularMyEsims();
+  } = useGroupEsimDetails(groupId);
 
   return (
     <Fragment>
@@ -51,7 +53,7 @@ function MyEsimRegularTable() {
               status={error?.status}
               dataLength={myEsims.length}
               column={10}
-              tableName="Regular MyEsim"
+              tableName="Group eSIM Details"
             >
               {myEsims.map((myEsim, index) => {
                 return (
@@ -122,4 +124,4 @@ function MyEsimRegularTable() {
   );
 }
 
-export default MyEsimRegularTable;
+export default MyEsimGroupDetailsTable;

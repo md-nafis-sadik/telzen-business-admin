@@ -10,7 +10,7 @@ import moment from "moment";
 export const useAccountBalance = () => {
   const dispatch = useDispatch();
   const { accountBalanceData, summaryData } = useSelector(
-    (state) => state.accountBalance
+    (state) => state.accountBalance,
   );
 
   const { lists, meta } = accountBalanceData;
@@ -18,13 +18,11 @@ export const useAccountBalance = () => {
 
   const { isFetching, isError, error } = useGetAccountBalanceQuery({
     current_page: currentPage,
-    per_page: pageSize,
+    limit: pageSize,
   });
 
-  const {
-    isFetching: isSummaryFetching,
-    isError: isSummaryError,
-  } = useGetAccountBalanceSummaryQuery();
+  const { isFetching: isSummaryFetching, isError: isSummaryError } =
+    useGetAccountBalanceSummaryQuery();
 
   const handlePageChange = (page) => {
     dispatch(updateAccountBalancePage(page));

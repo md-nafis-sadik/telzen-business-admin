@@ -1,28 +1,28 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMyEsims } from "@/hooks/useMyEsim";
-import {
-  DeleteIconSvg,
-  DownloadIconSvg,
-  QRIconSvg,
-} from "@/services";
+import { ViewIconSvg } from "@/services";
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 function MyEsimGroupTable() {
+  const navigate = useNavigate();
   const {
     isFetching,
     isError,
     error,
     myEsims,
     current_page,
-    per_page,
+    limit,
     total_page,
     total_items,
     updatePage,
-    handleOpenQrModal,
-    handleOpenRemoveModal,
-    handleDownloadInvoice,
   } = useGroupMyEsims();
+
+  const handleViewDetails = (groupId) => {
+    navigate(`/admin/my-esim/group/${groupId}`);
+  };
+
   return (
     <Fragment>
       <div className="flex-1 overflow-auto mt-4">
@@ -30,14 +30,12 @@ function MyEsimGroupTable() {
           <thead className="table_head sticky top-0">
             <tr className="table_row bg-white-700">
               <th className="table_th_first w-[80px]">SL</th>
+              <th className="table_th w-[150px]">Group UID</th>
+              <th className="table_th w-[150px]">Group Name</th>
+              <th className="table_th w-[150px]">Package</th>
               <th className="table_th w-[120px]">Date</th>
-              <th className="table_th w-[50px]">Customer</th>
-              <th className="table_th w-[50px]">Customer Email</th>
-              <th className="table_th w-[150px]">Customer phone</th>
-              <th className="table_th w-[120px]">Package</th>
-              <th className="table_th w-[120px]">Data Limit</th>
-              <th className="table_th w-[120px]">Usage</th>
-              <th className="table_th w-[120px]">Line Status</th>
+              <th className="table_th w-[120px]">Total Items</th>
+              <th className="table_th w-[120px]">Total Amount</th>
               <th className="table_th_last w-[100px]">Action</th>
             </tr>
           </thead>
@@ -47,84 +45,38 @@ function MyEsimGroupTable() {
               isError={isError}
               status={error?.status}
               dataLength={myEsims.length}
-              column={10}
-              tableName="Regular MyEsim"
+              column={8}
+              tableName="Group eSIM"
             >
-              {myEsims.map((myEsim, index) => (
-                <tr key={myEsim._id || index} className="table_row group">
-                  <td className="table_outline_td">{index + 1 || "-"}</td>
-                  <td className="table_outline_td">
-                    25-10-2024
-                    {/* <div className="flex justify-center items-center">
-                      <img
-                        src={myEsim?.avatar || images.myEsimAvatar}
-                        alt=""
-                        className="w-7 h-7 rounded-full object-cover"
-                      />
-                    </div> */}
-                  </td>
-                  <td className="table_outline_td">
-                    Cust Name 1{/* {myEsim?.full_name || "-"} */}
-                  </td>
-                  <td className="table_outline_td">
-                    cust@gmail.com
-                    {/* <HoverTooltip
-                      items={myEsim?.division}
-                      label="Division"
-                      groupName="division"
-                    /> */}
-                  </td>
-                  <td className="table_outline_td">
-                    +88 0215521552
-                    {/* <HoverTooltip
-                      items={myEsim?.district}
-                      label="District"
-                      groupName="district"
-                    /> */}
-                  </td>
-                  <td className="table_outline_td">
-                    Package 1
-                    {/* <HoverTooltip
-                      items={myEsim?.sub_district}
-                      label="Upazila"
-                      groupName="upazila"
-                    /> */}
-                  </td>
-                  <td className="table_outline_td">
-                    10GB
-                    {/* <HoverTooltip
-                      items={myEsim?.sub_district}
-                      label="Upazila"
-                      groupName="upazila"
-                    /> */}
-                  </td>
-                  <td className="table_outline_td">
-                    8GB
-                    {/* <HoverTooltip
-                      items={myEsim?.sub_district}
-                      label="Upazila"
-                      groupName="upazila"
-                    /> */}
-                  </td>
-                  <td className="table_outline_td">
-                    Activated
-                    {/* {myEsim.commission_rate
-                      ? `${myEsim.commission_rate.toLocaleString()}`
-                      : "-"} */}
-                  </td>
-                  <td className="table_outline_td flex gap-3 justify-center items-center ">
-                    <button onClick={() => handleOpenQrModal(myEsim)}>
-                      <QRIconSvg />
-                    </button>
-                    <button onClick={() => handleDownloadInvoice(myEsim)}>
-                      <DownloadIconSvg />
-                    </button>
-                    <button onClick={() => handleOpenRemoveModal(myEsim)}>
-                      <DeleteIconSvg />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {myEsims.map((group, index) => {
+                const orderDate = group?.order_created_at
+                  ? new Date(group.order_created_at * 1000).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric'
+                    })
+                  : '-';
+
+                return (
+                  <tr key={group._id || index} className="table_row group">
+                    <td className="table_outline_td">{((current_page - 1) * limit) + index + 1 || "-"}</td>
+                    <td className="table_outline_td">{group?.group_uid || "-"}</td>
+                    <td className="table_outline_td">{group?.group_name || "-"}</td>
+                    <td className="table_outline_td">{group?.package_name || "-"}</td>
+                    <td className="table_outline_td">{orderDate}</td>
+                    <td className="table_outline_td">{group?.total_purchased_item || 0}</td>
+                    <td className="table_outline_td">${group?.total_amount || 0}</td>
+                    <td className="table_outline_td">
+                      <button 
+                        onClick={() => handleViewDetails(group._id)}
+                        className="flex justify-center items-center w-full"
+                      >
+                        <ViewIconSvg />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </TableHelper>
           </tbody>
         </table>
@@ -135,7 +87,7 @@ function MyEsimGroupTable() {
           current_page={current_page}
           total_page={total_page}
           updatePage={updatePage}
-          per_page={per_page}
+          limit={limit}
           total_items={total_items}
         />
       </div>

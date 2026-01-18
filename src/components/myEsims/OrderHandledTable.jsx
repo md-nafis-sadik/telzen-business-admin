@@ -10,7 +10,7 @@ function OrderHandledTable({
   isError = false,
   error = null,
   current_page = 1,
-  per_page = 10,
+  limit = 10,
   total_page = 1,
   total_items = 0,
   updatePage = () => {},
@@ -18,9 +18,7 @@ function OrderHandledTable({
   return (
     <Fragment>
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-text-700 mb-4">
-          {title}
-        </h3>
+        <h3 className="text-lg font-semibold text-text-700 mb-4">{title}</h3>
         <div className="flex-1 overflow-auto">
           <table className="table">
             <thead className="table_head sticky top-0">
@@ -91,7 +89,7 @@ function OrderHandledTable({
           current_page={current_page}
           total_page={total_page}
           updatePage={updatePage}
-          per_page={per_page}
+          limit={limit}
           total_items={total_items}
         />
       </div>

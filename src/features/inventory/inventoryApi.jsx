@@ -1,26 +1,11 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { envConfig } from "@/services";
+import { apiSlice } from "../api/apiSlice";
 
-const inventoryBaseQuery = fetchBaseQuery({
-  baseUrl: envConfig.inventoryBaseUrl,
-  prepareHeaders: async (headers, { getState }) => {
-    const token = getState()?.auth?.auth?.token;
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    headers.set("Accept", "application/json");
-    return headers;
-  },
-});
-
-export const inventoryApi = createApi({
-  reducerPath: "inventoryApi",
-  baseQuery: inventoryBaseQuery,
+export const inventoryApi = apiSlice.injectEndpoints({
   tagTypes: ["Inventory", "Package"],
   endpoints: (builder) => ({
     // Get regions with pagination and search
     getRegions: builder.query({
-      query: ({ page = 1, limit = 15, search = "" }) => {
+      query: ({ page = 1, limit = 9999999, search = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
@@ -37,7 +22,7 @@ export const inventoryApi = createApi({
 
     // Get countries with pagination and search
     getCountries: builder.query({
-      query: ({ page = 1, limit = 15, search = "" }) => {
+      query: ({ page = 1, limit = 9999999, search = "" }) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
@@ -54,7 +39,7 @@ export const inventoryApi = createApi({
 
     // Get packages for a region or country
     getPackages: builder.query({
-      query: ({ region_id, country_id, page = 1, limit = 20 }) => {
+      query: ({ region_id, country_id, page = 1, limit = 9999999 }) => {
         const params = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),

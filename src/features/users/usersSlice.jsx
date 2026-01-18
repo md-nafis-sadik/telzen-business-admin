@@ -52,7 +52,7 @@ const initialState = {
   // Single user/group details
   singleUser: {},
   selectedData: {},
-  
+
   // Active tab state
   activeTab: "regular", // 'regular' or 'group'
   blockedTab: "regular", // 'regular' or 'group'
@@ -71,7 +71,7 @@ const usersSlice = createSlice({
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        pageSize: meta?.limit || 10,
       };
 
       if (search !== undefined) {
@@ -96,7 +96,7 @@ const usersSlice = createSlice({
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        pageSize: meta?.limit || 10,
       };
 
       if (search !== undefined) {
@@ -121,7 +121,7 @@ const usersSlice = createSlice({
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        pageSize: meta?.limit || 10,
       };
 
       if (search !== undefined) {
@@ -146,7 +146,7 @@ const usersSlice = createSlice({
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
-        pageSize: meta?.per_page || 10,
+        pageSize: meta?.limit || 10,
       };
 
       if (search !== undefined) {

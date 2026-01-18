@@ -24,6 +24,23 @@ function Breadcrumb() {
 
     // Special handling for staff routes (active/blocked/details)
 
+    // Check for group details route first (more specific)
+    if (pathname.match(/\/my-esim\/group\/[^/]+$/)) {
+      breadcrumbs.push({
+        name: "My eSIM",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Group",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Details",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
     if (pathname.includes("/my-esim/regular")) {
       breadcrumbs.push({
         name: "My eSIM",
@@ -126,7 +143,7 @@ function Breadcrumb() {
             !route.path.includes("/add") &&
             !route.path.includes("/edit") &&
             !route.path.includes("/active") &&
-            !route.path.includes("/blocked")
+            !route.path.includes("/blocked"),
         );
 
         if (parentRoute) {
@@ -148,7 +165,7 @@ function Breadcrumb() {
             !route.path.includes("/add") &&
             !route.path.includes("/edit") &&
             !route.path.includes("/active") &&
-            !route.path.includes("/blocked")
+            !route.path.includes("/blocked"),
         );
 
         if (parentRoute) {

@@ -12,7 +12,7 @@ import CustomModal from "@/components/shared/CustomModal";
 
 function MyEsimRegular() {
   const dispatch = useDispatch();
-  const { showQrModal, showRemoveModal } = useSelector((state) => state.myEsim);
+  const { showQrModal, showRemoveModal, selectedData } = useSelector((state) => state.myEsim);
 
   const {
     isLoading,
@@ -30,23 +30,30 @@ function MyEsimRegular() {
         widthClass="sm:w-auto"
       >
         <div className="flex flex-col items-center gap-4">
-          <div className="p-10">
-            <img src={images.qrCode} alt="QR Code" className="max-w-[300px]" />
+          <div className="p-6">
+            <img 
+              src={selectedData?.qr_code_url} 
+              alt="QR Code" 
+              className="w-full lg:w-[300px]" 
+            />
           </div>
           <div className="text-center">
             <div className="font-barlowCondensed text-6xl font-[900] uppercase">
-              Esim QR Code
+              eSIM QR Code
             </div>
             <div className="font-inter text-lg">
               Download or scan the code to install eSIM
             </div>
           </div>
-          <button
-            className="rounded_button
-"
+          <a
+            href={selectedData?.qr_code_url}
+            download={`esim-qr-${selectedData?.iccid || 'code'}.png`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded_button"
           >
             Download
-          </button>
+          </a>
         </div>
       </CustomModal>
 

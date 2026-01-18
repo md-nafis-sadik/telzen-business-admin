@@ -13,6 +13,7 @@ import { adminRouteLinks } from "../services";
 import PrivateRouter from "./PrivateRouter";
 import MyEsimRegular from "@/pages/admin/MyESim/RegularEsim";
 import MyEsimGroup from "@/pages/admin/MyESim/GroupEsim";
+import GroupEsimDetails from "@/pages/admin/MyESim/GroupEsimDetails";
 import AccountBalance from "@/pages/admin/AccountBalance/AccountBalance";
 import BusinessProfile from "@/pages/admin/BusinessProfile/BusinessProfile";
 import ContactSupport from "@/pages/admin/ContactSupport/ContactSupport";
@@ -79,6 +80,14 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="myEsim">
           <MyEsimGroup />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: "my-esim/group/:id",
+      element: (
+        <RoleBasedRoute requiredActivePath="myEsim">
+          <GroupEsimDetails />
         </RoleBasedRoute>
       ),
     },
