@@ -1,24 +1,24 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import { useDebounce } from "./useDebounce";
-import { usePhoneInput } from "./usePhoneInput";
 import {
-  useGetStaffQuery,
-  useGetSingleStaffQuery,
   useAddStaffMutation,
-  useUpdateStaffMutation,
   useChangeStaffStatusMutation,
   useDeleteStaffMutation,
+  useGetSingleStaffQuery,
+  useGetStaffQuery,
+  useUpdateStaffMutation,
 } from "@/features/staffs/staffApi";
 import {
-  updateStaffSearch,
-  updateStaffPage,
-  openBlockModal,
   closeBlockModal,
+  openBlockModal,
   setSuccessModal,
+  updateStaffPage,
+  updateStaffSearch,
 } from "@/features/staffs/staffSlice";
 import { errorNotify, roleOptions, successNotify } from "@/services";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDebounce } from "./useDebounce";
+import { usePhoneInput } from "./usePhoneInput";
 
 export const useStaffs = () => {
   const dispatch = useDispatch();
@@ -231,7 +231,7 @@ export const useEditStaff = () => {
   const [selectedRole, setSelectedRole] = useState(getRoleValue());
   const { phone, handlePhoneChange } = usePhoneInput(
     singleStaff?.phone || "",
-    "bd"
+    "bd",
   );
 
   const handleSubmit = async (e) => {

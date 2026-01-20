@@ -1,12 +1,12 @@
 import { apiSlice } from "../api/apiSlice";
 import {
-  setStaff,
-  setSingleStaff,
   addNewStaff,
-  updateStaff,
   blockStaff,
-  unblockStaff,
   deleteStaff,
+  setSingleStaff,
+  setStaff,
+  unblockStaff,
+  updateStaff,
 } from "./staffSlice";
 
 const staffApi = apiSlice.injectEndpoints({
@@ -14,7 +14,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Get All Staff
     getStaff: builder.query({
       query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/admin/staff-users?page=${current_page}&per_page=${per_page}`;
+        let url = `/staff?page=${current_page}&limit=${per_page}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -36,7 +36,7 @@ const staffApi = apiSlice.injectEndpoints({
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -49,7 +49,7 @@ const staffApi = apiSlice.injectEndpoints({
                 last_page: 0,
               },
               search: arg.search || "",
-            })
+            }),
           );
         }
       },
@@ -57,7 +57,7 @@ const staffApi = apiSlice.injectEndpoints({
 
     // Get Single Staff
     getSingleStaff: builder.query({
-      query: (id) => `/admin/staff-users/${id}`,
+      query: (id) => `/staff/single?staff_id=${id}`,
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
@@ -99,7 +99,7 @@ const staffApi = apiSlice.injectEndpoints({
             updateStaff({
               staff_id: id,
               data: result?.data?.data || data,
-            })
+            }),
           );
         } catch (error) {
           console.error("Update staff failed:", error);
@@ -114,7 +114,10 @@ const staffApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { status },
       }),
-      async onQueryStarted({ id, status, staffData }, { queryFulfilled, dispatch }) {
+      async onQueryStarted(
+        { id, status, staffData },
+        { queryFulfilled, dispatch },
+      ) {
         try {
           await queryFulfilled;
           if (status === "blocked") {
