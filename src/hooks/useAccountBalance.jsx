@@ -1,16 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
 import {
   useGetAccountBalanceQuery,
   useGetAccountBalanceSummaryQuery,
 } from "@/features/accountBalance/accountBalanceApi";
 import { updateAccountBalancePage } from "@/features/accountBalance/accountBalanceSlice";
-import * as XLSX from "xlsx";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import * as XLSX from "xlsx";
 
 export const useAccountBalance = () => {
   const dispatch = useDispatch();
   const { accountBalanceData, summaryData } = useSelector(
-    (state) => state.accountBalance
+    (state) => state.accountBalance,
   );
 
   const { lists, meta } = accountBalanceData;
@@ -21,10 +21,8 @@ export const useAccountBalance = () => {
     per_page: pageSize,
   });
 
-  const {
-    isFetching: isSummaryFetching,
-    isError: isSummaryError,
-  } = useGetAccountBalanceSummaryQuery();
+  const { isFetching: isSummaryFetching, isError: isSummaryError } =
+    useGetAccountBalanceSummaryQuery();
 
   const handlePageChange = (page) => {
     dispatch(updateAccountBalancePage(page));
@@ -61,13 +59,15 @@ export const useAccountBalance = () => {
 
     const exportData = lists.map((item, index) => ({
       SL: index + 1,
-      Date: item.date ? moment(item.date).format("DD-MM-YYYY") : "-",
-      Package: item.package || "-",
-      Customer: item.customer || "-",
-      "Group Name": item.group_name || "-",
-      "Customer Email": item.customer_email || "-",
+      Date: item.created_at
+        ? moment.unix(item.created_at).format("DD-MM-YYYY")
+        : "-",
+      Package: item.package?.name || "-",
+      Customer: item.customer?.name || "-",
+      "Group Name": item.group?.name || "-",
+      "Customer Email": item.customer?.email || "-",
       "Customer Phone": item.customer_phone || "-",
-      Amount: `$${item.amount || 0}`,
+      Amount: `$${item.payment_amount || 0}`,
       Revenue: `$${item.revenue || 0}`,
     }));
 

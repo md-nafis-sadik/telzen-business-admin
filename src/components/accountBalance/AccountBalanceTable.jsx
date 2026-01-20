@@ -2,6 +2,7 @@ import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useAccountBalance } from "@/hooks";
 import { ExportExcelIconSvg, PrintIconSvg } from "@/services";
+import moment from "moment";
 
 function AccountBalanceTable() {
   const {
@@ -19,6 +20,7 @@ function AccountBalanceTable() {
     handlePrint,
     hasData,
   } = useAccountBalance();
+
   return (
     <div className="bg-white w-full rounded-2xl overflow-hidden flex flex-col p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
@@ -36,7 +38,7 @@ function AccountBalanceTable() {
               onClick={handleExport}
               disabled={!hasData}
             >
-              <ExportExcelIconSvg/>
+              <ExportExcelIconSvg />
               <span className="text-sm font-semibold">Export to Excel</span>
             </button>
 
@@ -45,7 +47,7 @@ function AccountBalanceTable() {
               onClick={handlePrint}
               disabled={!hasData}
             >
-              <PrintIconSvg/>
+              <PrintIconSvg />
               <span className="text-sm font-semibold">Print</span>
             </button>
           </div>
@@ -83,28 +85,28 @@ function AccountBalanceTable() {
                       {(currentPage - 1) * pageSize + index + 1}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.date || "25-10-2024"}
+                      {moment.unix(item?.created_at).format("DD-MM-YYYY")}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.package || "Package 1"}
+                      {item?.package?.name}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer || "Cust Name 1"}
+                      {item?.customer?.name}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.group_name || "-"}
+                      {item?.group?.name || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer_email || "cust@gmail.com"}
+                      {item?.customer?.email}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer_phone || "+88 0215521552"}
+                      {item?.customer_phone}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      ${item?.amount || "299"}
+                      ${item?.payment_amount}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      ${item?.revenue || "88"}
+                      ${item?.revenue}
                     </td>
                   </tr>
                 ))}

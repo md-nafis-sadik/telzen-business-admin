@@ -6,13 +6,15 @@ const accountBalanceApi = apiSlice.injectEndpoints({
     // Get Account Balance List
     getAccountBalance: builder.query({
       query: ({ current_page = 1, per_page = 10 }) => {
-        return `/admin/account-balance?page=${current_page}&per_page=${per_page}`;
+        return `/checkout?page=${current_page}&limit=${per_page}`;
       },
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+
+          console.log("Account Balance Response Data:", responseData);
 
           dispatch(
             setAccountBalance({
@@ -23,7 +25,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
                 total: 0,
                 last_page: 0,
               },
-            })
+            }),
           );
         } catch (error) {
           dispatch(
@@ -35,7 +37,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
                 total: 0,
                 last_page: 0,
               },
-            })
+            }),
           );
         }
       },
@@ -43,19 +45,19 @@ const accountBalanceApi = apiSlice.injectEndpoints({
 
     // Get Summary Data
     getAccountBalanceSummary: builder.query({
-      query: () => `/admin/account-balance/summary`,
+      query: () => `/checkout/stats`,
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           const data = result?.data?.data || {};
-          
+
           dispatch(
             setSummaryData({
-              packageSold: data.package_sold || 0,
-              sellingValue: data.selling_value || 0,
-              packageFee: data.package_fee || 0,
-              grossRevenue: data.gross_revenue || 0,
-            })
+              packageSold: data.total_package_sold || 0,
+              sellingValue: data.total_selling_value || 0,
+              packageFee: data.total_retailer_fee || 0,
+              grossRevenue: data.revenue || 0,
+            }),
           );
         } catch (error) {
           dispatch(
@@ -64,7 +66,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               sellingValue: 0,
               packageFee: 0,
               grossRevenue: 0,
-            })
+            }),
           );
         }
       },
@@ -72,7 +74,5 @@ const accountBalanceApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const {
-  useGetAccountBalanceQuery,
-  useGetAccountBalanceSummaryQuery,
-} = accountBalanceApi;
+export const { useGetAccountBalanceQuery, useGetAccountBalanceSummaryQuery } =
+  accountBalanceApi;
