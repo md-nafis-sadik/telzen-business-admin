@@ -1,8 +1,11 @@
+import { useSendSupportMessageMutation } from "@/features/customerSupport/customerSupportApi";
+import { errorNotify, successNotify } from "@/services";
 import { useState } from "react";
-import { successNotify, errorNotify } from "@/services";
 
 export const useContactSupport = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [sendSupportMessage, isLoading] = useSendSupportMessageMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -11,23 +14,22 @@ export const useContactSupport = () => {
     const data = {
       email: formData.get("email"),
       subject: formData.get("subject"),
-      brief: formData.get("brief"),
+      description: formData.get("description"),
     };
 
     // Basic validation
-    if (!data.email || !data.subject || !data.brief) {
+    if (!data.email || !data.subject || !data.description) {
       errorNotify("Please fill in all fields");
       return;
     }
 
-    setIsSubmitting(true);
+    const submittedData = new FormData();
+    submittedData.append("data", JSON.stringify(data));
+
+    setIsSubmitting(isLoading);
 
     try {
-      // TODO: Replace with actual API call
-      console.log("Contact Support Form submitted:", data);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await sendSupportMessage(submittedData).unwrap();
 
       successNotify("Your message has been sent successfully!");
 
