@@ -32,7 +32,7 @@ function DashboardHeader() {
   };
 
   const userRole =
-    auth.role === "admin"
+    auth.role === "super-admin"
       ? "Admin"
       : auth.role === "manager"
       ? "Manager"

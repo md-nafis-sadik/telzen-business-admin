@@ -174,7 +174,7 @@ function Breadcrumb() {
         .split("/")
         .filter((segment) => segment !== "");
       pathSegments.forEach((segment, index) => {
-        if (segment !== "admin") {
+        if (segment !== "super-admin") {
           let name = segment
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))

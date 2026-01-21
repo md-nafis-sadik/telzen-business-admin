@@ -9,31 +9,62 @@ export default function useAuthCheck() {
   const [authChecked, setAuthChecked] = useState(false);
 
   const getAuthUserData = async () => {
-    // Normal auth check from localStorage
-    const localAuth = localStorage?.getItem("telzen_business_admin");
-    if (localAuth) {
-      const { data } = decryptValue(localAuth);
-      if (data) {
-        const auth = JSON.parse(data);
-        const currentTimestamp = moment().unix();
-        const checkExpire = auth?.expireAt && auth.expireAt > currentTimestamp;
-        if (auth?.token) {
-          if (checkExpire) {
-            dispatch(saveAuthData(auth));
-          } else {
-            dispatch(clearAuthState());
-            errorNotify(
-              auth?.expireAt ? "Login Session Expired" : "Invalid session"
-            );
-          }
-        } else {
+    try {
+      // Normal auth check from localStorage
+      const localAuth = localStorage?.getItem("telzen_business_admin");
+      
+      console.log("🔍 Checking auth from localStorage:", { hasData: !!localAuth });
+      
+      if (localAuth) {
+        const { data, error } = decryptValue(localAuth);
+        
+        if (error) {
+          console.error("❌ Decryption failed:", error);
           dispatch(clearAuthState());
+          setAuthChecked(true);
+          return;
+        }
+        
+        if (data) {
+          const auth = JSON.parse(data);
+          
+          console.log("📦 Decrypted auth data:", { 
+            hasToken: !!auth?.token, 
+            role: auth?.role,
+            expireAt: auth?.expireAt 
+          });
+          
+          // Check if token exists
+          if (auth?.token) {
+            const currentTimestamp = moment().unix();
+            const hasExpireAt = auth?.expireAt;
+            const isExpired = hasExpireAt && auth.expireAt <= currentTimestamp;
+            
+            // Only clear if token is explicitly expired
+            if (isExpired) {
+              console.warn("⏰ Token expired, clearing auth");
+              dispatch(clearAuthState());
+              errorNotify("Login Session Expired");
+            } else {
+              console.log("✅ Token is valid, restoring auth state");
+              // Token exists and is valid (or has no expiry set)
+              dispatch(saveAuthData(auth));
+            }
+          } else {
+            console.warn("⚠️ No token found in auth data, clearing state");
+            // No token found, clear state
+            dispatch(clearAuthState());
+          }
         }
       } else {
-        dispatch(clearAuthState());
+        console.log("ℹ️ No auth data in localStorage");
       }
+    } catch (error) {
+      console.error("❌ Error checking auth:", error);
+      // Don't clear state on error, just log it
+    } finally {
+      setAuthChecked(true);
     }
-    setAuthChecked(true);
   };
 
   useEffect(() => {

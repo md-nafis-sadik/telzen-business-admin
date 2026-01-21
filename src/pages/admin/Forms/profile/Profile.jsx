@@ -56,7 +56,7 @@ function Profile() {
   }
 
   const userRole =
-    userData.role === "admin"
+    userData.role === "super-admin"
       ? "Admin"
       : userData.role === "manager"
       ? "Manager"
