@@ -23,7 +23,7 @@ const initialState = {
 
   roleOptions: [
     { id: "manager", label: "Manager" },
-    { id: "admin", label: "Admin" },
+    { id: "super-admin", label: "Admin" },
     { id: "employee", label: "Employee" },
   ],
 

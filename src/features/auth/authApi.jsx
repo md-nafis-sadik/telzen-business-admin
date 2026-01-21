@@ -1,6 +1,6 @@
 import moment from "moment";
 import { apiSlice } from "../api/apiSlice";
-import { saveAuthData, updateAuth } from "./authSlice";
+import { saveAuthData, updateAuth, clearAuthState } from "./authSlice";
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -56,13 +56,13 @@ export const authApi = apiSlice.injectEndpoints({
 
     getProfile: builder.query({
       query: () => ({
-        url: `/admin/user_profile`,
+        url: `/auth/profile`,
       }),
     }),
 
     getUserProfile: builder.query({
       query: () => ({
-        url: `/admin/user_profile`,
+        url: `/auth/profile`,
       }),
       async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
@@ -78,6 +78,13 @@ export const authApi = apiSlice.injectEndpoints({
           );
         } catch (error) {
           console.error("Error updating profile data:", error);
+          // Handle 401 Unauthorized - clear auth and throw error for component to handle
+          if (error?.error?.status === 401 || error?.error?.data?.status_code === 401) {
+            console.log("🚫 Unauthorized access - clearing auth state");
+            dispatch(clearAuthState());
+            // Re-throw the error so AutoLoginRedirect can handle it
+            throw error;
+          }
         }
       },
     }),
@@ -88,7 +95,7 @@ export const authApi = apiSlice.injectEndpoints({
         formData.append("image", imageFile);
 
         return {
-          url: `/admin/user_profile`,
+          url: `/auth/profile`,
           method: "POST",
           body: formData,
         };
@@ -124,11 +131,12 @@ export const authApi = apiSlice.injectEndpoints({
           const futureDate = moment().add(30, "days");
           const expireAt = currentAuth?.expireAt || futureDate.unix();
           
-          // Save complete profile data
+          // Save complete profile data with token preserved
           dispatch(saveAuthData({ 
             ...results, 
             token: currentAuth?.token,
-            expireAt 
+            expireAt,
+            role: results?.role || "super-admin" // Ensure role is set
           }));
         } catch (error) {
           console.error("Error fetching profile:", error);

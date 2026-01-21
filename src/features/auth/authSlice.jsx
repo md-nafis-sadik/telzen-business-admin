@@ -23,11 +23,25 @@ const authSlice = createSlice({
         state.userRole = action.payload.role;
       } else if (action?.payload?.token && !state.userRole) {
         // If logging in with token but no role, set default to admin
-        state.userRole = "admin";
-        state.auth.role = "admin";
+        state.userRole = "super-admin";
+        state.auth.role = "super-admin";
       }
-      const { data } = encryptValue(JSON.stringify(state.auth));
-      localStorage.setItem("telzen_business_admin", data);
+      
+      console.log("🔐 Saving auth data to localStorage:", { 
+        hasToken: !!state.auth?.token, 
+        role: state.auth?.role,
+        expireAt: state.auth?.expireAt 
+      });
+      
+      const { data, error } = encryptValue(JSON.stringify(state.auth));
+      
+      if (error) {
+        console.error("❌ Encryption failed:", error);
+      } else {
+        console.log("✅ Encrypted data successfully, saving to localStorage");
+        localStorage.setItem("telzen_business_admin", data);
+      }
+      
       state.previews = state.auth?.image ? [state.auth?.image] : [];
     },
     initiateAuthData: (state, action) => {
@@ -37,8 +51,8 @@ const authSlice = createSlice({
         state.userRole = action.payload.role;
       } else if (action?.payload?.token) {
         // If logging in with token but no role, set default to admin
-        state.userRole = "admin";
-        state.auth.role = "admin";
+        state.userRole = "super-admin";
+        state.auth.role = "super-admin";
       }
       const { data } = encryptValue(JSON.stringify(state.auth));
       localStorage.setItem("telzen_business_admin", data);
