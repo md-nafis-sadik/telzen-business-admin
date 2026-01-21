@@ -22,8 +22,6 @@ function EditStaff() {
     isUpdating,
   } = useEditStaff();
 
-  console.log("Single Staff Data:", singleStaff);
-
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">
       <div className="flex gap-1">
@@ -37,10 +35,10 @@ function EditStaff() {
           <div className="flex flex-col justify-end gap-10">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="Full Name"
+                label="Staff Name"
                 labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-                placeholder="Enter staff full name"
-                name="full_name"
+                placeholder="Enter staff Staff name"
+                name="name"
                 defaultValue={singleStaff?.name}
                 required
               />
@@ -52,7 +50,7 @@ function EditStaff() {
                 name="email"
                 type="email"
                 defaultValue={singleStaff?.email}
-                required
+                disabled
               />
 
               <PhoneInput
@@ -63,7 +61,7 @@ function EditStaff() {
                 value={singleStaff?.phone}
                 onChange={handlePhoneChange}
                 country="bd"
-                required
+                disabled
               />
 
               <SelectInput

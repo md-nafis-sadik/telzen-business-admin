@@ -179,18 +179,26 @@ export const useStaffMutations = () => {
 export const useAddStaff = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState("");
-  const { phone, handlePhoneChange } = usePhoneInput("", "bd");
+  const { phone, countryInfo, handlePhoneChange } = usePhoneInput("", "bd");
   const [addStaff, { isLoading: isAdding }] = useAddStaffMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.set("role", selectedRole);
-    formData.set("phone", phone);
-    const data = Object.fromEntries(formData);
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const data = {
+      name,
+      email,
+      role: selectedRole,
+      phone,
+      country: countryInfo,
+    };
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
 
     try {
-      await addStaff(data).unwrap();
+      await addStaff(formData).unwrap();
       successNotify("Staff added successfully");
       navigate("/admin/staffs");
     } catch (error) {
@@ -228,21 +236,30 @@ export const useEditStaff = () => {
     return roleValue?.toLowerCase() || "";
   };
 
+  console.log("singleStaff:", singleStaff);
+
   const [selectedRole, setSelectedRole] = useState(getRoleValue());
-  const { phone, handlePhoneChange } = usePhoneInput(
-    singleStaff?.phone || "",
-    "bd",
+  const { phone, countryInfo, handlePhoneChange } = usePhoneInput(
+    singleStaff?.phone,
+    singleStaff?.country?.code,
+    singleStaff?.country?.dial_code,
+    singleStaff?.country?.name,
   );
 
   const handleSubmit = async (e) => {
+    // console.log("countryInfo:", countryInfo);
     e.preventDefault();
-    const formData = new FormData(e.target);
-    formData.set("role", selectedRole);
-    formData.set("phone", phone);
-    const data = Object.fromEntries(formData);
+    const name = e.target.name.value;
+    const data = {
+      name,
+      role: selectedRole,
+    };
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(data));
 
     try {
-      await updateStaff({ id: singleStaff._id, data }).unwrap();
+      await updateStaff({ id: singleStaff._id, data: formData }).unwrap();
       successNotify("Staff updated successfully");
       navigate("/admin/staffs");
     } catch (error) {

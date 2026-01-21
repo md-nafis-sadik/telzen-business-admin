@@ -71,7 +71,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Add Staff
     addStaff: builder.mutation({
       query: (data) => ({
-        url: "/admin/staff-users",
+        url: "/staff/create",
         method: "POST",
         body: data,
       }),
@@ -88,7 +88,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Update Staff
     updateStaff: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/admin/staff-users/${id}`,
+        url: `staff/update?staff_id=${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -134,7 +134,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Delete Staff
     deleteStaff: builder.mutation({
       query: (id) => ({
-        url: `/admin/staff-users/${id}`,
+        url: `staff/delete?staff_id=${id}`,
         method: "DELETE",
       }),
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
