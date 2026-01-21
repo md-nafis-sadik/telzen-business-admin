@@ -13,7 +13,6 @@ export default function useAuthCheck() {
       // Normal auth check from localStorage
       const localAuth = localStorage?.getItem("telzen_business_admin");
       
-      console.log("🔍 Checking auth from localStorage:", { hasData: !!localAuth });
       
       if (localAuth) {
         const { data, error } = decryptValue(localAuth);
@@ -46,7 +45,6 @@ export default function useAuthCheck() {
               dispatch(clearAuthState());
               errorNotify("Login Session Expired");
             } else {
-              console.log("✅ Token is valid, restoring auth state");
               // Token exists and is valid (or has no expiry set)
               dispatch(saveAuthData(auth));
             }

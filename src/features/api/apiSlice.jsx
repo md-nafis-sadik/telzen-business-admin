@@ -19,11 +19,29 @@ export const apiSlice = createApi({
   baseQuery: async (args, api, extraOptions) => {
     const result = await baseQuery(args, api, extraOptions);
     const response = result?.error?.data?.error;
-    if (response === "Invalid token" || response === "Unauthorized") {
+    const statusCode =
+      result?.error?.status || result?.error?.data?.status_code;
+
+    if (
+      statusCode === 401 ||
+      response === "Invalid token" ||
+      response === "Unauthorized"
+    ) {
+      console.log("🚫 401 Unauthorized - Clearing auth and redirecting");
+
+      const errorMessage =
+        result?.error?.data?.message || "Session expired. Please login again.";
+      localStorage.setItem("auth_error_message", errorMessage);
+
       // Clear all auth state and API cache when token is invalid
       api.dispatch(logout());
       api.dispatch(clearAuthState());
       api.dispatch(apiSlice.util.resetApiState());
+
+      // Redirect to home page after a brief delay
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 100);
     }
     return result;
   },

@@ -3,11 +3,11 @@ import Password from "@/components/shared/Password";
 import RequestLoader from "@/components/shared/RequestLoader";
 import AutoLoginRedirect from "@/components/shared/AutoLoginRedirect";
 import { useLogin } from "@/hooks";
-import { images, userRouteLinks } from "@/services";
+import { images, userRouteLinks, errorNotify } from "@/services";
 import { Link, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -21,6 +21,15 @@ function Login() {
   // Check if there's a token in URL (auto-login scenario)
   const searchParams = new URLSearchParams(location.search);
   const hasToken = searchParams.get("token");
+
+  // Show error message from localStorage if exists (after 401 redirect)
+  useEffect(() => {
+    const authErrorMessage = localStorage.getItem("auth_error_message");
+    if (authErrorMessage) {
+      errorNotify(authErrorMessage);
+      localStorage.removeItem("auth_error_message");
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     setFormData({
