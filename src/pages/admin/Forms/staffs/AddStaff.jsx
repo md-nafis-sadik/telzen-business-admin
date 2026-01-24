@@ -1,7 +1,7 @@
 import BackToPrev from "@/components/shared/BackToPrev";
 import Input from "@/components/shared/Input";
-import RequestLoader from "@/components/shared/RequestLoader";
 import PhoneInput from "@/components/shared/PhoneInput";
+import RequestLoader from "@/components/shared/RequestLoader";
 import SelectInput from "@/components/shared/SelectInput";
 import { useAddStaff } from "@/hooks";
 import { Link } from "react-router-dom";
@@ -29,10 +29,10 @@ function AddStaff() {
         <div className="flex flex-col gap-10">
           <div className="grid grid-cols-2 gap-6">
             <Input
-              label="Full Name"
+              label="Staff Name"
               labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
-              placeholder="Enter staff full name"
-              name="full_name"
+              placeholder="Enter staff Staff name"
+              name="name"
               required
             />
 

@@ -19,7 +19,7 @@ const maskedArray = (number = "") => {
     return number
       .split(" ")
       .map((segment, index, arr) =>
-        index === arr.length - 1 ? "XX" + segment.slice(-2) : "XXXX"
+        index === arr.length - 1 ? "XX" + segment.slice(-2) : "XXXX",
       );
   else return [];
 };
@@ -98,8 +98,8 @@ function arrayToCommaSeparated(arr) {
 const filterUndefined = (obj) => {
   return Object.fromEntries(
     Object.entries(obj).filter(
-      ([_, value]) => value !== undefined && value !== null && value !== ""
-    )
+      ([_, value]) => value !== undefined && value !== null && value !== "",
+    ),
   );
 };
 
@@ -118,9 +118,12 @@ const getCustomerFileNameFromUrl = (url) => {
   return url.split("/").pop();
 };
 
-const roleOptions = [
-  { id: "manager", name: "Manager" },
-];
+const roleOptions = [{ id: "manager", name: "Manager" }];
+
+const roleLabelMap = {
+  manager: "Manager",
+  "super-admin": "Super Admin",
+};
 
 export {
   arrayToCommaSeparated,
@@ -135,7 +138,8 @@ export {
   getStringTime,
   getTimeFromDate,
   maskedArray,
+  roleLabelMap,
+  roleOptions,
   strongPasswordRgx,
   timestampConverter,
-  roleOptions,
 };

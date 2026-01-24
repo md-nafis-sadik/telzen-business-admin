@@ -5,14 +5,16 @@ const accountBalanceApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get Account Balance List
     getAccountBalance: builder.query({
-      query: ({ current_page = 1, limit = 10 }) => {
-        return `/admin/account-balance?page=${current_page}&limit=${limit}`;
+      query: ({ current_page = 1, per_page = 10 }) => {
+        return `/checkout?page=${current_page}&limit=${per_page}`;
       },
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+
+          console.log("Account Balance Response Data:", responseData);
 
           dispatch(
             setAccountBalance({
@@ -43,7 +45,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
 
     // Get Summary Data
     getAccountBalanceSummary: builder.query({
-      query: () => `/admin/account-balance/summary`,
+      query: () => `/checkout/stats`,
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
@@ -55,7 +57,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               sellingValue: data.selling_value || 0,
               packageFee: data.package_fee || 0,
               grossRevenue: data.gross_revenue || 0,
-            }),
+            })
           );
         } catch (error) {
           dispatch(

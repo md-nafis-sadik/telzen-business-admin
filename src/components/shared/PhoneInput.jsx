@@ -10,6 +10,7 @@ function PhoneInputComponent({
   onChange,
   country = "bd",
   required = false,
+  disabled = false,
 }) {
   return (
     <div className="flex flex-col gap-2">
@@ -23,6 +24,7 @@ function PhoneInputComponent({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        disabled={disabled}
         inputProps={{
           name: name,
           required: required,
@@ -35,6 +37,7 @@ function PhoneInputComponent({
           borderColor: "#BDBDBD",
           fontSize: "15px",
           color: "#4f4f4f",
+          backgroundColor: disabled ? "#ECECEC" : "",
         }}
         buttonStyle={{
           border: "none",

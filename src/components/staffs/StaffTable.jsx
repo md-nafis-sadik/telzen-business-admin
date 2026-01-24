@@ -2,11 +2,11 @@ import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useStaffs } from "@/hooks";
 import {
-  BlockIconSvg,
-  EditIconSvg,
-  DeleteIconSvg,
   ActiveIconSvg,
-  images,
+  BlockIconSvg,
+  DeleteIconSvg,
+  EditIconSvg,
+  roleLabelMap,
 } from "@/services";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
@@ -41,10 +41,12 @@ function StaffTable() {
           <thead className="table_head sticky top-0">
             <tr className="table_row bg-white-700">
               <th className="table_th_first w-[80px]">SL</th>
+              <th className="table_th_first w-[80px]">Image</th>
               <th className="table_th w-[200px]">Staff Name</th>
               <th className="table_th w-[150px]">Role</th>
               <th className="table_th w-[200px]">Email</th>
               <th className="table_th w-[150px]">Phone</th>
+              <th className="table_th w-[150px]">Status</th>
               <th className="table_th_last w-[120px]">Action</th>
             </tr>
           </thead>
@@ -63,20 +65,28 @@ function StaffTable() {
                     {(currentPage - 1) * pageSize + index + 1}
                   </td>
                   <td className="table_outline_td">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center gap-2">
                       <img
-                        src={staff?.avatar || images.staffAvatar}
+                        src={staff?.image?.path}
                         alt=""
                         className="w-8 h-8 rounded-full object-cover"
                       />
-                      <span>{staff?.full_name || "-"}</span>
+                      {/* <span>{staff?.full_name || "-"}</span> */}
                     </div>
                   </td>
+                  <td className="table_outline_td">{staff?.name || "-"}</td>
                   <td className="table_outline_td">
-                    {staff?.role?.name || "-"}
+                    {roleLabelMap[staff?.role] || "-"}
                   </td>
                   <td className="table_outline_td">{staff?.email || "-"}</td>
                   <td className="table_outline_td">{staff?.phone || "-"}</td>
+                  <td
+                    className={`table_outline_td ${
+                      staff?.is_blocked ? "text-red-500" : "text-green-400"
+                    }`}
+                  >
+                    {staff?.is_blocked ? "Blocked" : "Active" || "-"}
+                  </td>
 
                   <td className="table_outline_td">
                     <div className="flex gap-3 justify-center items-center">
@@ -84,9 +94,9 @@ function StaffTable() {
                         <EditIconSvg />
                       </Link>
 
-                      {staff?.status === "active" ? (
+                      {staff?.is_blocked === false ? (
                         <button
-                          onClick={() => handleOpenBlockModal(staff)}
+                          onClick={() => handleOpenBlockModal(staff._id)}
                           title="Block Staff"
                         >
                           <BlockIconSvg />

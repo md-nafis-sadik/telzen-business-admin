@@ -45,7 +45,7 @@ function ContactSupport() {
             <div>
               <Textarea
                 label="Brief"
-                name="brief"
+                name="description"
                 placeholder="Share brief about the issue"
                 rows={6}
                 required

@@ -2,11 +2,19 @@ import { useState } from "react";
 
 export const usePhoneInput = (initialValue = "", initialCountry = "bd") => {
   const [phone, setPhone] = useState(initialValue);
-  const [country, setCountry] = useState(initialCountry);
+  const [countryInfo, setCountryInfo] = useState({
+    countryCode: initialCountry,
+    dialCode: "",
+    name: "",
+  });
 
   const handlePhoneChange = (value, data) => {
     setPhone(value);
-    setCountry(data.countryCode);
+    setCountryInfo({
+      code: data.countryCode,
+      dial_code: data.dialCode,
+      name: data.name,
+    });
   };
 
   const resetPhone = () => {
@@ -16,10 +24,10 @@ export const usePhoneInput = (initialValue = "", initialCountry = "bd") => {
 
   return {
     phone,
-    country,
+    countryInfo,
     handlePhoneChange,
     setPhone,
-    setCountry,
+    setCountryInfo,
     resetPhone,
   };
 };

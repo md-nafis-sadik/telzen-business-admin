@@ -1,20 +1,20 @@
 import { apiSlice } from "../api/apiSlice";
 import {
-  setStaff,
-  setSingleStaff,
   addNewStaff,
-  updateStaff,
   blockStaff,
-  unblockStaff,
   deleteStaff,
+  setSingleStaff,
+  setStaff,
+  unblockStaff,
+  updateStaff,
 } from "./staffSlice";
 
 const staffApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get All Staff
     getStaff: builder.query({
-      query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/admin/staff-users?page=${current_page}&limit=${limit}`;
+      query: ({ current_page = 1, per_page = 10, search = "" }) => {
+        let url = `/staff?page=${current_page}&limit=${per_page}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -57,7 +57,7 @@ const staffApi = apiSlice.injectEndpoints({
 
     // Get Single Staff
     getSingleStaff: builder.query({
-      query: (id) => `/admin/staff-users/${id}`,
+      query: (id) => `/staff/single?staff_id=${id}`,
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
@@ -71,7 +71,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Add Staff
     addStaff: builder.mutation({
       query: (data) => ({
-        url: "/admin/staff-users",
+        url: "/staff/create",
         method: "POST",
         body: data,
       }),
@@ -88,7 +88,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Update Staff
     updateStaff: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/admin/staff-users/${id}`,
+        url: `staff/update?staff_id=${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -134,7 +134,7 @@ const staffApi = apiSlice.injectEndpoints({
     // Delete Staff
     deleteStaff: builder.mutation({
       query: (id) => ({
-        url: `/admin/staff-users/${id}`,
+        url: `staff/delete?staff_id=${id}`,
         method: "DELETE",
       }),
       async onQueryStarted(id, { queryFulfilled, dispatch }) {
