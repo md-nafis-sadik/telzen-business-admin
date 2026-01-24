@@ -7,14 +7,14 @@ export const authApi = apiSlice.injectEndpoints({
     // Register mutation
     register: builder.mutation({
       query: (formData) => ({
-        url: "/admin/registration", // This should be your register endpoint
+        url: "/auth/registration", // This should be your register endpoint
         method: "POST",
         body: formData,
       }),
     }),
     login: builder.mutation({
       query: (formData) => ({
-        url: "/admin/login",
+        url: "/auth/login",
         method: "POST",
         body: formData,
       }),
@@ -34,7 +34,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     updateProfile: builder.mutation({
       query: (data) => ({
-        url: `/admin/profile`,
+        url: `/auth/profile`,
         method: "POST",
         body: data,
       }),

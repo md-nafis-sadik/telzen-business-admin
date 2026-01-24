@@ -13,7 +13,7 @@ function Packages() {
     handlePackageClick,
   } = usePackages();
 
-  const packages = data?.data || [];
+  const packages = data?.data?.packages || [];
 
   return (
     <section className="w-full flex-1 flex flex-col rounded-2xl">
@@ -27,12 +27,12 @@ function Packages() {
               <div
                 className="aspect-[5/6] relative rounded-3xl overflow-hidden"
                 style={{
-                  backgroundImage: `url(${data?.country?.image || data?.region?.image || ""})`,
+                  backgroundImage: `url(${data?.data?.country?.image || data?.data?.region?.image || ""})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
               >
-                {!data?.country?.image && !data?.region?.image && (
+                {!data?.data?.country?.image && !data?.data?.region?.image && (
                   <div className="w-full h-full bg-gray-300 flex items-center justify-center">
                     <span className="text-gray-500">No Image</span>
                   </div>
