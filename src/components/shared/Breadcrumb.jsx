@@ -53,7 +53,7 @@ function Breadcrumb() {
       return breadcrumbs;
     }
 
-    if (pathname.includes("/my-esim/group")) {
+    if (pathname.includes("/my-esim/group") && !pathname.includes("/group/")) {
       breadcrumbs.push({
         name: "My eSIM",
         isActive: false,
@@ -77,7 +77,33 @@ function Breadcrumb() {
       return breadcrumbs;
     }
 
-    if (pathname.includes("/users/active")) {
+    // Handle user group details route - FIXED
+    if (pathname.match(/\/users\/active\/group\/[^/]+$/)) {
+      breadcrumbs.push({
+        name: "Group",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Users",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
+    if (pathname.match(/\/users\/blocked\/group\/[^/]+$/)) {
+      breadcrumbs.push({
+        name: "Group",
+        isActive: false,
+      });
+      breadcrumbs.push({
+        name: "Users",
+        isActive: true,
+      });
+      return breadcrumbs;
+    }
+
+    // Handle active users route (without group)
+    if (pathname === "/admin/users/active" || pathname === "/users/active") {
       breadcrumbs.push({
         name: "Users",
         isActive: false,
@@ -89,7 +115,8 @@ function Breadcrumb() {
       return breadcrumbs;
     }
 
-    if (pathname.includes("/users/blocked")) {
+    // Handle blocked users route
+    if (pathname === "/admin/users/blocked" || pathname === "/users/blocked") {
       breadcrumbs.push({
         name: "Users",
         isActive: false,
@@ -191,7 +218,7 @@ function Breadcrumb() {
         .split("/")
         .filter((segment) => segment !== "");
       pathSegments.forEach((segment, index) => {
-        if (segment !== "super-admin") {
+        if (segment !== "super-admin" && segment !== "admin") {
           let name = segment
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -217,7 +244,10 @@ function Breadcrumb() {
 
   const breadcrumbs = generateBreadcrumbs();
 
-  if (breadcrumbs.length === 0) {
+  if (
+    breadcrumbs.length === 0 ||
+    (breadcrumbs.length === 1 && breadcrumbs[0].name === "")
+  ) {
     return null;
   }
 

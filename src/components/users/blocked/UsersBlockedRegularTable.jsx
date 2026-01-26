@@ -7,10 +7,15 @@ import {
   DeleteIconSvg,
   BlockIconSvg,
 } from "@/services";
+import moment from "moment";
 import { Fragment } from "react";
+import ReactCountryFlag from "react-country-flag";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { openUnblockModal } from "@/features/users/usersSlice";
 
 function UsersBlockedRegularTable() {
+  const dispatch = useDispatch();
   const {
     isFetching,
     isError,
@@ -22,6 +27,10 @@ function UsersBlockedRegularTable() {
     total_items,
     updatePage,
   } = useBlockedRegularUsers();
+
+  const handleUnblockClick = (user) => {
+    dispatch(openUnblockModal(user));
+  };
 
   return (
     <Fragment>
@@ -49,15 +58,25 @@ function UsersBlockedRegularTable() {
             >
               {users.map((user, index) => (
                 <tr key={user._id || index} className="table_row group">
+                  <td className="table_outline_td">{user?.uid || "-"}</td>
                   <td className="table_outline_td">
-                    {user?.user_id || user?.id || "-"}
-                  </td>
-                  <td className="table_outline_td">
-                    <div className="flex items-center gap-2">
-                      {user?.country_flag && (
+                    <div className="flex items-center justify-center gap-2">
+                      {/* {user?.country_flag && (
                         <span className="text-xl">{user.country_flag}</span>
-                      )}
-                      <span>{user?.country || "-"}</span>
+                      )} */}
+                      <ReactCountryFlag
+                        countryCode={user?.country?.code}
+                        svg
+                        style={{
+                          width: "1.3em",
+                          height: "1.3em",
+                          borderRadius: "100%",
+                          objectPosition: "center",
+                          objectFit: "cover",
+                        }}
+                        title={user?.country?.name || ""}
+                      />
+                      <span>{user?.country?.name || "-"}</span>
                     </div>
                   </td>
                   <td className="table_outline_td">
@@ -66,24 +85,23 @@ function UsersBlockedRegularTable() {
                   <td className="table_outline_td">{user?.email || "-"}</td>
                   <td className="table_outline_td">
                     {user?.created_at
-                      ? new Date(user.created_at).toLocaleDateString()
-                      : user?.date || "-"}
+                      ? moment.unix(user.created_at).format("DD-MM-YYYY")
+                      : "-"}
                   </td>
                   <td className="table_outline_td">
-                    <span className="text-red-600 font-semibold">
-                      {user?.status || "Blocked"}
-                    </span>
+                    <span className="text-green-600">{"Active"}</span>
                   </td>
                   <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <Link
-                      to={`${adminRouteLinks.usersBlocked.path}/details/${
-                        user._id || user.id
-                      }`}
+                    {/* <Link
+                      to={`${adminRouteLinks.usersActive.path}/details/${user._id || user.id}`}
                       className="cursor-pointer"
                     >
                       <ViewIconSvg />
-                    </Link>
-                    <button className="cursor-pointer">
+                    </Link> */}
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => handleUnblockClick(user)}
+                    >
                       <BlockIconSvg />
                     </button>
                   </td>

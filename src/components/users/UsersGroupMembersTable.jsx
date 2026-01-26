@@ -1,14 +1,23 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMembers } from "@/hooks";
-import { ViewIconSvg, DeleteIconSvg } from "@/services";
+import { ViewIconSvg, DeleteIconSvg, adminRouteLinks, BlockIconSvg } from "@/services";
+import moment from "moment";
 import { Fragment } from "react";
-import { useParams } from "react-router-dom";
+import ReactCountryFlag from "react-country-flag";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { openDeleteGroupModal } from "@/features/users/usersSlice";
 
 function UsersGroupMembersTable() {
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { members, meta, isFetching, isError, error, page, setPage } =
     useGroupMembers(id);
+
+  const handleRemoveClick = (member) => {
+    dispatch(openDeleteGroupModal(member));
+  };
 
   return (
     <Fragment>
@@ -17,6 +26,7 @@ function UsersGroupMembersTable() {
           <thead className="table_head sticky top-0">
             <tr className="table_row bg-white-700">
               <th className="table_th_first w-[80px]">ID</th>
+              <th className="table_th w-[150px]">Country</th>
               <th className="table_th w-[150px]">Name</th>
               <th className="table_th w-[150px]">Mobile No.</th>
               <th className="table_th w-[200px]">Email</th>
@@ -35,26 +45,50 @@ function UsersGroupMembersTable() {
             >
               {members.map((member, index) => (
                 <tr key={member._id || index} className="table_row group">
+                  <td className="table_outline_td">{member?.uid || "-"}</td>
                   <td className="table_outline_td">
-                    {member?.user_id || member?.id || "-"}
+                    <div className="flex items-center justify-center gap-2">
+                      {/* {member?.country_flag && (
+                                        <span className="text-xl">{user.country_flag}</span>
+                                      )} */}
+                      <ReactCountryFlag
+                        countryCode={member?.country?.code}
+                        svg
+                        style={{
+                          width: "1.3em",
+                          height: "1.3em",
+                          borderRadius: "100%",
+                          objectPosition: "center",
+                          objectFit: "cover",
+                        }}
+                        title={member?.country?.name || ""}
+                      />
+                      <span>{member?.country?.name || "-"}</span>
+                    </div>
                   </td>
                   <td className="table_outline_td">
                     {member?.name || member?.full_name || "-"}
                   </td>
-                  <td className="table_outline_td">
-                    {member?.mobile || member?.phone || "-"}
-                  </td>
                   <td className="table_outline_td">{member?.email || "-"}</td>
                   <td className="table_outline_td">
-                    <span className="text-green-600 font-semibold">
-                      {member?.status || "Active"}
-                    </span>
+                    {member?.created_at
+                      ? moment.unix(member.created_at).format("DD-MM-YYYY")
+                      : "-"}
+                  </td>
+                  <td className="table_outline_td">
+                    <span className="text-green-600">{"Active"}</span>
                   </td>
                   <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <button className="cursor-pointer">
+                    {/* <Link
+                      to={`${adminRouteLinks.usersActive.path}/details/${member._id || member.id}`}
+                      className="cursor-pointer"
+                    >
                       <ViewIconSvg />
-                    </button>
-                    <button className="cursor-pointer">
+                    </Link> */}
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => handleRemoveClick(member)}
+                    >
                       <DeleteIconSvg />
                     </button>
                   </td>

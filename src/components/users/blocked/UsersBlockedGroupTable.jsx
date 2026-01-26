@@ -2,10 +2,14 @@ import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useBlockedGroupUsers } from "@/hooks";
 import { adminRouteLinks, ViewIconSvg, DeleteIconSvg } from "@/services";
+import moment from "moment";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { openDeleteGroupModal } from "@/features/users/usersSlice";
 
 function UsersBlockedGroupTable() {
+  const dispatch = useDispatch();
   const {
     isFetching,
     isError,
@@ -17,6 +21,10 @@ function UsersBlockedGroupTable() {
     total_items,
     updatePage,
   } = useBlockedGroupUsers();
+
+  const handleDeleteClick = (group) => {
+    dispatch(openDeleteGroupModal(group));
+  };
 
   return (
     <Fragment>
@@ -46,8 +54,8 @@ function UsersBlockedGroupTable() {
                   </td>
                   <td className="table_outline_td">
                     {group?.created_at
-                      ? new Date(group.created_at).toLocaleDateString("en-GB")
-                      : group?.date || "-"}
+                      ? moment.unix(group.created_at).format("DD-MM-YYYY")
+                      : "-"}
                   </td>
                   <td className="table_outline_td">
                     {group?.group_name || group?.name || "Group Name 1"}
@@ -59,7 +67,10 @@ function UsersBlockedGroupTable() {
                     >
                       <ViewIconSvg />
                     </Link>
-                    <button className="cursor-pointer">
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteClick(group)}
+                    >
                       <DeleteIconSvg />
                     </button>
                   </td>

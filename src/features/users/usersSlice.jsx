@@ -53,6 +53,11 @@ const initialState = {
   singleUser: {},
   selectedData: {},
 
+  // Modal States
+  showBlockModal: false,
+  showUnblockModal: false,
+  showDeleteGroupModal: false,
+
   // Active tab state
   activeTab: "regular", // 'regular' or 'group'
   blockedTab: "regular", // 'regular' or 'group'
@@ -181,6 +186,111 @@ const usersSlice = createSlice({
       state.selectedData = action.payload;
     },
 
+    // Modal Actions
+    openBlockModal: (state, action) => {
+      state.showBlockModal = true;
+      state.selectedData = action.payload;
+    },
+
+    closeBlockModal: (state) => {
+      state.showBlockModal = false;
+      state.selectedData = {};
+    },
+
+    openUnblockModal: (state, action) => {
+      state.showUnblockModal = true;
+      state.selectedData = action.payload;
+    },
+
+    closeUnblockModal: (state) => {
+      state.showUnblockModal = false;
+      state.selectedData = {};
+    },
+
+    openDeleteGroupModal: (state, action) => {
+      state.showDeleteGroupModal = true;
+      state.selectedData = action.payload;
+    },
+
+    closeDeleteGroupModal: (state) => {
+      state.showDeleteGroupModal = false;
+      state.selectedData = {};
+    },
+
+    // Transfer user from active to blocked or vice versa
+    transferUserBetweenLists: (state, action) => {
+      const { userId, toBlocked } = action.payload;
+
+      if (toBlocked) {
+        // Remove from active and add to blocked
+        const user = state.activeRegularData.lists.find(u => u._id === userId);
+        if (user) {
+          state.activeRegularData.lists = state.activeRegularData.lists.filter(u => u._id !== userId);
+          state.blockedRegularData.lists.unshift({ ...user, is_blocked: true });
+          
+          // Update meta
+          state.activeRegularData.meta.totalItems = Math.max(0, state.activeRegularData.meta.totalItems - 1);
+          state.blockedRegularData.meta.totalItems += 1;
+          
+          // Recalculate total pages
+          state.activeRegularData.meta.totalPages = Math.max(1, Math.ceil(state.activeRegularData.meta.totalItems / state.activeRegularData.meta.pageSize));
+          state.blockedRegularData.meta.totalPages = Math.ceil(state.blockedRegularData.meta.totalItems / state.blockedRegularData.meta.pageSize);
+          
+          // Adjust current page if needed
+          if (state.activeRegularData.lists.length === 0 && state.activeRegularData.meta.currentPage > 1) {
+            state.activeRegularData.meta.currentPage = Math.max(1, state.activeRegularData.meta.currentPage - 1);
+          }
+        }
+      } else {
+        // Remove from blocked and add to active
+        const user = state.blockedRegularData.lists.find(u => u._id === userId);
+        if (user) {
+          state.blockedRegularData.lists = state.blockedRegularData.lists.filter(u => u._id !== userId);
+          state.activeRegularData.lists.unshift({ ...user, is_blocked: false });
+          
+          // Update meta
+          state.blockedRegularData.meta.totalItems = Math.max(0, state.blockedRegularData.meta.totalItems - 1);
+          state.activeRegularData.meta.totalItems += 1;
+          
+          // Recalculate total pages
+          state.blockedRegularData.meta.totalPages = Math.max(1, Math.ceil(state.blockedRegularData.meta.totalItems / state.blockedRegularData.meta.pageSize));
+          state.activeRegularData.meta.totalPages = Math.ceil(state.activeRegularData.meta.totalItems / state.activeRegularData.meta.pageSize);
+          
+          // Adjust current page if needed
+          if (state.blockedRegularData.lists.length === 0 && state.blockedRegularData.meta.currentPage > 1) {
+            state.blockedRegularData.meta.currentPage = Math.max(1, state.blockedRegularData.meta.currentPage - 1);
+          }
+        }
+      }
+    },
+
+    // Remove group from lists
+    removeGroupFromLists: (state, action) => {
+      const { groupId, isBlocked } = action.payload;
+
+      if (isBlocked) {
+        // Remove from blocked groups
+        state.blockedGroupData.lists = state.blockedGroupData.lists.filter(g => g._id !== groupId);
+        state.blockedGroupData.meta.totalItems = Math.max(0, state.blockedGroupData.meta.totalItems - 1);
+        state.blockedGroupData.meta.totalPages = Math.max(1, Math.ceil(state.blockedGroupData.meta.totalItems / state.blockedGroupData.meta.pageSize));
+        
+        // Adjust current page if needed
+        if (state.blockedGroupData.lists.length === 0 && state.blockedGroupData.meta.currentPage > 1) {
+          state.blockedGroupData.meta.currentPage = Math.max(1, state.blockedGroupData.meta.currentPage - 1);
+        }
+      } else {
+        // Remove from active groups
+        state.activeGroupData.lists = state.activeGroupData.lists.filter(g => g._id !== groupId);
+        state.activeGroupData.meta.totalItems = Math.max(0, state.activeGroupData.meta.totalItems - 1);
+        state.activeGroupData.meta.totalPages = Math.max(1, Math.ceil(state.activeGroupData.meta.totalItems / state.activeGroupData.meta.pageSize));
+        
+        // Adjust current page if needed
+        if (state.activeGroupData.lists.length === 0 && state.activeGroupData.meta.currentPage > 1) {
+          state.activeGroupData.meta.currentPage = Math.max(1, state.activeGroupData.meta.currentPage - 1);
+        }
+      }
+    },
+
     // Reset All
     resetUsersState: () => initialState,
   },
@@ -203,6 +313,14 @@ export const {
   setActiveTab,
   setBlockedTab,
   setUserSelectedData,
+  openBlockModal,
+  closeBlockModal,
+  openUnblockModal,
+  closeUnblockModal,
+  openDeleteGroupModal,
+  closeDeleteGroupModal,
+  transferUserBetweenLists,
+  removeGroupFromLists,
   resetUsersState,
 } = usersSlice.actions;
 

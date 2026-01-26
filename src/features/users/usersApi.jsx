@@ -12,7 +12,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Active Regular Users
     getActiveRegularUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/admin/users/active/regular?page=${current_page}&limit=${limit}`;
+        let url = `/customer?is_blocked=false&page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -56,7 +56,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Active Group Users
     getActiveGroupUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/admin/users/active/group?page=${current_page}&limit=${limit}`;
+        let url = `/customer/group?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -100,7 +100,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Blocked Regular Users
     getBlockedRegularUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/admin/users/blocked/regular?page=${current_page}&limit=${limit}`;
+        let url = `/customer?is_blocked=true&page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -144,7 +144,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Blocked Group Users
     getBlockedGroupUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/admin/users/blocked/group?page=${current_page}&limit=${limit}`;
+        let url = `/customer/group?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -201,13 +201,45 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Active Group Members (when clicking eye icon on a group)
     getGroupMembers: builder.query({
       query: ({ groupId, current_page = 1, limit = 10 }) =>
-        `/admin/users/groups/${groupId}/members?page=${current_page}&limit=${limit}`,
+        `/customer/by-group?group_id=${groupId}&page=${current_page}&limit=${limit}`,
     }),
 
     // Get User eSIM Bundles (for detail page)
     getUserEsimBundles: builder.query({
       query: ({ userId, current_page = 1, limit = 10 }) =>
         `/admin/users/${userId}/esim-bundles?page=${current_page}&limit=${limit}`,
+    }),
+
+    // Block/Unblock User
+    updateCustomerBlockStatus: builder.mutation({
+      query: ({ customer_id, is_blocked }) => ({
+        url: `/customer/update?customer_id=${customer_id}`,
+        method: "PATCH",
+        body: {
+          data: {
+            is_blocked,
+          },
+        },
+      }),
+    }),
+
+    // Delete Group
+    deleteCustomerGroup: builder.mutation({
+      query: ({ group_id }) => ({
+        url: `/customer/group/delete?group_id=${group_id}`,
+        method: "PATCH",
+      }),
+    }),
+
+    // Remove User from Group
+    removeUserFromGroup: builder.mutation({
+      query: ({ group_id, customer_id }) => ({
+        url: `/customer/group/toggle?type=remove&group_id=${group_id}`,
+        method: "PATCH",
+        body: {
+          customer_id,
+        },
+      }),
     }),
   }),
 });
@@ -220,4 +252,7 @@ export const {
   useGetUserDetailsQuery,
   useGetGroupMembersQuery,
   useGetUserEsimBundlesQuery,
+  useUpdateCustomerBlockStatusMutation,
+  useDeleteCustomerGroupMutation,
+  useRemoveUserFromGroupMutation,
 } = usersApi;

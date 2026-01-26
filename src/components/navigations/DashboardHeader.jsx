@@ -33,12 +33,10 @@ function DashboardHeader() {
 
   const userRole =
     auth.role === "super-admin"
-      ? "Admin"
+      ? "Super Admin"
       : auth.role === "manager"
-      ? "Manager"
-      : auth.role === "customer_manager"
-      ? "Customer Manager"
-      : "Admin"; // Default to Admin if no role
+        ? "Manager"
+        : "Admin";
 
   return (
     <header
@@ -72,8 +70,8 @@ function DashboardHeader() {
                 className="self-stretch justify-start text-text-700 text-xs font-normal font-['Inter'] leading-none"
                 htmlFor=""
               >
-                {/* {userRole} */}
-                Control Panel
+                {userRole}
+                {/* Control Panel */}
               </span>
             </div>
           </DropdownMenuTrigger>
