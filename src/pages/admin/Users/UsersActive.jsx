@@ -1,78 +1,26 @@
 import UsersActiveHeader from "@/components/users/active/UsersActiveHeader";
 import UsersActiveRegularTable from "@/components/users/active/UsersActiveRegularTable";
-import { useUserTabs } from "@/hooks";
+import { useActiveUsers } from "@/hooks";
 import Modal from "@/components/shared/Modal";
-import { DeletePopupIconSvg, successNotify, errorNotify } from "@/services";
-import { useDispatch, useSelector } from "react-redux";
+import { DeletePopupIconSvg } from "@/services";
 import {
   closeBlockModal,
   closeDeleteGroupModal,
-  transferUserBetweenLists,
-  removeGroupFromLists,
 } from "@/features/users/usersSlice";
-import {
-  useUpdateCustomerBlockStatusMutation,
-  useDeleteCustomerGroupMutation,
-} from "@/features/users/usersApi";
 import RequestLoader from "@/components/shared/RequestLoader";
 import UsersGroupTable from "@/components/users/UsersGroupTable";
 
 function UsersActive() {
-  const { currentTab } = useUserTabs("active");
-  const dispatch = useDispatch();
-  const { showBlockModal, showDeleteGroupModal, selectedData } = useSelector(
-    (state) => state.users
-  );
-
-  const [updateCustomerBlockStatus, { isLoading: isBlockLoading }] =
-    useUpdateCustomerBlockStatusMutation();
-  const [deleteCustomerGroup, { isLoading: isDeleteLoading }] =
-    useDeleteCustomerGroupMutation();
-
-  const handleBlockConfirm = async () => {
-    if (!selectedData?._id) return;
-
-    try {
-      const response = await updateCustomerBlockStatus({
-        customer_id: selectedData._id,
-        is_blocked: true,
-      }).unwrap();
-
-      dispatch(
-        transferUserBetweenLists({
-          userId: selectedData._id,
-          toBlocked: true,
-        })
-      );
-
-      dispatch(closeBlockModal());
-      successNotify(response?.message || "User blocked successfully!");
-    } catch (error) {
-      errorNotify(error?.data?.message || "Failed to block user");
-    }
-  };
-
-  const handleDeleteGroupConfirm = async () => {
-    if (!selectedData?._id) return;
-
-    try {
-      const response = await deleteCustomerGroup({
-        group_id: selectedData._id,
-      }).unwrap();
-
-      dispatch(
-        removeGroupFromLists({
-          groupId: selectedData._id,
-          isBlocked: false,
-        })
-      );
-
-      dispatch(closeDeleteGroupModal());
-      successNotify(response?.message || "Group deleted successfully!");
-    } catch (error) {
-      errorNotify(error?.data?.message || "Failed to delete group");
-    }
-  };
+  const {
+    currentTab,
+    isBlockLoading,
+    isDeleteLoading,
+    showBlockModal,
+    handleBlockConfirm,
+    showDeleteGroupModal,
+    handleDeleteGroupConfirm,
+    dispatch,
+  } = useActiveUsers();
 
   return (
     <div className="w-full flex flex-col gap-6">

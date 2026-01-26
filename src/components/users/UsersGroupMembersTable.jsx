@@ -12,7 +12,15 @@ import { openDeleteGroupModal } from "@/features/users/usersSlice";
 function UsersGroupMembersTable() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { members, meta, isFetching, isError, error, page, setPage } =
+  const { members,
+    current_page,
+    limit,
+    total_page,
+    total_items,
+    isFetching,
+    isError,
+    error,
+    updatePage, } =
     useGroupMembers(id);
 
   const handleRemoveClick = (member) => {
@@ -100,11 +108,11 @@ function UsersGroupMembersTable() {
       </div>
 
       <Pagination
-        current_page={meta?.page || page}
-        limit={meta?.limit || 10}
-        total_page={meta?.last_page || 1}
-        total_items={meta?.total || 0}
-        onChange={setPage}
+        current_page={current_page}
+        limit={limit}
+        total_page={total_page}
+        total_items={total_items}
+        updatePage={updatePage}
       />
     </Fragment>
   );

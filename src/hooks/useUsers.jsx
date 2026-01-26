@@ -5,6 +5,8 @@ import {
   useGetUserDetailsQuery,
   useGetGroupMembersQuery,
   useGetUserEsimBundlesQuery,
+  useUpdateCustomerBlockStatusMutation,
+  useDeleteCustomerGroupMutation,
 } from "@/features/users/usersApi";
 import {
   updateActiveRegularSearch,
@@ -17,23 +19,170 @@ import {
   updateGroupMembersPage,
   setActiveTab,
   setBlockedTab,
+  openBlockModal,
+  openUnblockModal,
+  transferUserBetweenLists,
+  closeBlockModal,
+  closeDeleteGroupModal,
+  closeUnblockModal,
+  removeGroupFromLists,
 } from "@/features/users/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
 import { useState } from "react";
+import { errorNotify, successNotify } from "@/services";
 
-// Hook for Active Regular Users
+export const useActiveUsers = () => {
+  const { currentTab } = useUserTabs("active");
+  const dispatch = useDispatch();
+  const { showBlockModal, showDeleteGroupModal, selectedData } = useSelector(
+    (state) => state.users
+  );
+
+  const [updateCustomerBlockStatus, { isLoading: isBlockLoading }] =
+    useUpdateCustomerBlockStatusMutation();
+  const [deleteCustomerGroup, { isLoading: isDeleteLoading }] =
+    useDeleteCustomerGroupMutation();
+
+  const handleBlockConfirm = async () => {
+    if (!selectedData?._id) return;
+
+    try {
+      const response = await updateCustomerBlockStatus({
+        customer_id: selectedData._id,
+        is_blocked: true,
+      }).unwrap();
+
+      dispatch(
+        transferUserBetweenLists({
+          userId: selectedData._id,
+          toBlocked: true,
+        })
+      );
+
+      dispatch(closeBlockModal());
+      successNotify(response?.message || "User blocked successfully!");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to block user");
+    }
+  };
+
+  const handleDeleteGroupConfirm = async () => {
+    if (!selectedData?._id) return;
+
+    try {
+      const response = await deleteCustomerGroup({
+        group_id: selectedData._id,
+      }).unwrap();
+
+      dispatch(
+        removeGroupFromLists({
+          groupId: selectedData._id,
+          isBlocked: false,
+        })
+      );
+
+      dispatch(closeDeleteGroupModal());
+      successNotify(response?.message || "Group deleted successfully!");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to delete group");
+    }
+  };
+
+  return {
+    currentTab,
+    isBlockLoading,
+    isDeleteLoading,
+    showBlockModal,
+    handleBlockConfirm,
+    showDeleteGroupModal,
+    handleDeleteGroupConfirm,
+    dispatch,
+  };
+};
+
+export const useBlockedUsers = () => {
+  const { currentTab } = useUserTabs("blocked");
+  const dispatch = useDispatch();
+  const { showUnblockModal, showDeleteGroupModal, selectedData } = useSelector(
+    (state) => state.users
+  );
+
+  const [updateCustomerBlockStatus, { isLoading: isUnblockLoading }] =
+    useUpdateCustomerBlockStatusMutation();
+  const [deleteCustomerGroup, { isLoading: isDeleteLoading }] =
+    useDeleteCustomerGroupMutation();
+
+  const handleUnblockConfirm = async () => {
+    if (!selectedData?._id) return;
+
+    try {
+      const response = await updateCustomerBlockStatus({
+        customer_id: selectedData._id,
+        is_blocked: false,
+      }).unwrap();
+
+      dispatch(
+        transferUserBetweenLists({
+          userId: selectedData._id,
+          toBlocked: false,
+        })
+      );
+
+      dispatch(closeUnblockModal());
+      successNotify(response?.message || "User unblocked successfully!");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to unblock user");
+    }
+  };
+
+  const handleDeleteGroupConfirm = async () => {
+    if (!selectedData?._id) return;
+
+    try {
+      const response = await deleteCustomerGroup({
+        group_id: selectedData._id,
+      }).unwrap();
+
+      dispatch(
+        removeGroupFromLists({
+          groupId: selectedData._id,
+          isBlocked: true,
+        })
+      );
+
+      dispatch(closeDeleteGroupModal());
+      successNotify(response?.message || "Group deleted successfully!");
+    } catch (error) {
+      errorNotify(error?.data?.message || "Failed to delete group");
+    }
+  };
+
+  return {
+    currentTab,
+    isUnblockLoading,
+    isDeleteLoading,
+    handleUnblockConfirm,
+    showUnblockModal,
+    showDeleteGroupModal,
+    handleDeleteGroupConfirm,
+    dispatch,
+  };
+};
+
+
 export const useActiveRegularUsers = () => {
   const dispatch = useDispatch();
   const { activeRegularData } = useSelector((state) => state.users);
 
   const { lists, meta, search } = activeRegularData;
+
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetActiveRegularUsersQuery(
+  const { isFetching, isError, error } = useGetActiveRegularUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
@@ -56,6 +205,10 @@ export const useActiveRegularUsers = () => {
     dispatch(updateActiveRegularPage(1));
   };
 
+  const handleBlockClick = (user) => {
+    dispatch(openBlockModal(user));
+  };
+
   return {
     users: isTyping || isError ? [] : displayData,
     current_page: currentPage,
@@ -69,6 +222,7 @@ export const useActiveRegularUsers = () => {
     error,
     handleSearchChange,
     updatePage: handlePageChange,
+    handleBlockClick,
   };
 };
 
@@ -154,6 +308,10 @@ export const useBlockedRegularUsers = () => {
     dispatch(updateBlockedRegularPage(1));
   };
 
+  const handleUnblockClick = (user) => {
+    dispatch(openUnblockModal(user));
+  };
+
   return {
     users: isTyping || isError ? [] : displayData,
     current_page: currentPage,
@@ -167,6 +325,7 @@ export const useBlockedRegularUsers = () => {
     error,
     handleSearchChange,
     updatePage: handlePageChange,
+    handleUnblockClick,
   };
 };
 

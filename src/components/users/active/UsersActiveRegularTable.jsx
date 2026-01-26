@@ -2,20 +2,13 @@ import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useActiveRegularUsers } from "@/hooks";
 import {
-  adminRouteLinks,
-  ViewIconSvg,
-  DeleteIconSvg,
   BlockIconSvg,
 } from "@/services";
 import moment from "moment";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { openBlockModal } from "@/features/users/usersSlice";
 
 function UsersActiveRegularTable() {
-  const dispatch = useDispatch();
   const {
     isFetching,
     isError,
@@ -26,11 +19,8 @@ function UsersActiveRegularTable() {
     total_page,
     total_items,
     updatePage,
+    handleBlockClick,
   } = useActiveRegularUsers();
-
-  const handleBlockClick = (user) => {
-    dispatch(openBlockModal(user));
-  };
 
   return (
     <Fragment>
@@ -61,9 +51,6 @@ function UsersActiveRegularTable() {
                   <td className="table_outline_td">{user?.uid || "-"}</td>
                   <td className="table_outline_td">
                     <div className="flex items-center justify-center gap-2">
-                      {/* {user?.country_flag && (
-                        <span className="text-xl">{user.country_flag}</span>
-                      )} */}
                       <ReactCountryFlag
                         countryCode={user?.country?.code}
                         svg
@@ -117,7 +104,7 @@ function UsersActiveRegularTable() {
         limit={limit}
         total_page={total_page}
         total_items={total_items}
-        onChange={updatePage}
+        updatePage={updatePage}
       />
     </Fragment>
   );

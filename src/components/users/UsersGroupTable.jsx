@@ -86,7 +86,7 @@ function UsersGroupTable() {
         limit={limit}
         total_page={total_page}
         total_items={total_items}
-        onChange={updatePage}
+        updatePage={updatePage}
       />
     </Fragment>
   );

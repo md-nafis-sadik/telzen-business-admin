@@ -73,10 +73,10 @@ const usersSlice = createSlice({
 
       state.activeRegularData.lists = data || [];
       state.activeRegularData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.limit || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
@@ -98,10 +98,10 @@ const usersSlice = createSlice({
 
       state.groupData.lists = data || [];
       state.groupData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.limit || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
@@ -123,10 +123,10 @@ const usersSlice = createSlice({
 
       state.blockedRegularData.lists = data || [];
       state.blockedRegularData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.limit || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
@@ -148,10 +148,10 @@ const usersSlice = createSlice({
 
       state.groupMembersData.lists = data || [];
       state.groupMembersData.meta = {
-        totalItems: meta?.total || 0,
-        totalPages: meta?.last_page || 1,
-        currentPage: meta?.page || 1,
-        pageSize: meta?.limit || 10,
+        totalItems: meta?.total_items || 0,
+        totalPages: meta?.total_pages || 1,
+        currentPage: meta?.current_page || 1,
+        pageSize: meta?.page_size || 10,
       };
 
       if (search !== undefined) {
