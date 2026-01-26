@@ -1,8 +1,7 @@
 import {
   useGetActiveRegularUsersQuery,
-  useGetActiveGroupUsersQuery,
+  useGetGroupUsersQuery,
   useGetBlockedRegularUsersQuery,
-  useGetBlockedGroupUsersQuery,
   useGetUserDetailsQuery,
   useGetGroupMembersQuery,
   useGetUserEsimBundlesQuery,
@@ -10,12 +9,12 @@ import {
 import {
   updateActiveRegularSearch,
   updateActiveRegularPage,
-  updateActiveGroupSearch,
-  updateActiveGroupPage,
+  updateGroupSearch,
+  updateGroupPage,
   updateBlockedRegularSearch,
   updateBlockedRegularPage,
-  updateBlockedGroupSearch,
-  updateBlockedGroupPage,
+  updateGroupMembersSearch,
+  updateGroupMembersPage,
   setActiveTab,
   setBlockedTab,
 } from "@/features/users/usersSlice";
@@ -46,7 +45,7 @@ export const useActiveRegularUsers = () => {
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = lists;
 
   const handlePageChange = (page) => {
     dispatch(updateActiveRegularPage(page.current_page));
@@ -74,16 +73,16 @@ export const useActiveRegularUsers = () => {
 };
 
 // Hook for Active Group Users
-export const useActiveGroupUsers = () => {
+export const useGroupUsers = () => {
   const dispatch = useDispatch();
-  const { activeGroupData } = useSelector((state) => state.users);
+  const { groupData } = useSelector((state) => state.users);
 
-  const { lists, meta, search } = activeGroupData;
+  const { lists, meta, search } = groupData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetActiveGroupUsersQuery(
+  const { isFetching, isError, error } = useGetGroupUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
@@ -95,15 +94,15 @@ export const useActiveGroupUsers = () => {
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = lists;
 
   const handlePageChange = (page) => {
-    dispatch(updateActiveGroupPage(page.current_page));
+    dispatch(updateGroupPage(page.current_page));
   };
 
   const handleSearchChange = (value) => {
-    dispatch(updateActiveGroupSearch(value));
-    dispatch(updateActiveGroupPage(1));
+    dispatch(updateGroupSearch(value));
+    dispatch(updateGroupPage(1));
   };
 
   return {
@@ -132,7 +131,7 @@ export const useBlockedRegularUsers = () => {
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetBlockedRegularUsersQuery(
+  const { isFetching, isError, error } = useGetBlockedRegularUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
@@ -144,7 +143,7 @@ export const useBlockedRegularUsers = () => {
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = lists;
 
   const handlePageChange = (page) => {
     dispatch(updateBlockedRegularPage(page.current_page));
@@ -171,54 +170,6 @@ export const useBlockedRegularUsers = () => {
   };
 };
 
-// Hook for Blocked Group Users
-export const useBlockedGroupUsers = () => {
-  const dispatch = useDispatch();
-  const { blockedGroupData } = useSelector((state) => state.users);
-
-  const { lists, meta, search } = blockedGroupData;
-  const { currentPage, pageSize, totalPages, totalItems } = meta;
-
-  const debouncedSearch = useDebounce(search, 500);
-
-  const { data, isFetching, isError, error } = useGetBlockedGroupUsersQuery(
-    {
-      current_page: currentPage,
-      limit: pageSize,
-      search: debouncedSearch,
-    },
-    {
-      skip: false,
-    },
-  );
-
-  const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
-
-  const handlePageChange = (page) => {
-    dispatch(updateBlockedGroupPage(page.current_page));
-  };
-
-  const handleSearchChange = (value) => {
-    dispatch(updateBlockedGroupSearch(value));
-    dispatch(updateBlockedGroupPage(1));
-  };
-
-  return {
-    groups: isTyping || isError ? [] : displayData,
-    current_page: currentPage,
-    limit: pageSize,
-    total_page: totalPages,
-    total_items: totalItems,
-    blockedSearch: search,
-    isFetching: isFetching || isTyping,
-    isLoading: false,
-    isError,
-    error,
-    handleSearchChange,
-    updatePage: handlePageChange,
-  };
-};
 
 // Hook for User Details Page
 export const useUserDetails = () => {
@@ -258,21 +209,51 @@ export const useUserDetails = () => {
 
 // Hook for Group Members
 export const useGroupMembers = (groupId) => {
-  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  const { groupMembersData } = useSelector((state) => state.users);
 
-  const { data, isFetching, isError, error } = useGetGroupMembersQuery(
-    { groupId, current_page: page, limit: 10 },
-    { skip: !groupId },
+  const { lists, meta, search } = groupMembersData;
+  const { currentPage, pageSize, totalPages, totalItems } = meta;
+
+  const debouncedSearch = useDebounce(search, 500);
+
+  const { isFetching, isError, error } = useGetGroupMembersQuery(
+    {
+      groupId,
+      current_page: currentPage,
+      limit: pageSize,
+      search: debouncedSearch,
+    },
+    {
+      skip: !groupId,
+    },
   );
 
+  const isTyping = search !== debouncedSearch;
+  const displayData = lists;
+
+  const handlePageChange = (page) => {
+    dispatch(updateGroupMembersPage(page.current_page));
+  };
+
+  const handleSearchChange = (value) => {
+    dispatch(updateGroupMembersSearch(value));
+    dispatch(updateGroupMembersPage(1));
+  };
+
   return {
-    members: data?.data || [],
-    meta: data?.meta || {},
-    isFetching,
+    members: isTyping || isError ? [] : displayData,
+    current_page: currentPage,
+    limit: pageSize,
+    total_page: totalPages,
+    total_items: totalItems,
+    search,
+    isFetching: isFetching || isTyping,
+    isLoading: false,
     isError,
     error,
-    page,
-    setPage,
+    handleSearchChange,
+    updatePage: handlePageChange,
   };
 };
 

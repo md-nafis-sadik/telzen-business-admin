@@ -3,7 +3,7 @@ import UsersGroupMembersTable from "@/components/users/UsersGroupMembersTable";
 import { DeletePopupIconSvg, successNotify, errorNotify } from "@/services";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { closeDeleteGroupModal } from "@/features/users/usersSlice";
+import { closeDeleteGroupModal, removeMemberFromGroup } from "@/features/users/usersSlice";
 import { useRemoveUserFromGroupMutation } from "@/features/users/usersApi";
 import RequestLoader from "@/components/shared/RequestLoader";
 
@@ -25,6 +25,7 @@ function UsersGroupMembers() {
       }).unwrap();
 
       dispatch(closeDeleteGroupModal());
+      dispatch(removeMemberFromGroup({ memberId: selectedData._id }));
       successNotify(response?.message || "User removed from group successfully!");
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to remove user from group");

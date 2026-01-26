@@ -16,7 +16,7 @@ function Breadcrumb() {
       pathname === "/"
     ) {
       breadcrumbs.push({
-        name: "",
+        name: " ",
         isActive: true,
       });
       return breadcrumbs;

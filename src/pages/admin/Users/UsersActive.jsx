@@ -1,6 +1,5 @@
 import UsersActiveHeader from "@/components/users/active/UsersActiveHeader";
 import UsersActiveRegularTable from "@/components/users/active/UsersActiveRegularTable";
-import UsersActiveGroupTable from "@/components/users/active/UsersActiveGroupTable";
 import { useUserTabs } from "@/hooks";
 import Modal from "@/components/shared/Modal";
 import { DeletePopupIconSvg, successNotify, errorNotify } from "@/services";
@@ -16,6 +15,7 @@ import {
   useDeleteCustomerGroupMutation,
 } from "@/features/users/usersApi";
 import RequestLoader from "@/components/shared/RequestLoader";
+import UsersGroupTable from "@/components/users/UsersGroupTable";
 
 function UsersActive() {
   const { currentTab } = useUserTabs("active");
@@ -92,7 +92,7 @@ function UsersActive() {
         {currentTab === "regular" ? (
           <UsersActiveRegularTable />
         ) : (
-          <UsersActiveGroupTable />
+          <UsersGroupTable />
         )}
       </div>
 

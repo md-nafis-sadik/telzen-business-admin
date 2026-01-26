@@ -1,6 +1,5 @@
 import UsersBlockedHeader from "@/components/users/blocked/UsersBlockedHeader";
 import UsersBlockedRegularTable from "@/components/users/blocked/UsersBlockedRegularTable";
-import UsersBlockedGroupTable from "@/components/users/blocked/UsersBlockedGroupTable";
 import { useUserTabs } from "@/hooks";
 import Modal from "@/components/shared/Modal";
 import { DeletePopupIconSvg, successNotify, errorNotify } from "@/services";
@@ -16,6 +15,7 @@ import {
   useDeleteCustomerGroupMutation,
 } from "@/features/users/usersApi";
 import RequestLoader from "@/components/shared/RequestLoader";
+import UsersGroupTable from "@/components/users/UsersGroupTable";
 
 function UsersBlocked() {
   const { currentTab } = useUserTabs("blocked");
@@ -92,7 +92,7 @@ function UsersBlocked() {
         {currentTab === "regular" ? (
           <UsersBlockedRegularTable />
         ) : (
-          <UsersBlockedGroupTable />
+          <UsersGroupTable />
         )}
       </div>
 

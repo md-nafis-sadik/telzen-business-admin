@@ -14,7 +14,7 @@ const initialState = {
   },
 
   // Active Group Users
-  activeGroupData: {
+  groupData: {
     lists: [],
     meta: {
       totalItems: 0,
@@ -37,8 +37,8 @@ const initialState = {
     search: "",
   },
 
-  // Blocked Group Users
-  blockedGroupData: {
+  // Group Members Data
+  groupMembersData: {
     lists: [],
     meta: {
       totalItems: 0,
@@ -93,11 +93,11 @@ const usersSlice = createSlice({
     },
 
     // Active Group Users
-    setActiveGroupUsers: (state, action) => {
+    setGroupUsers: (state, action) => {
       const { data, meta, search } = action.payload;
 
-      state.activeGroupData.lists = data || [];
-      state.activeGroupData.meta = {
+      state.groupData.lists = data || [];
+      state.groupData.meta = {
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
@@ -105,16 +105,16 @@ const usersSlice = createSlice({
       };
 
       if (search !== undefined) {
-        state.activeGroupData.search = search;
+        state.groupData.search = search;
       }
     },
 
-    updateActiveGroupSearch: (state, action) => {
-      state.activeGroupData.search = action.payload;
+    updateGroupSearch: (state, action) => {
+      state.groupData.search = action.payload;
     },
 
-    updateActiveGroupPage: (state, action) => {
-      state.activeGroupData.meta.currentPage = action.payload;
+    updateGroupPage: (state, action) => {
+      state.groupData.meta.currentPage = action.payload;
     },
 
     // Blocked Regular Users
@@ -142,12 +142,12 @@ const usersSlice = createSlice({
       state.blockedRegularData.meta.currentPage = action.payload;
     },
 
-    // Blocked Group Users
-    setBlockedGroupUsers: (state, action) => {
+    // Group Members Data
+    setGroupMembers: (state, action) => {
       const { data, meta, search } = action.payload;
 
-      state.blockedGroupData.lists = data || [];
-      state.blockedGroupData.meta = {
+      state.groupMembersData.lists = data || [];
+      state.groupMembersData.meta = {
         totalItems: meta?.total || 0,
         totalPages: meta?.last_page || 1,
         currentPage: meta?.page || 1,
@@ -155,16 +155,29 @@ const usersSlice = createSlice({
       };
 
       if (search !== undefined) {
-        state.blockedGroupData.search = search;
+        state.groupMembersData.search = search;
       }
     },
 
-    updateBlockedGroupSearch: (state, action) => {
-      state.blockedGroupData.search = action.payload;
+    updateGroupMembersSearch: (state, action) => {
+      state.groupMembersData.search = action.payload;
     },
 
-    updateBlockedGroupPage: (state, action) => {
-      state.blockedGroupData.meta.currentPage = action.payload;
+    updateGroupMembersPage: (state, action) => {
+      state.groupMembersData.meta.currentPage = action.payload;
+    },
+
+    resetGroupMembers: (state) => {
+      state.groupMembersData = {
+        lists: [],
+        meta: {
+          totalItems: 0,
+          totalPages: 1,
+          currentPage: 1,
+          pageSize: 10,
+        },
+        search: "",
+      };
     },
 
     // Single User Details
@@ -266,28 +279,29 @@ const usersSlice = createSlice({
 
     // Remove group from lists
     removeGroupFromLists: (state, action) => {
-      const { groupId, isBlocked } = action.payload;
+      const { groupId } = action.payload;
 
-      if (isBlocked) {
-        // Remove from blocked groups
-        state.blockedGroupData.lists = state.blockedGroupData.lists.filter(g => g._id !== groupId);
-        state.blockedGroupData.meta.totalItems = Math.max(0, state.blockedGroupData.meta.totalItems - 1);
-        state.blockedGroupData.meta.totalPages = Math.max(1, Math.ceil(state.blockedGroupData.meta.totalItems / state.blockedGroupData.meta.pageSize));
-        
-        // Adjust current page if needed
-        if (state.blockedGroupData.lists.length === 0 && state.blockedGroupData.meta.currentPage > 1) {
-          state.blockedGroupData.meta.currentPage = Math.max(1, state.blockedGroupData.meta.currentPage - 1);
+        state.groupData.lists = state.groupData.lists.filter(g => g._id !== groupId);
+        state.groupData.meta.totalItems = Math.max(0, state.groupData.meta.totalItems - 1);
+        state.groupData.meta.totalPages = Math.max(1, Math.ceil(state.groupData.meta.totalItems / state.groupData.meta.pageSize));
+
+        if (state.groupData.lists.length === 0 && state.groupData.meta.currentPage > 1) {
+          state.groupData.meta.currentPage = Math.max(1, state.groupData.meta.currentPage - 1);
         }
-      } else {
-        // Remove from active groups
-        state.activeGroupData.lists = state.activeGroupData.lists.filter(g => g._id !== groupId);
-        state.activeGroupData.meta.totalItems = Math.max(0, state.activeGroupData.meta.totalItems - 1);
-        state.activeGroupData.meta.totalPages = Math.max(1, Math.ceil(state.activeGroupData.meta.totalItems / state.activeGroupData.meta.pageSize));
-        
-        // Adjust current page if needed
-        if (state.activeGroupData.lists.length === 0 && state.activeGroupData.meta.currentPage > 1) {
-          state.activeGroupData.meta.currentPage = Math.max(1, state.activeGroupData.meta.currentPage - 1);
-        }
+      
+    },
+
+    // Remove member from group members list
+    removeMemberFromGroup: (state, action) => {
+      const { memberId } = action.payload;
+      
+      state.groupMembersData.lists = state.groupMembersData.lists.filter(m => m._id !== memberId);
+      state.groupMembersData.meta.totalItems = Math.max(0, state.groupMembersData.meta.totalItems - 1);
+      state.groupMembersData.meta.totalPages = Math.max(1, Math.ceil(state.groupMembersData.meta.totalItems / state.groupMembersData.meta.pageSize));
+      
+      // Adjust current page if needed
+      if (state.groupMembersData.lists.length === 0 && state.groupMembersData.meta.currentPage > 1) {
+        state.groupMembersData.meta.currentPage = Math.max(1, state.groupMembersData.meta.currentPage - 1);
       }
     },
 
@@ -300,15 +314,16 @@ export const {
   setActiveRegularUsers,
   updateActiveRegularSearch,
   updateActiveRegularPage,
-  setActiveGroupUsers,
-  updateActiveGroupSearch,
-  updateActiveGroupPage,
+  setGroupUsers,
+  updateGroupSearch,
+  updateGroupPage,
   setBlockedRegularUsers,
   updateBlockedRegularSearch,
   updateBlockedRegularPage,
-  setBlockedGroupUsers,
-  updateBlockedGroupSearch,
-  updateBlockedGroupPage,
+  setGroupMembers,
+  updateGroupMembersSearch,
+  updateGroupMembersPage,
+  resetGroupMembers,
   setSingleUser,
   setActiveTab,
   setBlockedTab,
@@ -321,6 +336,7 @@ export const {
   closeDeleteGroupModal,
   transferUserBetweenLists,
   removeGroupFromLists,
+  removeMemberFromGroup,
   resetUsersState,
 } = usersSlice.actions;
 

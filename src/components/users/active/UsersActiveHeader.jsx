@@ -1,13 +1,13 @@
 import SearchInput from "@/components/shared/SearchInput";
 import {
   useActiveRegularUsers,
-  useActiveGroupUsers,
+  useGroupUsers,
   useUserTabs,
 } from "@/hooks";
 
 function UsersActiveHeader() {
   const regularHook = useActiveRegularUsers();
-  const groupHook = useActiveGroupUsers();
+  const groupHook = useGroupUsers();
   const { currentTab, handleTabChange } = useUserTabs("active");
 
   const { activeSearch, handleSearchChange, isFetching } =

@@ -1,13 +1,13 @@
 import SearchInput from "@/components/shared/SearchInput";
 import {
   useBlockedRegularUsers,
-  useBlockedGroupUsers,
   useUserTabs,
+  useGroupUsers,
 } from "@/hooks";
 
 function UsersBlockedHeader() {
   const regularHook = useBlockedRegularUsers();
-  const groupHook = useBlockedGroupUsers();
+  const groupHook = useGroupUsers();
   const { currentTab, handleTabChange } = useUserTabs("blocked");
 
   const { blockedSearch, handleSearchChange, isFetching } =

@@ -1,6 +1,6 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
-import { useActiveGroupUsers } from "@/hooks";
+import { useGroupUsers } from "@/hooks";
 import { adminRouteLinks, ViewIconSvg, DeleteIconSvg } from "@/services";
 import moment from "moment";
 import { Fragment } from "react";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { openDeleteGroupModal } from "@/features/users/usersSlice";
 
-function UsersActiveGroupTable() {
+function UsersGroupTable() {
   const dispatch = useDispatch();
   const {
     isFetching,
@@ -20,7 +20,7 @@ function UsersActiveGroupTable() {
     total_page,
     total_items,
     updatePage,
-  } = useActiveGroupUsers();
+  } = useGroupUsers();
 
   const handleDeleteClick = (group) => {
     dispatch(openDeleteGroupModal(group));
@@ -92,4 +92,4 @@ function UsersActiveGroupTable() {
   );
 }
 
-export default UsersActiveGroupTable;
+export default UsersGroupTable;

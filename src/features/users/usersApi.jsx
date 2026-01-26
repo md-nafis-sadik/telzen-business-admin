@@ -1,10 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
 import {
   setActiveRegularUsers,
-  setActiveGroupUsers,
   setBlockedRegularUsers,
-  setBlockedGroupUsers,
+  setGroupMembers,
   setSingleUser,
+  setGroupUsers,
 } from "./usersSlice";
 
 const usersApi = apiSlice.injectEndpoints({
@@ -54,7 +54,7 @@ const usersApi = apiSlice.injectEndpoints({
     }),
 
     // Get Active Group Users
-    getActiveGroupUsers: builder.query({
+    getGroupUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
         let url = `/customer/group?page=${current_page}&limit=${limit}`;
         if (search) {
@@ -69,7 +69,7 @@ const usersApi = apiSlice.injectEndpoints({
           const responseData = result?.data;
 
           dispatch(
-            setActiveGroupUsers({
+            setGroupUsers({
               data: responseData?.data || [],
               meta: responseData?.meta || {
                 page: arg.current_page || 1,
@@ -82,7 +82,7 @@ const usersApi = apiSlice.injectEndpoints({
           );
         } catch (error) {
           dispatch(
-            setActiveGroupUsers({
+            setGroupUsers({
               data: [],
               meta: {
                 page: arg.current_page || 1,
@@ -141,50 +141,6 @@ const usersApi = apiSlice.injectEndpoints({
       },
     }),
 
-    // Get Blocked Group Users
-    getBlockedGroupUsers: builder.query({
-      query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/customer/group?page=${current_page}&limit=${limit}`;
-        if (search) {
-          url += `&search=${encodeURIComponent(search)}`;
-        }
-        return url;
-      },
-
-      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
-        try {
-          const result = await queryFulfilled;
-          const responseData = result?.data;
-
-          dispatch(
-            setBlockedGroupUsers({
-              data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
-        } catch (error) {
-          dispatch(
-            setBlockedGroupUsers({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
-        }
-      },
-    }),
-
     // Get Single User Details (for the detail page with eSIM bundles)
     getUserDetails: builder.query({
       query: (id) => `/admin/users/${id}`,
@@ -198,10 +154,48 @@ const usersApi = apiSlice.injectEndpoints({
       },
     }),
 
-    // Get Active Group Members (when clicking eye icon on a group)
+    // Get Group Members (when clicking eye icon on a group)
     getGroupMembers: builder.query({
-      query: ({ groupId, current_page = 1, limit = 10 }) =>
-        `/customer/by-group?group_id=${groupId}&page=${current_page}&limit=${limit}`,
+      query: ({ groupId, current_page = 1, limit = 10, search = "" }) => {
+        let url = `/customer/by-group?group_id=${groupId}&page=${current_page}&limit=${limit}`;
+        if (search) {
+          url += `&search=${encodeURIComponent(search)}`;
+        }
+        return url;
+      },
+
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          const responseData = result?.data;
+
+          dispatch(
+            setGroupMembers({
+              data: responseData?.data || [],
+              meta: responseData?.meta || {
+                page: arg.current_page || 1,
+                limit: arg.limit || 10,
+                total: 0,
+                last_page: 0,
+              },
+              search: arg.search || "",
+            }),
+          );
+        } catch (error) {
+          dispatch(
+            setGroupMembers({
+              data: [],
+              meta: {
+                page: arg.current_page || 1,
+                limit: arg.limit || 10,
+                total: 0,
+                last_page: 0,
+              },
+              search: arg.search || "",
+            }),
+          );
+        }
+      },
     }),
 
     // Get User eSIM Bundles (for detail page)
@@ -227,7 +221,7 @@ const usersApi = apiSlice.injectEndpoints({
     deleteCustomerGroup: builder.mutation({
       query: ({ group_id }) => ({
         url: `/customer/group/delete?group_id=${group_id}`,
-        method: "PATCH",
+        method: "DELETE",
       }),
     }),
 
@@ -246,9 +240,8 @@ const usersApi = apiSlice.injectEndpoints({
 
 export const {
   useGetActiveRegularUsersQuery,
-  useGetActiveGroupUsersQuery,
+  useGetGroupUsersQuery,
   useGetBlockedRegularUsersQuery,
-  useGetBlockedGroupUsersQuery,
   useGetUserDetailsQuery,
   useGetGroupMembersQuery,
   useGetUserEsimBundlesQuery,
