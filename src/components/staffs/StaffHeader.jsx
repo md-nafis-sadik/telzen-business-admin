@@ -6,7 +6,7 @@ function StaffHeader() {
   const { search, handleSearchChange, isFetching, totalItems } = useStaffs();
 
   return (
-    <div className="w-full flex flex-col xl:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
+    <div className="w-full flex flex-col lg:flex-row items-start md:items-center justify-between gap-4 md:gap-0">
       <div>
         <h1 className="self-stretch justify-start text-gray-100 text-lg font-semibold leading-relaxed">
           Staffs
@@ -24,9 +24,7 @@ function StaffHeader() {
           /> */}
 
           <Link to="/admin/staffs/add" className="w-full md:w-auto">
-            <button className="btn_save">
-              Add New
-            </button>
+            <button className="btn_save">Add New</button>
           </Link>
         </div>
       </div>

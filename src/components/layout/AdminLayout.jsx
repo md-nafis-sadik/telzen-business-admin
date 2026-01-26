@@ -7,11 +7,15 @@ import Modal from "../shared/Modal";
 import { DeletePopupIconSvg } from "@/services";
 import { useLogout } from "@/hooks";
 import { toggleLogoutModal } from "@/features/shared/sharedSlice";
+import { useGetUserProfileQuery } from "@/features/auth/authApi";
 
 function AdminLayout() {
   const dispatch = useDispatch();
   const { showLogoutModal } = useSelector((state) => state.shared);
   const { performLogout } = useLogout();
+  
+  // Fetch profile on every refresh
+  useGetUserProfileQuery();
 
   const blockConfirmHandler = async () => {
     performLogout();

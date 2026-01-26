@@ -27,11 +27,6 @@ export default function useAuthCheck() {
         if (data) {
           const auth = JSON.parse(data);
           
-          console.log("📦 Decrypted auth data:", { 
-            hasToken: !!auth?.token, 
-            role: auth?.role,
-            expireAt: auth?.expireAt 
-          });
           
           // Check if token exists
           if (auth?.token) {

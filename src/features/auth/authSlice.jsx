@@ -4,6 +4,29 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   auth: {},
   userRole: null, // Store user role separately for easier access
+  profile: {
+    name: "",
+    email: "",
+    phone: "",
+    uid: "",
+    country: null,
+    image: null,
+    document: null,
+    role: "",
+    business: {
+      uid: "",
+      name: "",
+      email: "",
+      markup_percentage: {
+        discount: 0,
+        price_increase: 0,
+      },
+      access_code: "",
+      secret_key: "",
+    },
+    is_blocked: false,
+    created_at: null,
+  },
   files: [],
   previews: [],
   document: null,
@@ -26,22 +49,15 @@ const authSlice = createSlice({
         state.userRole = "super-admin";
         state.auth.role = "super-admin";
       }
-      
-      console.log("🔐 Saving auth data to localStorage:", { 
-        hasToken: !!state.auth?.token, 
-        role: state.auth?.role,
-        expireAt: state.auth?.expireAt 
-      });
-      
+
       const { data, error } = encryptValue(JSON.stringify(state.auth));
-      
+
       if (error) {
         console.error("❌ Encryption failed:", error);
       } else {
-        console.log("✅ Encrypted data successfully, saving to localStorage");
         localStorage.setItem("telzen_business_admin", data);
       }
-      
+
       state.previews = state.auth?.image ? [state.auth?.image] : [];
     },
     initiateAuthData: (state, action) => {
@@ -64,6 +80,9 @@ const authSlice = createSlice({
         state.userRole = action.payload.role;
       }
     },
+    setProfile: (state, action) => {
+      state.profile = { ...state.profile, ...action.payload };
+    },
     logout: (state) => {
       return {
         ...initialState,
@@ -75,6 +94,29 @@ const authSlice = createSlice({
     clearAuthState: (state) => {
       state.auth = {};
       state.userRole = null;
+      state.profile = {
+        name: "",
+        email: "",
+        phone: "",
+        uid: "",
+        country: null,
+        image: null,
+        document: null,
+        role: "",
+        business: {
+          uid: "",
+          name: "",
+          email: "",
+          markup_percentage: {
+            discount: 0,
+            price_increase: 0,
+          },
+          access_code: "",
+          secret_key: "",
+        },
+        is_blocked: false,
+        created_at: null,
+      };
       state.files = [];
       state.previews = [];
       state.document = null;
@@ -97,6 +139,7 @@ export const {
   saveAuthData,
   initiateAuthData,
   updateAuth,
+  setProfile,
   logout,
   clearAuthState,
   setFiles,

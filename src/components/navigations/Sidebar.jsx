@@ -125,13 +125,13 @@ function Sidebar() {
       canAccess: canAccessContactSupport,
       type: "single",
     },
-    {
-      id: "apiSettings",
-      menu: adminRouteLinks?.apiSettings,
-      icon: () => <ApiSettingsIconSvg />,
-      canAccess: canAccessApiSettings,
-      type: "single",
-    },
+    // {
+    //   id: "apiSettings",
+    //   menu: adminRouteLinks?.apiSettings,
+    //   icon: () => <ApiSettingsIconSvg />,
+    //   canAccess: canAccessApiSettings,
+    //   type: "single",
+    // },
   ];
 
   return (

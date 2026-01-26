@@ -18,7 +18,7 @@ import Breadcrumb from "../shared/Breadcrumb";
 import { useRef } from "react";
 
 function DashboardHeader() {
-  const { auth } = useSelector((state) => state.auth);
+  const { auth, profile } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,15 +59,14 @@ function DashboardHeader() {
           >
             <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full outline-none">
               <img
-                src={auth?.image || images.profileAvatar}
+                src={auth?.image?.path || profile?.business?.image?.path}
                 alt=""
                 className="w-full h-full rounded-full object-cover"
               />
             </div>
             <div className="flex flex-col justify-center text-left gap-[2px]">
               <label className="self-stretch justify-start text-text-700 text-base font-bold font-['Inter'] leading-tight">
-                {/* {auth?.name} */}
-                Business Name
+                {profile?.business?.name}
               </label>
               <span
                 className="self-stretch justify-start text-text-700 text-xs font-normal font-['Inter'] leading-none"

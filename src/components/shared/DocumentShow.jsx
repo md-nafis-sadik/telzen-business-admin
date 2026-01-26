@@ -33,8 +33,12 @@ function DocumentShow({ title = "Document.pdf", fileUrl = "" }) {
           setIsOpen(true);
           setLoading(true); // reset loading on open
         }}
+        className="flex items-center gap-2"
       >
         <DownloadIconSvg />
+        <span className="text-sm text-gray-700 font-medium">
+          Document Uploaded
+        </span>
       </button>
 
       {/* Shadcn Dialog */}
@@ -57,10 +61,10 @@ function DocumentShow({ title = "Document.pdf", fileUrl = "" }) {
           </DialogHeader>
 
           {/* PDF or Image viewer */}
-          <div className="flex-1 h-full overflow-hidden flex items-center justify-center pb-2 relative">
+          <div className="flex-1 h-full overflow-hidden flex items-center justify-center p-2 relative">
             {loading && (
-              <div className="absolute inset-0 flex flex-col items-center gap-4 justify-center bg-gray-100">
-                <p className="text-gray-200">Please Wait! Loading...</p>
+              <div className="absolute inset-0 flex flex-col items-center gap-4 justify-center bg-gray-200 rounded-2xl m-2">
+                <p className="text-gray-300">Please Wait! Loading...</p>
                 <div className="animate-pulse h-12 w-12 bg-gray-300 rounded-full" />
               </div>
             )}
@@ -68,7 +72,7 @@ function DocumentShow({ title = "Document.pdf", fileUrl = "" }) {
             {isPdf ? (
               <iframe
                 src={fileUrl}
-                className="w-full h-full rounded-lg"
+                className="w-full h-full rounded-2xl"
                 title="PDF Viewer"
                 onLoad={() => setLoading(false)}
               />
@@ -76,7 +80,7 @@ function DocumentShow({ title = "Document.pdf", fileUrl = "" }) {
               <img
                 src={fileUrl}
                 alt={title}
-                className="max-w-full max-h-full object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain rounded-2xl"
                 onLoad={() => setLoading(false)}
               />
             )}
