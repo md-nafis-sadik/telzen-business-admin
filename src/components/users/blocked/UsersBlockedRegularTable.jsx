@@ -1,8 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useBlockedRegularUsers } from "@/hooks";
-import { ActiveIconSvg, BlockIconSvg } from "@/services";
-import moment from "moment";
+import { ActiveIconSvg, formatDate } from "@/services";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
 
@@ -69,9 +68,7 @@ function UsersBlockedRegularTable() {
                   </td>
                   <td className="table_outline_td">{user?.email || "-"}</td>
                   <td className="table_outline_td">
-                    {user?.created_at
-                      ? moment.unix(user.created_at).format("DD-MM-YYYY")
-                      : "-"}
+                    {formatDate(user.created_at)}
                   </td>
                   <td className="table_outline_td">
                     <div>

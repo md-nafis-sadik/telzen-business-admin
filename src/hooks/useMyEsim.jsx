@@ -6,10 +6,16 @@ import {
 import {
   updateRegularSearch,
   updateRegularPage,
+  updateRegularPageSize,
   updateGroupSearch,
   updateGroupPage,
+  updateGroupPageSize,
+  updateGroupDetailsSearch,
+  updateGroupDetailsPage,
+  updateGroupDetailsPageSize,
   openQrModal,
   openRemoveModal,
+  setLoadingInvoiceId,
 } from "@/features/myEsim/myEsimSlice";
 import {
   errorNotify,
@@ -19,35 +25,48 @@ import {
 } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "./useDebounce";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const generateCacheKey = (page, search) => {
+  return `${page}_${search}`;
+};
 
 export const useRegularMyEsims = () => {
-  const { regularData } = useSelector((state) => state.myEsim);
-
   const dispatch = useDispatch();
+  const { regularData, loadingInvoiceId } = useSelector(
+    (state) => state.myEsim,
+  );
 
-  const { lists, meta, search } = regularData;
+  const { lists, meta, search, cache, filterChangeId } = regularData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetRegularMyEsimQuery(
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
+
+  const { isFetching, isError, error } = useGetRegularMyEsimQuery(
     {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
+      refetchOnMountOrArgChange: false,
       skip: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateRegularPage(page.current_page));
-
-    if (page.limit && page.limit !== pageSize) {
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateRegularPageSize(newPageSize));
     }
   };
 
@@ -66,6 +85,7 @@ export const useRegularMyEsims = () => {
 
   const handleDownloadInvoice = async (myEsim) => {
     try {
+      dispatch(setLoadingInvoiceId(myEsim._id));
       const invoiceData = formatInvoiceData(myEsim);
 
       const companyInfo = {
@@ -90,57 +110,65 @@ export const useRegularMyEsims = () => {
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);
       errorNotify("Failed to generate invoice");
+    } finally {
+      dispatch(setLoadingInvoiceId(null));
     }
   };
 
   return {
-    isFetching: isFetching || isTyping,
-    isError,
-    error,
     myEsims: isTyping || isError ? [] : displayData,
     current_page: currentPage,
     limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     regularSearch: search,
-    updatePage: handlePageChange,
+    isFetching: isFetching || isTyping,
     isLoading: false,
+    isError,
+    error,
     handleSearchChange,
+    updatePage: handlePageChange,
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,
+    loadingInvoiceId,
   };
 };
 
 export const useGroupMyEsims = () => {
-  const { groupData } = useSelector((state) => state.myEsim);
-
   const dispatch = useDispatch();
-  const { showDeleteModal } = useSelector((state) => state.shared);
+  const navigate = useNavigate();
+  const { groupData, loadingInvoiceId } = useSelector((state) => state.myEsim);
 
-  const { lists, meta, search } = groupData;
+  const { lists, meta, search, cache, filterChangeId } = groupData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetGroupMyEsimQuery(
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
+
+  const { isFetching, isError, error } = useGetGroupMyEsimQuery(
     {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
+      refetchOnMountOrArgChange: false,
       skip: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateGroupPage(page.current_page));
-
-    if (page.limit && page.limit !== pageSize) {
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateGroupPageSize(newPageSize));
     }
   };
 
@@ -156,9 +184,13 @@ export const useGroupMyEsims = () => {
   const handleOpenRemoveModal = (myEsim) => {
     dispatch(openRemoveModal(myEsim));
   };
+  const handleViewDetails = (groupId) => {
+    navigate(`/admin/my-esim/group/${groupId}`);
+  };
 
   const handleDownloadInvoice = async (myEsim) => {
     try {
+      dispatch(setLoadingInvoiceId(myEsim._id));
       const invoiceData = formatInvoiceData(myEsim);
 
       const companyInfo = {
@@ -183,64 +215,74 @@ export const useGroupMyEsims = () => {
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);
       errorNotify("Failed to generate invoice");
+    } finally {
+      dispatch(setLoadingInvoiceId(null));
     }
   };
 
   return {
-    isFetching: isFetching || isTyping,
-    isError,
-    error,
     myEsims: isTyping || isError ? [] : displayData,
     current_page: currentPage,
     limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
     groupSearch: search,
-    updatePage: handlePageChange,
+    isFetching: isFetching || isTyping,
     isLoading: false,
-    showDeleteModal,
+    isError,
+    error,
     handleSearchChange,
+    updatePage: handlePageChange,
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,
+    loadingInvoiceId,
+    handleViewDetails,
   };
 };
 
 export const useGroupEsimDetails = (groupId) => {
-  const { groupData } = useSelector((state) => state.myEsim);
-
   const dispatch = useDispatch();
+  const { groupDetailsData, loadingInvoiceId } = useSelector(
+    (state) => state.myEsim,
+  );
 
-  const { lists, meta, search } = groupData;
+  const { lists, meta, search, cache, filterChangeId } = groupDetailsData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const { data, isFetching, isError, error } = useGetGroupEsimDetailsQuery(
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
+
+  const { isFetching, isError, error } = useGetGroupEsimDetailsQuery(
     {
       group_id: groupId,
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
       skip: !groupId,
+      refetchOnMountOrArgChange: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = data?.data || lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
-    dispatch(updateGroupPage(page.current_page));
-
-    if (page.limit && page.limit !== pageSize) {
+    dispatch(updateGroupDetailsPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateGroupDetailsPageSize(newPageSize));
     }
   };
 
   const handleSearchChange = (value) => {
-    dispatch(updateGroupSearch(value));
-    dispatch(updateGroupPage(1));
+    dispatch(updateGroupDetailsSearch(value));
+    dispatch(updateGroupDetailsPage(1));
   };
 
   const handleOpenQrModal = (myEsim) => {
@@ -253,6 +295,7 @@ export const useGroupEsimDetails = (groupId) => {
 
   const handleDownloadInvoice = async (myEsim) => {
     try {
+      dispatch(setLoadingInvoiceId(myEsim._id));
       const invoiceData = formatInvoiceData(myEsim);
 
       const companyInfo = {
@@ -277,24 +320,27 @@ export const useGroupEsimDetails = (groupId) => {
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);
       errorNotify("Failed to generate invoice");
+    } finally {
+      dispatch(setLoadingInvoiceId(null));
     }
   };
 
   return {
-    isFetching: isFetching || isTyping,
-    isError,
-    error,
     myEsims: isTyping || isError ? [] : displayData,
     current_page: currentPage,
     limit: pageSize,
     total_page: totalPages,
     total_items: totalItems,
-    groupSearch: search,
-    updatePage: handlePageChange,
+    groupDetailsSearch: search,
+    isFetching: isFetching || isTyping,
     isLoading: false,
+    isError,
+    error,
     handleSearchChange,
+    updatePage: handlePageChange,
     handleOpenQrModal,
     handleOpenRemoveModal,
     handleDownloadInvoice,
+    loadingInvoiceId,
   };
 };

@@ -15,27 +15,14 @@ function Staff() {
     showBlockModal,
     showUnblockModal,
     showDeleteModal,
-    successModal,
     isBlockLoading,
     isUnblockLoading,
     isDeletingStaff,
     handleBlockStaff,
     handleUnblockStaff,
     handleDeleteStaff,
-    handleCloseSuccessModal,
     dispatch,
   } = useStaffs();
-
-  const getSuccessMessage = () => {
-    const messages = {
-      block: "Staff has been blocked successfully!",
-      unblock: "Staff has been unblocked successfully!",
-      add: "Staff has been added successfully!",
-      update: "Staff has been updated successfully!",
-      delete: "Staff has been deleted successfully!",
-    };
-    return successModal.message || messages[successModal.type] || "Operation successful!";
-  };
 
   return (
     <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl">
@@ -95,17 +82,7 @@ function Staff() {
         isLoading={isDeletingStaff}
       />
 
-      <Modal
-        confirmButtonClass="btn_success h-12 !w-full text-sm"
-        confirmButton="Okay"
-        title="Successful!"
-        titleClass="text-text-700 leading-normal w-[400px]"
-        actionPara={getSuccessMessage()}
-        popupIcon={<SuccessPopupIconSvg />}
-        showModal={successModal.show}
-        onClose={handleCloseSuccessModal}
-        confirmHandeler={handleCloseSuccessModal}
-      />
+
     </div>
   );
 }

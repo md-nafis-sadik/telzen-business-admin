@@ -59,7 +59,8 @@ const staffSlice = createSlice({
       };
 
       // Use the current search state for cache key, not the incoming search parameter
-      const currentSearch = search !== undefined ? search : state.staffData.search;
+      const currentSearch =
+        search !== undefined ? search : state.staffData.search;
       const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "");
       state.staffData.cache[cacheKey] = {
         data: data || [],
@@ -156,7 +157,7 @@ const staffSlice = createSlice({
       if (staffIndex !== -1) {
         state.staffData.lists[staffIndex] = {
           ...state.staffData.lists[staffIndex],
-          status: "blocked",
+          is_blocked: true,
         };
       }
 
@@ -171,18 +172,17 @@ const staffSlice = createSlice({
         if (cacheStaffIndex !== -1) {
           state.staffData.cache[key].data[cacheStaffIndex] = {
             ...state.staffData.cache[key].data[cacheStaffIndex],
-            status: "blocked",
+            is_blocked: true,
           };
         }
       });
 
       if (
-        (state.singleStaff._id === staff_id ||
-          state.singleStaff.staff_user_id === staff_id ||
-          state.singleStaff.id === staff_id) &&
-        state.singleStaff.status !== "blocked"
+        state.singleStaff._id === staff_id ||
+        state.singleStaff.staff_user_id === staff_id ||
+        state.singleStaff.id === staff_id
       ) {
-        state.singleStaff = { ...state.singleStaff, status: "blocked" };
+        state.singleStaff = { ...state.singleStaff, is_blocked: true };
       }
     },
 
@@ -199,7 +199,7 @@ const staffSlice = createSlice({
       if (staffIndex !== -1) {
         state.staffData.lists[staffIndex] = {
           ...state.staffData.lists[staffIndex],
-          status: "active",
+          is_blocked: false,
         };
       }
 
@@ -214,7 +214,7 @@ const staffSlice = createSlice({
         if (cacheStaffIndex !== -1) {
           state.staffData.cache[key].data[cacheStaffIndex] = {
             ...state.staffData.cache[key].data[cacheStaffIndex],
-            status: "active",
+            is_blocked: false,
           };
         }
       });
@@ -224,7 +224,7 @@ const staffSlice = createSlice({
         state.singleStaff.staff_user_id === staff_id ||
         state.singleStaff.id === staff_id
       ) {
-        state.singleStaff = { ...state.singleStaff, status: "active" };
+        state.singleStaff = { ...state.singleStaff, is_blocked: false };
       }
     },
 
@@ -238,7 +238,10 @@ const staffSlice = createSlice({
       if (state.staffData.cache[firstPageKey]) {
         state.staffData.cache[firstPageKey].data.unshift(newStaff);
         // Remove last item if exceeds page size
-        if (state.staffData.cache[firstPageKey].data.length > state.staffData.meta.pageSize) {
+        if (
+          state.staffData.cache[firstPageKey].data.length >
+          state.staffData.meta.pageSize
+        ) {
           state.staffData.cache[firstPageKey].data.pop();
         }
       }
@@ -264,7 +267,9 @@ const staffSlice = createSlice({
 
       // Remove from all cache entries
       Object.keys(state.staffData.cache).forEach((key) => {
-        state.staffData.cache[key].data = state.staffData.cache[key].data.filter(
+        state.staffData.cache[key].data = state.staffData.cache[
+          key
+        ].data.filter(
           (staff) =>
             staff._id !== staff_id &&
             staff.staff_user_id !== staff_id &&
@@ -275,14 +280,19 @@ const staffSlice = createSlice({
       // Recalculate total pages
       state.staffData.meta.totalPages = Math.max(
         1,
-        Math.ceil(state.staffData.meta.totalItems / state.staffData.meta.pageSize)
+        Math.ceil(
+          state.staffData.meta.totalItems / state.staffData.meta.pageSize,
+        ),
       );
 
       // Adjust current page if current page is now empty and not page 1
-      if (state.staffData.lists.length === 0 && state.staffData.meta.currentPage > 1) {
+      if (
+        state.staffData.lists.length === 0 &&
+        state.staffData.meta.currentPage > 1
+      ) {
         const newPage = Math.min(
           state.staffData.meta.currentPage,
-          state.staffData.meta.totalPages
+          state.staffData.meta.totalPages,
         );
         state.staffData.meta.currentPage = Math.max(1, newPage);
       }

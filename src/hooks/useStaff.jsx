@@ -19,8 +19,8 @@ import {
   updateStaffPageSize,
   updateStaffSearch,
 } from "@/features/staffs/staffSlice";
-import { errorNotify, roleOptions } from "@/services";
-import { useState } from "react";
+import { errorNotify, roleOptions, successNotify } from "@/services";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
@@ -32,6 +32,7 @@ const generateCacheKey = (page, search) => {
 
 export const useStaffs = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     staffData,
     showBlockModal,
@@ -119,13 +120,7 @@ export const useStaffs = () => {
       }).unwrap();
 
       dispatch(closeBlockModal());
-      dispatch(
-        setSuccessModal({
-          show: true,
-          type: "block",
-          message: response?.message || "Staff blocked successfully!",
-        }),
-      );
+      successNotify("Staff blocked successfully");
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to block staff");
     }
@@ -141,13 +136,7 @@ export const useStaffs = () => {
       }).unwrap();
 
       dispatch(closeUnblockModal());
-      dispatch(
-        setSuccessModal({
-          show: true,
-          type: "unblock",
-          message: response?.message || "Staff unblocked successfully!",
-        }),
-      );
+      successNotify("Staff unblocked successfully");
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to unblock staff");
     }
@@ -162,13 +151,7 @@ export const useStaffs = () => {
       ).unwrap();
 
       dispatch(closeDeleteModal());
-      dispatch(
-        setSuccessModal({
-          show: true,
-          type: "delete",
-          message: response?.message || "Staff deleted successfully!",
-        }),
-      );
+      successNotify("Staff deleted successfully");
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to delete staff");
     }
@@ -176,6 +159,7 @@ export const useStaffs = () => {
 
   const handleCloseSuccessModal = () => {
     dispatch(clearSuccessModal());
+    navigate("/admin/staffs");
   };
 
   return {
@@ -266,29 +250,81 @@ export const useStaffMutations = () => {
 };
 
 export const useAddStaff = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedRole, setSelectedRole] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
+  const [errors, setErrors] = useState({});
   const { phone, countryInfo, handlePhoneChange } = usePhoneInput("", "bd");
   const [addStaff, { isLoading: isAdding }] = useAddStaffMutation();
 
+  // Validate form on changes
+  const validateForm = () => {
+    const { addStaffValidation } = require("@/services/validations/staff.validation");
+    
+    try {
+      addStaffValidation.parse({
+        name: formData.name,
+        email: formData.email,
+        phone: phone,
+        role: selectedRole,
+      });
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error.errors) {
+        const newErrors = {};
+        error.errors.forEach((err) => {
+          newErrors[err.path[0]] = err.message;
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  // Check if form is valid for button disable
+  const isFormValid = () => {
+    return (
+      formData.name.trim().length >= 3 &&
+      formData.email.includes("@") &&
+      phone.length >= 10 &&
+      selectedRole.length > 0
+    );
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const name = e.target.name.value;
-    const email = e.target.email.value;
+    
+    // Validate before submit
+    if (!validateForm()) {
+      errorNotify("Please fill in all required fields correctly");
+      return;
+    }
+
     const data = {
-      name,
-      email,
+      name: formData.name,
+      email: formData.email,
       role: selectedRole,
       phone,
       country: countryInfo,
     };
 
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(data));
+    const formDataToSend = new FormData();
+    formDataToSend.append("data", JSON.stringify(data));
 
     try {
-      const response = await addStaff(formData).unwrap();
+      const response = await addStaff(formDataToSend).unwrap();
       dispatch(
         setSuccessModal({
           show: true,
@@ -296,10 +332,6 @@ export const useAddStaff = () => {
           message: response?.message || "Staff added successfully!",
         }),
       );
-      // Navigate after showing success modal
-      setTimeout(() => {
-        navigate("/admin/staffs");
-      }, 1500);
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to add staff");
     }
@@ -314,11 +346,14 @@ export const useAddStaff = () => {
     handleSubmit,
     isAdding,
     dispatch,
+    formData,
+    handleInputChange,
+    errors,
+    isFormValid: isFormValid(),
   };
 };
 
 export const useEditStaff = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const { singleStaff } = useSelector((state) => state.staffs);
@@ -337,7 +372,13 @@ export const useEditStaff = () => {
     return roleValue?.toLowerCase() || "";
   };
 
-  const [selectedRole, setSelectedRole] = useState(getRoleValue());
+  const [selectedRole, setSelectedRole] = useState("");
+
+  useEffect(() => {
+    if (singleStaff?.role) {
+      setSelectedRole(getRoleValue());
+    }
+  }, [singleStaff?.role]);
   const { phone, countryInfo, handlePhoneChange } = usePhoneInput(
     singleStaff?.phone,
     singleStaff?.country?.code,
@@ -348,9 +389,12 @@ export const useEditStaff = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
+    
+    const roleToSend = selectedRole || getRoleValue();
+    
     const data = {
       name,
-      role: selectedRole,
+      role: roleToSend,
     };
 
     const formData = new FormData();
@@ -368,10 +412,6 @@ export const useEditStaff = () => {
           message: response?.message || "Staff updated successfully!",
         }),
       );
-      // Navigate after showing success modal
-      setTimeout(() => {
-        navigate("/admin/staffs");
-      }, 1500);
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to update staff");
     }

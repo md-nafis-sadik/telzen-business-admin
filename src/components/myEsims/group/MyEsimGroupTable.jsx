@@ -1,12 +1,10 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMyEsims } from "@/hooks/useMyEsim";
-import { ViewIconSvg } from "@/services";
+import { formatDate, ViewIconSvg } from "@/services";
 import { Fragment } from "react";
-import { useNavigate } from "react-router-dom";
 
 function MyEsimGroupTable() {
-  const navigate = useNavigate();
   const {
     isFetching,
     isError,
@@ -17,11 +15,8 @@ function MyEsimGroupTable() {
     total_page,
     total_items,
     updatePage,
+    handleViewDetails,
   } = useGroupMyEsims();
-
-  const handleViewDetails = (groupId) => {
-    navigate(`/admin/my-esim/group/${groupId}`);
-  };
 
   return (
     <Fragment>
@@ -49,25 +44,31 @@ function MyEsimGroupTable() {
               tableName="Group eSIM"
             >
               {myEsims.map((group, index) => {
-                const orderDate = group?.order_created_at
-                  ? new Date(group.order_created_at * 1000).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric'
-                    })
-                  : '-';
-
                 return (
                   <tr key={group._id || index} className="table_row group">
-                    <td className="table_outline_td">{((current_page - 1) * limit) + index + 1 || "-"}</td>
-                    <td className="table_outline_td">{group?.group_uid || "-"}</td>
-                    <td className="table_outline_td">{group?.group_name || "-"}</td>
-                    <td className="table_outline_td">{group?.package_name || "-"}</td>
-                    <td className="table_outline_td">{orderDate}</td>
-                    <td className="table_outline_td">{group?.total_purchased_item || 0}</td>
-                    <td className="table_outline_td">${group?.total_amount || 0}</td>
                     <td className="table_outline_td">
-                      <button 
+                      {(current_page - 1) * limit + index + 1 || "-"}
+                    </td>
+                    <td className="table_outline_td">
+                      {group?.group_uid || "-"}
+                    </td>
+                    <td className="table_outline_td">
+                      {group?.group_name || "-"}
+                    </td>
+                    <td className="table_outline_td">
+                      {group?.package_name || "-"}
+                    </td>
+                    <td className="table_outline_td">
+                      {formatDate(group?.order_created_at)}
+                    </td>
+                    <td className="table_outline_td">
+                      {group?.total_purchased_item || 0}
+                    </td>
+                    <td className="table_outline_td">
+                      ${group?.total_amount || 0}
+                    </td>
+                    <td className="table_outline_td">
+                      <button
                         onClick={() => handleViewDetails(group._id)}
                         className="flex justify-center items-center w-full"
                       >

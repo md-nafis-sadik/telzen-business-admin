@@ -2,6 +2,7 @@ import { apiSlice } from "../api/apiSlice";
 import {
   setRegularMyEsim,
   setGroupMyEsim,
+  setGroupDetailsData,
   setSingleMyEsim,
 } from "./myEsimSlice";
 
@@ -22,33 +23,22 @@ const myEsimApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setRegularMyEsim({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
+              meta: {
+                current_page: apiMeta?.current_page || arg.current_page || 1,
+                page_size: apiMeta?.page_size || arg.limit || 10,
+                total_items: apiMeta?.total_items || 0,
+                total_pages: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          console.error("Regular MyEsim fetch error:", error);
-          dispatch(
-            setRegularMyEsim({
-              data: [],
-              meta: {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -68,33 +58,22 @@ const myEsimApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setGroupMyEsim({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
+              meta: {
+                current_page: apiMeta?.current_page || arg.current_page || 1,
+                page_size: apiMeta?.page_size || arg.limit || 10,
+                total_items: apiMeta?.total_items || 0,
+                total_pages: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          console.error("Group MyEsim fetch error:", error);
-          dispatch(
-            setGroupMyEsim({
-              data: [],
-              meta: {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -114,39 +93,28 @@ const myEsimApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
-            setGroupMyEsim({
+            setGroupDetailsData({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
+              meta: {
+                current_page: apiMeta?.current_page || arg.current_page || 1,
+                page_size: apiMeta?.page_size || arg.limit || 10,
+                total_items: apiMeta?.total_items || 0,
+                total_pages: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          console.error("Group eSIM details fetch error:", error);
-          dispatch(
-            setGroupMyEsim({
-              data: [],
-              meta: {
-                current_page: arg.current_page || 1,
-                page_size: arg.limit || 10,
-                total_items: 0,
-                total_pages: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
 
     getSingleMyEsim: builder.query({
-      query: ({ myEsim_id }) => `/admin/staff-user/${myEsim_id}`,
+      query: ({ myEsim_id }) => `/esim/${myEsim_id}`,
       async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
@@ -156,28 +124,6 @@ const myEsimApi = apiSlice.injectEndpoints({
         }
       },
     }),
-
-    // getMyEsimDetails: builder.query({
-    //   query: ({ myEsim_id }) => ({
-    //     url: `/admin/myEsim-user/${myEsim_id}`,
-    //     method: "GET",
-    //   }),
-
-    //   async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
-    //     try {
-    //       const result = await queryFulfilled;
-    //       const response = result?.data;
-
-    //       dispatch(
-    //         setMyEsimDetails(response?.data || {})
-    //       );
-    //     } catch (error) {
-    //       dispatch(
-    //         setMyEsimDetails({})
-    //       );
-    //     }
-    //   },
-    // }),
   }),
 });
 

@@ -15,6 +15,8 @@ function Packages() {
 
   const packages = data?.data?.packages || [];
 
+  const encodedImage = data?.data?.country?.image ? encodeURI(data?.data?.country?.image) : encodeURI(data?.data?.region?.image);
+
   return (
     <section className="w-full flex-1 flex flex-col rounded-2xl">
       <div className="flex flex-col md:flex-row gap-8">
@@ -27,7 +29,7 @@ function Packages() {
               <div
                 className="aspect-[5/6] relative rounded-3xl overflow-hidden"
                 style={{
-                  backgroundImage: `url(${data?.data?.country?.image || data?.data?.region?.image || ""})`,
+                  backgroundImage: `url(${encodedImage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

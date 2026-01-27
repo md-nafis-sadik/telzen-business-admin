@@ -1,5 +1,6 @@
 import SearchInput from "@/components/shared/SearchInput";
 import { useRegularMyEsims } from "@/hooks";
+import { Link } from "react-router-dom";
 
 function MyEsimRegularHeader() {
   const { regularSearch, handleSearchChange, isFetching } = useRegularMyEsims();
@@ -21,12 +22,12 @@ function MyEsimRegularHeader() {
             className="w-full md:w-auto"
           />
 
-          <a
-            href="https://www.telzen.net/destinations"
+          <Link
+            to="/admin/inventory"
             className="w-full md:w-auto flex items-center justify-center px-5 h-[46px] bg-main-700 rounded-lg text-white text-sm font-semibold font-inter tracking-wide whitespace-nowrap"
           >
             Buy eSIM
-          </a>
+          </Link>
         </div>
       </div>
     </div>

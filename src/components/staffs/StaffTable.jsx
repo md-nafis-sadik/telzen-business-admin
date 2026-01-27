@@ -58,13 +58,17 @@ function StaffTable() {
                     {(current_page - 1) * limit + index + 1}
                   </td>
                   <td className="table_outline_td">
-                    <div className="flex items-center justify-center gap-2">
-                      <img
-                        src={staff?.image?.path}
-                        alt=""
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    </div>
+                    {staff?.image?.path ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <img
+                          src={staff.image.path}
+                          alt=""
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                   </td>
                   <td className="table_outline_td">{staff?.name || "-"}</td>
                   <td className="table_outline_td">

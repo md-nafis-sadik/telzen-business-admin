@@ -1,8 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useAccountBalance } from "@/hooks";
-import { ExportExcelIconSvg, PrintIconSvg } from "@/services";
-import moment from "moment";
+import { ExportExcelIconSvg, formatDate, PrintIconSvg } from "@/services";
 
 function AccountBalanceTable() {
   const {
@@ -11,7 +10,6 @@ function AccountBalanceTable() {
     pageSize,
     totalPages,
     totalItems,
-    summaryCards,
     isFetching,
     isError,
     error,
@@ -85,25 +83,25 @@ function AccountBalanceTable() {
                       {(currentPage - 1) * pageSize + index + 1}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {moment.unix(item?.created_at).format("DD-MM-YYYY")}
+                      {formatDate(item?.created_at)}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.package?.name}
+                      {item?.package?.name || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer?.name}
+                      {item?.customer?.name || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
                       {item?.group?.name || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer?.email}
+                      {item?.customer?.email || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      {item?.customer_phone}
+                      {item?.customer_phone || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      ${item?.payment_amount}
+                      ${item?.payment_amount || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
                       ${item?.revenue}

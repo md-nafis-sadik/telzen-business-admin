@@ -1,10 +1,12 @@
 import BackToPrev from "@/components/shared/BackToPrev";
 import Input from "@/components/shared/Input";
+import Modal from "@/components/shared/Modal";
 import PhoneInput from "@/components/shared/PhoneInput";
 import RequestLoader from "@/components/shared/RequestLoader";
 import SelectInput from "@/components/shared/SelectInput";
 import StaffHelper from "@/components/staffs/StaffHelper";
-import { useEditStaff } from "@/hooks";
+import { useEditStaff, useStaffs } from "@/hooks";
+import { SuccessPopupIconSvg } from "@/services";
 import { Link } from "react-router-dom";
 
 function EditStaff() {
@@ -13,14 +15,14 @@ function EditStaff() {
     isFetching,
     isError,
     error,
-    selectedRole,
     setSelectedRole,
-    phone,
     handlePhoneChange,
     roleOptions,
     handleSubmit,
     isUpdating,
   } = useEditStaff();
+
+  const { successModal, handleCloseSuccessModal } = useStaffs();
 
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">
@@ -87,7 +89,20 @@ function EditStaff() {
           </div>
         </form>
       </StaffHelper>
+
       {isUpdating && <RequestLoader />}
+
+      <Modal
+        confirmButtonClass="btn_success h-12 !w-full text-sm"
+        confirmButton="Okay"
+        title="Successful!"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionPara="Staff has been updated successfully!"
+        popupIcon={<SuccessPopupIconSvg />}
+        showModal={successModal.show}
+        onClose={handleCloseSuccessModal}
+        confirmHandeler={handleCloseSuccessModal}
+      />
     </section>
   );
 }

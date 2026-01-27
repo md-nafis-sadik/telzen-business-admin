@@ -1,7 +1,6 @@
-import { adminRouteLinks, images } from "@/services";
+import { adminRouteLinks } from "@/services";
 import BackToPrev from "../shared/BackToPrev";
 import LoadingInput from "../shared/LoadingInput";
-import { empty } from "@/services/images";
 
 function ProfileSkeleton() {
   return (

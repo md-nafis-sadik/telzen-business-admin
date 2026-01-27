@@ -2,10 +2,17 @@ import {
   useGetAccountBalanceQuery,
   useGetAccountBalanceSummaryQuery,
 } from "@/features/accountBalance/accountBalanceApi";
-import { updateAccountBalancePage } from "@/features/accountBalance/accountBalanceSlice";
-import moment from "moment";
+import {
+  updateAccountBalancePage,
+  updateAccountBalancePageSize,
+} from "@/features/accountBalance/accountBalanceSlice";
+import { formatDate } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from "xlsx";
+
+const generateCacheKey = (page) => {
+  return `${page}`;
+};
 
 export const useAccountBalance = () => {
   const dispatch = useDispatch();
@@ -13,19 +20,35 @@ export const useAccountBalance = () => {
     (state) => state.accountBalance,
   );
 
-  const { lists, meta } = accountBalanceData;
+  const { lists, meta, cache, filterChangeId } = accountBalanceData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
-  const { isFetching, isError, error } = useGetAccountBalanceQuery({
-    current_page: currentPage,
-    limit: pageSize,
-  });
+  const cacheKey = generateCacheKey(currentPage);
+  const cachedData = cache[cacheKey];
+
+  const { isFetching, isError, error } = useGetAccountBalanceQuery(
+    {
+      current_page: currentPage,
+      limit: pageSize,
+      _filterChangeId: filterChangeId,
+    },
+    {
+      refetchOnMountOrArgChange: false,
+      skip: false,
+    },
+  );
 
   const { isFetching: isSummaryFetching, isError: isSummaryError } =
     useGetAccountBalanceSummaryQuery();
 
+  const displayData = cachedData?.data || lists || [];
+
   const handlePageChange = (page) => {
-    dispatch(updateAccountBalancePage(page));
+    dispatch(updateAccountBalancePage(page.current_page || page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateAccountBalancePageSize(newPageSize));
+    }
   };
 
   const summaryCards = [
@@ -52,16 +75,14 @@ export const useAccountBalance = () => {
   ];
 
   const handleExport = () => {
-    if (!lists || lists.length === 0) {
+    if (!displayData || displayData.length === 0) {
       alert("No data to export!");
       return;
     }
 
-    const exportData = lists.map((item, index) => ({
-      SL: index + 1,
-      Date: item.created_at
-        ? moment.unix(item.created_at).format("DD-MM-YYYY")
-        : "-",
+    const exportData = displayData.map((item, index) => ({
+      SL: (currentPage - 1) * pageSize + index + 1,
+      Date: formatDate(item.created_at),
       Package: item.package?.name || "-",
       Customer: item.customer?.name || "-",
       "Group Name": item.group?.name || "-",
@@ -81,16 +102,17 @@ export const useAccountBalance = () => {
     window.print();
   };
 
-  const hasData = lists && lists.length > 0;
+  const hasData = displayData && displayData.length > 0;
 
   return {
-    dataList: lists,
+    dataList: isError ? [] : displayData,
     currentPage,
     pageSize,
     totalPages,
     totalItems,
     summaryCards,
     isFetching: isFetching || isSummaryFetching,
+    isLoading: false,
     isError: isError || isSummaryError,
     error,
     handlePageChange,

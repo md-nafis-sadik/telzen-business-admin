@@ -9,6 +9,8 @@ const initialState = {
       currentPage: 1,
       pageSize: 10,
     },
+    cache: {},
+    filterChangeId: 0,
   },
   summaryData: {
     packageSold: 0,
@@ -16,6 +18,10 @@ const initialState = {
     packageFee: 0,
     grossRevenue: 0,
   },
+};
+
+const generateCacheKey = (page) => {
+  return `${page}`;
 };
 
 const accountBalanceSlice = createSlice({
@@ -32,6 +38,14 @@ const accountBalanceSlice = createSlice({
         currentPage: meta?.page || 1,
         pageSize: meta?.limit || 10,
       };
+
+      // Cache the data
+      const cacheKey = generateCacheKey(meta?.page || 1);
+      state.accountBalanceData.cache[cacheKey] = {
+        data: data || [],
+        meta: meta || {},
+        timestamp: Date.now(),
+      };
     },
 
     setSummaryData: (state, action) => {
@@ -42,6 +56,13 @@ const accountBalanceSlice = createSlice({
       state.accountBalanceData.meta.currentPage = action.payload;
     },
 
+    updateAccountBalancePageSize: (state, action) => {
+      state.accountBalanceData.meta.pageSize = action.payload;
+      state.accountBalanceData.meta.currentPage = 1;
+      state.accountBalanceData.filterChangeId += 1;
+      state.accountBalanceData.cache = {};
+    },
+
     resetAccountBalanceState: () => initialState,
   },
 });
@@ -50,6 +71,7 @@ export const {
   setAccountBalance,
   setSummaryData,
   updateAccountBalancePage,
+  updateAccountBalancePageSize,
   resetAccountBalanceState,
 } = accountBalanceSlice.actions;
 

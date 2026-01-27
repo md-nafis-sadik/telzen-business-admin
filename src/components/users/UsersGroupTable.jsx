@@ -1,15 +1,16 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupUsers } from "@/hooks";
-import { adminRouteLinks, ViewIconSvg, DeleteIconSvg } from "@/services";
-import moment from "moment";
+import {
+  adminRouteLinks,
+  ViewIconSvg,
+  DeleteIconSvg,
+  formatDate,
+} from "@/services";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { openDeleteGroupModal } from "@/features/users/usersSlice";
 
 function UsersGroupTable() {
-  const dispatch = useDispatch();
   const {
     isFetching,
     isError,
@@ -20,11 +21,8 @@ function UsersGroupTable() {
     total_page,
     total_items,
     updatePage,
+    handleDeleteClick,
   } = useGroupUsers();
-
-  const handleDeleteClick = (group) => {
-    dispatch(openDeleteGroupModal(group));
-  };
 
   return (
     <Fragment>
@@ -53,9 +51,7 @@ function UsersGroupTable() {
                     {(current_page - 1) * limit + index + 1}
                   </td>
                   <td className="table_outline_td">
-                    {group?.created_at
-                      ? moment.unix(group.created_at).format("DD-MM-YYYY")
-                      : "-"}
+                    {formatDate(group.created_at)}
                   </td>
                   <td className="table_outline_td">
                     {group?.group_name || group?.name || "Group Name 1"}

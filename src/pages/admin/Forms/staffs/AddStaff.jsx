@@ -1,9 +1,11 @@
 import BackToPrev from "@/components/shared/BackToPrev";
 import Input from "@/components/shared/Input";
+import Modal from "@/components/shared/Modal";
 import PhoneInput from "@/components/shared/PhoneInput";
 import RequestLoader from "@/components/shared/RequestLoader";
 import SelectInput from "@/components/shared/SelectInput";
-import { useAddStaff } from "@/hooks";
+import { useAddStaff, useStaffs } from "@/hooks";
+import { SuccessPopupIconSvg } from "@/services";
 import { Link } from "react-router-dom";
 
 function AddStaff() {
@@ -15,7 +17,13 @@ function AddStaff() {
     roleOptions,
     handleSubmit,
     isAdding,
+    formData,
+    handleInputChange,
+    errors,
+    isFormValid,
   } = useAddStaff();
+
+  const { successModal, handleCloseSuccessModal } = useStaffs();
 
   return (
     <section className="bg-white p-4 flex flex-col gap-4 rounded-2xl">
@@ -33,6 +41,8 @@ function AddStaff() {
               labelClass="self-stretch justify-start text-text-700 text-sm font-normal leading-normal"
               placeholder="Enter staff Staff name"
               name="name"
+              value={formData.name}
+              onChange={handleInputChange}
               required
             />
 
@@ -42,6 +52,8 @@ function AddStaff() {
               placeholder="Enter email address"
               name="email"
               type="email"
+              value={formData.email}
+              onChange={handleInputChange}
               required
             />
 
@@ -65,6 +77,7 @@ function AddStaff() {
               selector="id"
               value={selectedRole}
               onValueChange={setSelectedRole}
+              required
             />
           </div>
 
@@ -72,13 +85,29 @@ function AddStaff() {
             <Link to="/admin/staffs" className="btn_cancel">
               CANCEL
             </Link>
-            <button type="submit" className="btn_save" disabled={isAdding}>
+            <button 
+              type="submit" 
+              className="btn_save" 
+              disabled={isAdding || !isFormValid}
+            >
               {isAdding ? "SUBMITTING..." : "SUBMIT"}
             </button>
           </div>
         </div>
       </form>
       {isAdding && <RequestLoader />}
+
+      <Modal
+        confirmButtonClass="btn_success h-12 !w-full text-sm"
+        confirmButton="Okay"
+        title="Successful!"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionPara="Staff has been added successfully!"
+        popupIcon={<SuccessPopupIconSvg />}
+        showModal={successModal.show}
+        onClose={handleCloseSuccessModal}
+        confirmHandeler={handleCloseSuccessModal}
+      />
     </section>
   );
 }

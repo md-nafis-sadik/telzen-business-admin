@@ -65,6 +65,11 @@ export const format = (amount) => `${getSymbol()}${amount.toFixed(2)}`;
 // Export current currency (read-only)
 export const currency = () => currentCurrency;
 
+export const formatDate = (unixTimestamp, formatStr = "DD-MM-YYYY") => {
+  if (!unixTimestamp) return "-";
+  return moment.unix(unixTimestamp).format(formatStr);
+};
+
 // Helper function to convert image URL to base64 using multiple proxy attempts
 const imageUrlToBase64 = async (url) => {
   // List of CORS proxies to try in order

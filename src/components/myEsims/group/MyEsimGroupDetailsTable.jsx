@@ -1,13 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupEsimDetails } from "@/hooks/useMyEsim";
-import {
-  DeleteIconSvg,
-  DownloadIconSvg,
-  formatData,
-  QRIconSvg,
-} from "@/services";
-import moment from "moment";
+import { DownloadIconSvg, formatData, formatDate, QRIconSvg } from "@/services";
 import { Fragment } from "react";
 import { useParams } from "react-router-dom";
 
@@ -24,8 +18,8 @@ function MyEsimGroupDetailsTable() {
     total_items,
     updatePage,
     handleOpenQrModal,
-    handleOpenRemoveModal,
     handleDownloadInvoice,
+    loadingInvoiceId,
   } = useGroupEsimDetails(groupId);
 
   return (
@@ -62,9 +56,7 @@ function MyEsimGroupDetailsTable() {
                       {(current_page - 1) * limit + index + 1 || "-"}
                     </td>
                     <td className="table_outline_td">
-                      {myEsim.created_at
-                        ? moment.unix(myEsim.created_at).format("DD-MM-YYYY")
-                        : "-"}
+                      {formatDate(myEsim.created_at)}
                     </td>
                     <td className="table_outline_td">
                       {myEsim?.customer?.name || "-"}
@@ -98,9 +90,15 @@ function MyEsimGroupDetailsTable() {
                         <button onClick={() => handleOpenQrModal(myEsim)}>
                           <QRIconSvg />
                         </button>
-                        <button onClick={() => handleDownloadInvoice(myEsim)}>
-                          <DownloadIconSvg />
-                        </button>
+                        {loadingInvoiceId === myEsim._id ? (
+                          <button className="flex items-center justify-center cursor-not-allowed">
+                            <span className="w-5 h-5 m-0.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                          </button>
+                        ) : (
+                          <button onClick={() => handleDownloadInvoice(myEsim)}>
+                            <DownloadIconSvg />
+                          </button>
+                        )}
                       </span>
                     </td>
                   </tr>

@@ -21,7 +21,6 @@ import {
   updateGroupMembersSearch,
   updateGroupMembersPage,
   updateGroupMembersPageSize,
-  resetGroupMembers,
   setActiveTab,
   setBlockedTab,
   openBlockModal,
@@ -31,11 +30,12 @@ import {
   closeDeleteGroupModal,
   closeUnblockModal,
   removeGroupFromLists,
+  openDeleteGroupModal,
 } from "@/features/users/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { errorNotify, successNotify } from "@/services";
 
 const generateCacheKey = (page, search, groupId = null) => {
@@ -49,7 +49,7 @@ export const useActiveUsers = () => {
   const { currentTab } = useUserTabs("active");
   const dispatch = useDispatch();
   const { showBlockModal, showDeleteGroupModal, selectedData } = useSelector(
-    (state) => state.users
+    (state) => state.users,
   );
 
   const [updateCustomerBlockStatus, { isLoading: isBlockLoading }] =
@@ -70,7 +70,7 @@ export const useActiveUsers = () => {
         transferUserBetweenLists({
           userId: selectedData._id,
           toBlocked: true,
-        })
+        }),
       );
 
       dispatch(closeBlockModal());
@@ -92,7 +92,7 @@ export const useActiveUsers = () => {
         removeGroupFromLists({
           groupId: selectedData._id,
           isBlocked: false,
-        })
+        }),
       );
 
       dispatch(closeDeleteGroupModal());
@@ -118,7 +118,7 @@ export const useBlockedUsers = () => {
   const { currentTab } = useUserTabs("blocked");
   const dispatch = useDispatch();
   const { showUnblockModal, showDeleteGroupModal, selectedData } = useSelector(
-    (state) => state.users
+    (state) => state.users,
   );
 
   const [updateCustomerBlockStatus, { isLoading: isUnblockLoading }] =
@@ -139,7 +139,7 @@ export const useBlockedUsers = () => {
         transferUserBetweenLists({
           userId: selectedData._id,
           toBlocked: false,
-        })
+        }),
       );
 
       dispatch(closeUnblockModal());
@@ -161,7 +161,7 @@ export const useBlockedUsers = () => {
         removeGroupFromLists({
           groupId: selectedData._id,
           isBlocked: true,
-        })
+        }),
       );
 
       dispatch(closeDeleteGroupModal());
@@ -182,7 +182,6 @@ export const useBlockedUsers = () => {
     dispatch,
   };
 };
-
 
 export const useActiveRegularUsers = () => {
   const dispatch = useDispatch();
@@ -288,6 +287,10 @@ export const useGroupUsers = () => {
     dispatch(updateGroupPage(1));
   };
 
+  const handleDeleteClick = (group) => {
+    dispatch(openDeleteGroupModal(group));
+  };
+
   return {
     groups: isTyping || isError ? [] : displayData,
     current_page: currentPage,
@@ -301,6 +304,7 @@ export const useGroupUsers = () => {
     error,
     handleSearchChange,
     updatePage: handlePageChange,
+    handleDeleteClick,
   };
 };
 
@@ -366,7 +370,6 @@ export const useBlockedRegularUsers = () => {
     handleUnblockClick,
   };
 };
-
 
 // Hook for User Details Page
 export const useUserDetails = () => {
@@ -447,6 +450,10 @@ export const useGroupMembers = (groupId) => {
     dispatch(updateGroupMembersPage(1));
   };
 
+  const handleRemoveClick = (member) => {
+    dispatch(openDeleteGroupModal(member));
+  };
+
   return {
     members: isTyping || isError ? [] : displayData,
     current_page: currentPage,
@@ -460,6 +467,7 @@ export const useGroupMembers = (groupId) => {
     error,
     handleSearchChange,
     updatePage: handlePageChange,
+    handleRemoveClick,
   };
 };
 

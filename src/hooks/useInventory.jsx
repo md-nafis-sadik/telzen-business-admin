@@ -52,7 +52,7 @@ export const useInventory = () => {
 
   const handleSearchChange = (value) => {
     setSearchTerm(value);
-    setPage(1); // Reset to first page on search
+    setPage(1); 
   };
 
   return {

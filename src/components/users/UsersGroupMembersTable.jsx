@@ -1,22 +1,13 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMembers } from "@/hooks";
-import {
-  ViewIconSvg,
-  DeleteIconSvg,
-  adminRouteLinks,
-  BlockIconSvg,
-} from "@/services";
-import moment from "moment";
+import { DeleteIconSvg, formatDate } from "@/services";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { Link, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { openDeleteGroupModal } from "@/features/users/usersSlice";
+import { useParams } from "react-router-dom";
 
 function UsersGroupMembersTable() {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const {
     members,
     current_page,
@@ -27,11 +18,8 @@ function UsersGroupMembersTable() {
     isError,
     error,
     updatePage,
+    handleRemoveClick,
   } = useGroupMembers(id);
-
-  const handleRemoveClick = (member) => {
-    dispatch(openDeleteGroupModal(member));
-  };
 
   return (
     <Fragment>
@@ -62,9 +50,6 @@ function UsersGroupMembersTable() {
                   <td className="table_outline_td">{member?.uid || "-"}</td>
                   <td className="table_outline_td">
                     <div className="flex items-center justify-center gap-2">
-                      {/* {member?.country_flag && (
-                                        <span className="text-xl">{user.country_flag}</span>
-                                      )} */}
                       <ReactCountryFlag
                         countryCode={member?.country?.code}
                         svg
@@ -85,9 +70,7 @@ function UsersGroupMembersTable() {
                   </td>
                   <td className="table_outline_td">{member?.email || "-"}</td>
                   <td className="table_outline_td">
-                    {member?.created_at
-                      ? moment.unix(member.created_at).format("DD-MM-YYYY")
-                      : "-"}
+                    {formatDate(member.created_at)}
                   </td>
                   <td className="table_outline_td">
                     <span className="text-green-600">{"Active"}</span>

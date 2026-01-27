@@ -2,10 +2,10 @@ import {
   setShowSidebar,
   toggleLogoutModal,
 } from "@/features/shared/sharedSlice";
-import { adminRouteLinks, images, LogoSvg } from "@/services";
+// import { adminRouteLinks, images, LogoSvg } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import useLogout from "@/hooks/useLogout";
+// import useLogout from "@/hooks/useLogout";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,13 +23,13 @@ function DashboardHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  const { performLogout, isLoggingOut } = useLogout();
-  const handleLogoutClick = () => {
-    dispatch(toggleLogoutModal(true));
-  };
-  const navigateToUser = () => {
-    navigate(adminRouteLinks.userProfile.path);
-  };
+  // const { performLogout, isLoggingOut } = useLogout();
+  // const handleLogoutClick = () => {
+  //   dispatch(toggleLogoutModal(true));
+  // };
+  // const navigateToUser = () => {
+  //   navigate(adminRouteLinks.userProfile.path);
+  // };
 
   const userRole =
     auth.role === "super-admin"

@@ -19,9 +19,7 @@ function ApiSettings() {
         <div className="w-full">
           {/* Header */}
           <div className="mb-4">
-            <h2 className="text-lg font-semibold text-text-700">
-              API Keys
-            </h2>
+            <h2 className="text-lg font-semibold text-text-700">API Keys</h2>
             <p className="text-sm text-gray-600">
               Authenticate API requests by the keys given bellow.
             </p>

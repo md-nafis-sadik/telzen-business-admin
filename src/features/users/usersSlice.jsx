@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // Active Regular Users
   activeRegularData: {
     lists: [],
     meta: {
@@ -15,7 +14,6 @@ const initialState = {
     filterChangeId: 0,
   },
 
-  // Active Group Users
   groupData: {
     lists: [],
     meta: {
@@ -29,7 +27,6 @@ const initialState = {
     filterChangeId: 0,
   },
 
-  // Blocked Regular Users
   blockedRegularData: {
     lists: [],
     meta: {
@@ -43,7 +40,6 @@ const initialState = {
     filterChangeId: 0,
   },
 
-  // Group Members Data
   groupMembersData: {
     lists: [],
     meta: {
@@ -57,18 +53,15 @@ const initialState = {
     filterChangeId: 0,
   },
 
-  // Single user/group details
   singleUser: {},
   selectedData: {},
 
-  // Modal States
   showBlockModal: false,
   showUnblockModal: false,
   showDeleteGroupModal: false,
 
-  // Active tab state
-  activeTab: "regular", // 'regular' or 'group'
-  blockedTab: "regular", // 'regular' or 'group'
+  activeTab: "regular",
+  blockedTab: "regular",
 };
 
 const generateCacheKey = (page, search, groupId = null) => {
@@ -94,8 +87,8 @@ const usersSlice = createSlice({
         pageSize: meta?.per_page || 10,
       };
 
-      // Use the current search state for cache key, not the incoming search parameter
-      const currentSearch = search !== undefined ? search : state.activeRegularData.search;
+      const currentSearch =
+        search !== undefined ? search : state.activeRegularData.search;
       const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "");
       state.activeRegularData.cache[cacheKey] = {
         data: data || [],
@@ -125,7 +118,6 @@ const usersSlice = createSlice({
       state.activeRegularData.cache = {};
     },
 
-    // Active Group Users
     setGroupUsers: (state, action) => {
       const { data, meta, search } = action.payload;
 
@@ -137,8 +129,8 @@ const usersSlice = createSlice({
         pageSize: meta?.per_page || 10,
       };
 
-      // Use the current search state for cache key, not the incoming search parameter
-      const currentSearch = search !== undefined ? search : state.groupData.search;
+      const currentSearch =
+        search !== undefined ? search : state.groupData.search;
       const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "");
       state.groupData.cache[cacheKey] = {
         data: data || [],
@@ -168,7 +160,6 @@ const usersSlice = createSlice({
       state.groupData.cache = {};
     },
 
-    // Blocked Regular Users
     setBlockedRegularUsers: (state, action) => {
       const { data, meta, search } = action.payload;
 
@@ -180,8 +171,8 @@ const usersSlice = createSlice({
         pageSize: meta?.per_page || 10,
       };
 
-      // Use the current search state for cache key, not the incoming search parameter
-      const currentSearch = search !== undefined ? search : state.blockedRegularData.search;
+      const currentSearch =
+        search !== undefined ? search : state.blockedRegularData.search;
       const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "");
       state.blockedRegularData.cache[cacheKey] = {
         data: data || [],
@@ -211,7 +202,6 @@ const usersSlice = createSlice({
       state.blockedRegularData.cache = {};
     },
 
-    // Group Members Data
     setGroupMembers: (state, action) => {
       const { data, meta, search, groupId } = action.payload;
 
@@ -223,9 +213,13 @@ const usersSlice = createSlice({
         pageSize: meta?.per_page || 10,
       };
 
-      // Use the current search state for cache key, not the incoming search parameter
-      const currentSearch = search !== undefined ? search : state.groupMembersData.search;
-      const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "", groupId);
+      const currentSearch =
+        search !== undefined ? search : state.groupMembersData.search;
+      const cacheKey = generateCacheKey(
+        meta?.page || 1,
+        currentSearch || "",
+        groupId,
+      );
       state.groupMembersData.cache[cacheKey] = {
         data: data || [],
         meta: meta || {},
@@ -269,12 +263,10 @@ const usersSlice = createSlice({
       };
     },
 
-    // Single User Details
     setSingleUser: (state, action) => {
       state.singleUser = action.payload;
     },
 
-    // Tab Management
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
     },
@@ -283,12 +275,10 @@ const usersSlice = createSlice({
       state.blockedTab = action.payload;
     },
 
-    // Selected Data
     setUserSelectedData: (state, action) => {
       state.selectedData = action.payload;
     },
 
-    // Modal Actions
     openBlockModal: (state, action) => {
       state.showBlockModal = true;
       state.selectedData = action.payload;
@@ -319,19 +309,18 @@ const usersSlice = createSlice({
       state.selectedData = {};
     },
 
-    // Transfer user from active to blocked or vice versa
     transferUserBetweenLists: (state, action) => {
       const { userId, toBlocked } = action.payload;
 
       if (toBlocked) {
-        // Find user in active lists or cache
-        let user = state.activeRegularData.lists.find(u => u._id === userId);
-        
+        let user = state.activeRegularData.lists.find((u) => u._id === userId);
+
         if (!user) {
-          // Search in cache if not in current lists
           Object.keys(state.activeRegularData.cache).forEach((key) => {
             if (!user) {
-              const cachedUser = state.activeRegularData.cache[key].data.find(u => u._id === userId);
+              const cachedUser = state.activeRegularData.cache[key].data.find(
+                (u) => u._id === userId,
+              );
               if (cachedUser) {
                 user = cachedUser;
               }
@@ -340,52 +329,75 @@ const usersSlice = createSlice({
         }
 
         if (user) {
-          // Remove from active lists
-          state.activeRegularData.lists = state.activeRegularData.lists.filter(u => u._id !== userId);
-          
-          // Remove from all active cache entries
+          state.activeRegularData.lists = state.activeRegularData.lists.filter(
+            (u) => u._id !== userId,
+          );
+
           Object.keys(state.activeRegularData.cache).forEach((key) => {
-            state.activeRegularData.cache[key].data = state.activeRegularData.cache[key].data.filter(
-              u => u._id !== userId
-            );
+            state.activeRegularData.cache[key].data =
+              state.activeRegularData.cache[key].data.filter(
+                (u) => u._id !== userId,
+              );
           });
-          
-          // Add to blocked lists
+
           state.blockedRegularData.lists.unshift({ ...user, is_blocked: true });
-          
-          // Add to first page of blocked cache if it exists
-          const blockedFirstPageKey = generateCacheKey(1, state.blockedRegularData.search);
+
+          const blockedFirstPageKey = generateCacheKey(
+            1,
+            state.blockedRegularData.search,
+          );
           if (state.blockedRegularData.cache[blockedFirstPageKey]) {
-            state.blockedRegularData.cache[blockedFirstPageKey].data.unshift({ ...user, is_blocked: true });
-            // Remove last item if exceeds page size
-            if (state.blockedRegularData.cache[blockedFirstPageKey].data.length > state.blockedRegularData.meta.pageSize) {
+            state.blockedRegularData.cache[blockedFirstPageKey].data.unshift({
+              ...user,
+              is_blocked: true,
+            });
+
+            if (
+              state.blockedRegularData.cache[blockedFirstPageKey].data.length >
+              state.blockedRegularData.meta.pageSize
+            ) {
               state.blockedRegularData.cache[blockedFirstPageKey].data.pop();
             }
           }
-          
-          // Update meta
-          state.activeRegularData.meta.totalItems = Math.max(0, state.activeRegularData.meta.totalItems - 1);
+
+          state.activeRegularData.meta.totalItems = Math.max(
+            0,
+            state.activeRegularData.meta.totalItems - 1,
+          );
           state.blockedRegularData.meta.totalItems += 1;
-          
-          // Recalculate total pages
-          state.activeRegularData.meta.totalPages = Math.max(1, Math.ceil(state.activeRegularData.meta.totalItems / state.activeRegularData.meta.pageSize));
-          state.blockedRegularData.meta.totalPages = Math.ceil(state.blockedRegularData.meta.totalItems / state.blockedRegularData.meta.pageSize);
-          
-          // Adjust current page if current page is now empty and not page 1
-          if (state.activeRegularData.lists.length === 0 && state.activeRegularData.meta.currentPage > 1) {
-            const newPage = Math.min(state.activeRegularData.meta.currentPage, state.activeRegularData.meta.totalPages);
+
+          state.activeRegularData.meta.totalPages = Math.max(
+            1,
+            Math.ceil(
+              state.activeRegularData.meta.totalItems /
+                state.activeRegularData.meta.pageSize,
+            ),
+          );
+          state.blockedRegularData.meta.totalPages = Math.ceil(
+            state.blockedRegularData.meta.totalItems /
+              state.blockedRegularData.meta.pageSize,
+          );
+
+          if (
+            state.activeRegularData.lists.length === 0 &&
+            state.activeRegularData.meta.currentPage > 1
+          ) {
+            const newPage = Math.min(
+              state.activeRegularData.meta.currentPage,
+              state.activeRegularData.meta.totalPages,
+            );
             state.activeRegularData.meta.currentPage = Math.max(1, newPage);
           }
         }
       } else {
-        // Remove from blocked and add to active
-        let user = state.blockedRegularData.lists.find(u => u._id === userId);
-        
+        let user = state.blockedRegularData.lists.find((u) => u._id === userId);
+
         if (!user) {
-          // Search in cache if not in current lists
           Object.keys(state.blockedRegularData.cache).forEach((key) => {
             if (!user) {
-              const cachedUser = state.blockedRegularData.cache[key].data.find(u => u._id === userId);
+              const cachedUser = state.blockedRegularData.cache[key].data.find(
+                (u) => u._id === userId,
+              );
               if (cachedUser) {
                 user = cachedUser;
               }
@@ -394,97 +406,141 @@ const usersSlice = createSlice({
         }
 
         if (user) {
-          // Remove from blocked lists
-          state.blockedRegularData.lists = state.blockedRegularData.lists.filter(u => u._id !== userId);
-          
-          // Remove from all blocked cache entries
+          state.blockedRegularData.lists =
+            state.blockedRegularData.lists.filter((u) => u._id !== userId);
+
           Object.keys(state.blockedRegularData.cache).forEach((key) => {
-            state.blockedRegularData.cache[key].data = state.blockedRegularData.cache[key].data.filter(
-              u => u._id !== userId
-            );
+            state.blockedRegularData.cache[key].data =
+              state.blockedRegularData.cache[key].data.filter(
+                (u) => u._id !== userId,
+              );
           });
-          
-          // Add to active lists
+
           state.activeRegularData.lists.unshift({ ...user, is_blocked: false });
-          
-          // Add to first page of active cache if it exists
-          const activeFirstPageKey = generateCacheKey(1, state.activeRegularData.search);
+
+          const activeFirstPageKey = generateCacheKey(
+            1,
+            state.activeRegularData.search,
+          );
           if (state.activeRegularData.cache[activeFirstPageKey]) {
-            state.activeRegularData.cache[activeFirstPageKey].data.unshift({ ...user, is_blocked: false });
-            // Remove last item if exceeds page size
-            if (state.activeRegularData.cache[activeFirstPageKey].data.length > state.activeRegularData.meta.pageSize) {
+            state.activeRegularData.cache[activeFirstPageKey].data.unshift({
+              ...user,
+              is_blocked: false,
+            });
+
+            if (
+              state.activeRegularData.cache[activeFirstPageKey].data.length >
+              state.activeRegularData.meta.pageSize
+            ) {
               state.activeRegularData.cache[activeFirstPageKey].data.pop();
             }
           }
-          
-          // Update meta
-          state.blockedRegularData.meta.totalItems = Math.max(0, state.blockedRegularData.meta.totalItems - 1);
+
+          state.blockedRegularData.meta.totalItems = Math.max(
+            0,
+            state.blockedRegularData.meta.totalItems - 1,
+          );
           state.activeRegularData.meta.totalItems += 1;
-          
-          // Recalculate total pages
-          state.blockedRegularData.meta.totalPages = Math.max(1, Math.ceil(state.blockedRegularData.meta.totalItems / state.blockedRegularData.meta.pageSize));
-          state.activeRegularData.meta.totalPages = Math.ceil(state.activeRegularData.meta.totalItems / state.activeRegularData.meta.pageSize);
-          
-          // Adjust current page if current page is now empty and not page 1
-          if (state.blockedRegularData.lists.length === 0 && state.blockedRegularData.meta.currentPage > 1) {
-            const newPage = Math.min(state.blockedRegularData.meta.currentPage, state.blockedRegularData.meta.totalPages);
+
+          state.blockedRegularData.meta.totalPages = Math.max(
+            1,
+            Math.ceil(
+              state.blockedRegularData.meta.totalItems /
+                state.blockedRegularData.meta.pageSize,
+            ),
+          );
+          state.activeRegularData.meta.totalPages = Math.ceil(
+            state.activeRegularData.meta.totalItems /
+              state.activeRegularData.meta.pageSize,
+          );
+
+          if (
+            state.blockedRegularData.lists.length === 0 &&
+            state.blockedRegularData.meta.currentPage > 1
+          ) {
+            const newPage = Math.min(
+              state.blockedRegularData.meta.currentPage,
+              state.blockedRegularData.meta.totalPages,
+            );
             state.blockedRegularData.meta.currentPage = Math.max(1, newPage);
           }
         }
       }
     },
 
-    // Remove group from lists
     removeGroupFromLists: (state, action) => {
       const { groupId } = action.payload;
 
-      // Remove from current lists
-      state.groupData.lists = state.groupData.lists.filter(g => g._id !== groupId);
-      
-      // Remove from all cache entries
-      Object.keys(state.groupData.cache).forEach((key) => {
-        state.groupData.cache[key].data = state.groupData.cache[key].data.filter(
-          g => g._id !== groupId
-        );
-      });
-      
-      // Update meta
-      state.groupData.meta.totalItems = Math.max(0, state.groupData.meta.totalItems - 1);
-      state.groupData.meta.totalPages = Math.max(1, Math.ceil(state.groupData.meta.totalItems / state.groupData.meta.pageSize));
+      state.groupData.lists = state.groupData.lists.filter(
+        (g) => g._id !== groupId,
+      );
 
-      // Adjust current page if current page is now empty and not page 1
-      if (state.groupData.lists.length === 0 && state.groupData.meta.currentPage > 1) {
-        const newPage = Math.min(state.groupData.meta.currentPage, state.groupData.meta.totalPages);
+      Object.keys(state.groupData.cache).forEach((key) => {
+        state.groupData.cache[key].data = state.groupData.cache[
+          key
+        ].data.filter((g) => g._id !== groupId);
+      });
+
+      state.groupData.meta.totalItems = Math.max(
+        0,
+        state.groupData.meta.totalItems - 1,
+      );
+      state.groupData.meta.totalPages = Math.max(
+        1,
+        Math.ceil(
+          state.groupData.meta.totalItems / state.groupData.meta.pageSize,
+        ),
+      );
+
+      if (
+        state.groupData.lists.length === 0 &&
+        state.groupData.meta.currentPage > 1
+      ) {
+        const newPage = Math.min(
+          state.groupData.meta.currentPage,
+          state.groupData.meta.totalPages,
+        );
         state.groupData.meta.currentPage = Math.max(1, newPage);
       }
     },
 
-    // Remove member from group members list
     removeMemberFromGroup: (state, action) => {
       const { memberId } = action.payload;
-      
-      // Remove from current lists
-      state.groupMembersData.lists = state.groupMembersData.lists.filter(m => m._id !== memberId);
-      
-      // Remove from all cache entries
+
+      state.groupMembersData.lists = state.groupMembersData.lists.filter(
+        (m) => m._id !== memberId,
+      );
+
       Object.keys(state.groupMembersData.cache).forEach((key) => {
-        state.groupMembersData.cache[key].data = state.groupMembersData.cache[key].data.filter(
-          m => m._id !== memberId
-        );
+        state.groupMembersData.cache[key].data = state.groupMembersData.cache[
+          key
+        ].data.filter((m) => m._id !== memberId);
       });
-      
-      // Update meta
-      state.groupMembersData.meta.totalItems = Math.max(0, state.groupMembersData.meta.totalItems - 1);
-      state.groupMembersData.meta.totalPages = Math.max(1, Math.ceil(state.groupMembersData.meta.totalItems / state.groupMembersData.meta.pageSize));
-      
-      // Adjust current page if current page is now empty and not page 1
-      if (state.groupMembersData.lists.length === 0 && state.groupMembersData.meta.currentPage > 1) {
-        const newPage = Math.min(state.groupMembersData.meta.currentPage, state.groupMembersData.meta.totalPages);
+
+      state.groupMembersData.meta.totalItems = Math.max(
+        0,
+        state.groupMembersData.meta.totalItems - 1,
+      );
+      state.groupMembersData.meta.totalPages = Math.max(
+        1,
+        Math.ceil(
+          state.groupMembersData.meta.totalItems /
+            state.groupMembersData.meta.pageSize,
+        ),
+      );
+
+      if (
+        state.groupMembersData.lists.length === 0 &&
+        state.groupMembersData.meta.currentPage > 1
+      ) {
+        const newPage = Math.min(
+          state.groupMembersData.meta.currentPage,
+          state.groupMembersData.meta.totalPages,
+        );
         state.groupMembersData.meta.currentPage = Math.max(1, newPage);
       }
     },
 
-    // Reset All
     resetUsersState: () => initialState,
   },
 });

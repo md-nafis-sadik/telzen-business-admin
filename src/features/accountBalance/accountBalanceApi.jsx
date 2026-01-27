@@ -5,40 +5,29 @@ const accountBalanceApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get Account Balance List
     getAccountBalance: builder.query({
-      query: ({ current_page = 1, per_page = 10 }) => {
-        return `/checkout?page=${current_page}&limit=${per_page}`;
+      query: ({ current_page = 1, limit = 10 }) => {
+        return `/checkout?page=${current_page}&limit=${limit}`;
       },
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
-
-          console.log("Account Balance Response Data:", responseData);
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setAccountBalance({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                limit: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
             }),
           );
         } catch (error) {
-          dispatch(
-            setAccountBalance({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-            }),
-          );
+          // Don't update anything on error to preserve state
         }
       },
     }),
@@ -57,7 +46,7 @@ const accountBalanceApi = apiSlice.injectEndpoints({
               sellingValue: data.total_selling_value || 0,
               packageFee: data.total_retailer_fee || 0,
               grossRevenue: data.revenue || 0,
-            })
+            }),
           );
         } catch (error) {
           dispatch(

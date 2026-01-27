@@ -68,7 +68,11 @@ const staffApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
           const result = await queryFulfilled;
-          dispatch(addNewStaff(result?.data?.data || arg));
+          // Only add the new staff to the slice, don't duplicate
+          const newStaffData = result?.data?.data;
+          if (newStaffData) {
+            dispatch(addNewStaff(newStaffData));
+          }
         } catch (error) {
           console.error("Add staff failed:", error);
         }

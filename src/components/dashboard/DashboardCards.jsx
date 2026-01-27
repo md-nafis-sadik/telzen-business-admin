@@ -15,15 +15,15 @@ function DashboardCards() {
   const { data: apiData, isFetching } = useGetDashboardCardDataQuery(filter);
   const dashboardCardData = apiData?.data || {};
 
-  const filterOptions = [
-    { id: "this_month", timestamp: "This Month" },
-    { id: "last6months", timestamp: "Last 6 Months" },
-    { id: "yearly", timestamp: "Yearly" },
-  ];
+  // const filterOptions = [
+  //   { id: "this_month", timestamp: "This Month" },
+  //   { id: "last6months", timestamp: "Last 6 Months" },
+  //   { id: "yearly", timestamp: "Yearly" },
+  // ];
 
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-  };
+  // const handleFilterChange = (newFilter) => {
+  //   setFilter(newFilter);
+  // };
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       {/* <div className="flex justify-between items-center mb-4">
