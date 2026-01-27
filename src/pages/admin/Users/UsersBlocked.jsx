@@ -23,7 +23,7 @@ function UsersBlocked() {
   } = useBlockedUsers();
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="w-full flex-1 flex flex-col gap-6">
       <UsersBlockedHeader />
       <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl">
         <div>
@@ -44,13 +44,12 @@ function UsersBlocked() {
         )}
       </div>
 
-      {isUnblockLoading && <RequestLoader />}
-      {isDeleteLoading && <RequestLoader />}
+      {(isUnblockLoading || isDeleteLoading) && <RequestLoader />}
 
       <Modal
         confirmButtonClass="btn_green !bg-[#00AE5B] h-12 !w-full text-sm"
         cancelButtonClass="btn_cancel h-12 !w-full text-sm"
-        confirmButton="Unblock"
+        confirmButton={isUnblockLoading ? "Unblocking..." : "Unblock"}
         title="Are you sure you want to unblock this user?"
         actionPara="Once unblocked, this user will regain access to their account."
         cancelButton="No, Thanks"
@@ -61,12 +60,13 @@ function UsersBlocked() {
         confirmHandeler={handleUnblockConfirm}
         showModal={showUnblockModal}
         onClose={() => dispatch(closeUnblockModal())}
+        isLoading={isUnblockLoading}
       />
 
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"
         cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
-        confirmButton="Delete"
+        confirmButton={isDeleteLoading ? "Deleting..." : "Delete"}
         title="Are you sure you want to delete this group?"
         cancelButton="No, Thanks"
         titleClass="text-text-700 leading-normal w-[400px]"
@@ -77,6 +77,7 @@ function UsersBlocked() {
           dispatch(closeDeleteGroupModal());
         }}
         confirmHandeler={handleDeleteGroupConfirm}
+        isLoading={isDeleteLoading}
       />
     </div>
   );

@@ -1,9 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useBlockedRegularUsers } from "@/hooks";
-import {
-  BlockIconSvg,
-} from "@/services";
+import { ActiveIconSvg, BlockIconSvg } from "@/services";
 import moment from "moment";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -76,21 +74,29 @@ function UsersBlockedRegularTable() {
                       : "-"}
                   </td>
                   <td className="table_outline_td">
-                    <span className="text-green-600">{"Active"}</span>
+                    <div>
+                      {user?.is_blocked ? (
+                        <span className="text-red-100">Blocked</span>
+                      ) : (
+                        <span className="text-green-600">Active</span>
+                      )}
+                    </div>
                   </td>
                   <td className="table_outline_td flex gap-3 justify-center items-center">
-                    {/* <Link
+                    <div>
+                      {/* <Link
                       to={`${adminRouteLinks.usersActive.path}/details/${user._id || user.id}`}
                       className="cursor-pointer"
                     >
                       <ViewIconSvg />
                     </Link> */}
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => handleUnblockClick(user)}
-                    >
-                      <BlockIconSvg />
-                    </button>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleUnblockClick(user)}
+                      >
+                        <ActiveIconSvg />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

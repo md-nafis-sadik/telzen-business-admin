@@ -23,32 +23,22 @@ const usersApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setActiveRegularUsers({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                per_page: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          dispatch(
-            setActiveRegularUsers({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -67,32 +57,22 @@ const usersApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setGroupUsers({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                per_page: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          dispatch(
-            setGroupUsers({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -111,32 +91,22 @@ const usersApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setBlockedRegularUsers({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                per_page: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          dispatch(
-            setBlockedRegularUsers({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -168,32 +138,23 @@ const usersApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setGroupMembers({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                per_page: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
+              groupId: arg.groupId, // Pass groupId for cache key
             }),
           );
         } catch (error) {
-          dispatch(
-            setGroupMembers({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),

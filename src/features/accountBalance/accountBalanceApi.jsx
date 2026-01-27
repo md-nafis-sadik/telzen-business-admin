@@ -53,10 +53,10 @@ const accountBalanceApi = apiSlice.injectEndpoints({
 
           dispatch(
             setSummaryData({
-              packageSold: data.package_sold || 0,
-              sellingValue: data.selling_value || 0,
-              packageFee: data.package_fee || 0,
-              grossRevenue: data.gross_revenue || 0,
+              packageSold: data.total_package_sold || 0,
+              sellingValue: data.total_selling_value || 0,
+              packageFee: data.total_retailer_fee || 0,
+              grossRevenue: data.revenue || 0,
             })
           );
         } catch (error) {

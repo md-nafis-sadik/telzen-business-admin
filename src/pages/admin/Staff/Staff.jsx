@@ -1,15 +1,111 @@
+import Modal from "@/components/shared/Modal";
+import RequestLoader from "@/components/shared/RequestLoader";
 import StaffHeader from "@/components/staffs/StaffHeader";
 import StaffTable from "@/components/staffs/StaffTable";
-import StaffBlockModal from "@/components/staffs/StaffBlockModal";
-import StaffSuccessModal from "@/components/staffs/StaffSuccessModal";
+import { DeletePopupIconSvg, SuccessPopupIconSvg } from "@/services";
+import { useStaffs } from "@/hooks";
+import {
+  closeBlockModal,
+  closeUnblockModal,
+  closeDeleteModal,
+} from "@/features/staffs/staffSlice";
 
 function Staff() {
+  const {
+    showBlockModal,
+    showUnblockModal,
+    showDeleteModal,
+    successModal,
+    isBlockLoading,
+    isUnblockLoading,
+    isDeletingStaff,
+    handleBlockStaff,
+    handleUnblockStaff,
+    handleDeleteStaff,
+    handleCloseSuccessModal,
+    dispatch,
+  } = useStaffs();
+
+  const getSuccessMessage = () => {
+    const messages = {
+      block: "Staff has been blocked successfully!",
+      unblock: "Staff has been unblocked successfully!",
+      add: "Staff has been added successfully!",
+      update: "Staff has been updated successfully!",
+      delete: "Staff has been deleted successfully!",
+    };
+    return successModal.message || messages[successModal.type] || "Operation successful!";
+  };
+
   return (
     <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl">
       <StaffHeader />
       <StaffTable />
-      <StaffBlockModal />
-      <StaffSuccessModal />
+
+      {(isBlockLoading || isUnblockLoading || isDeletingStaff) && <RequestLoader />}
+
+      <Modal
+        confirmButtonClass="btn_delete h-12 !w-full text-sm"
+        cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
+        confirmButton={isBlockLoading ? "Blocking..." : "Block"}
+        title="Are you sure you want to block this staff?"
+        cancelButton="No, Thanks"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionPara="The staff will no longer have access to their account."
+        popupIcon={<DeletePopupIconSvg />}
+        showModal={showBlockModal}
+        onClose={() => {
+          dispatch(closeBlockModal());
+        }}
+        confirmHandeler={handleBlockStaff}
+        isLoading={isBlockLoading}
+      />
+
+      <Modal
+        confirmButtonClass="btn_green !bg-[#00AE5B] h-12 !w-full text-sm"
+        cancelButtonClass="btn_cancel h-12 !w-full text-sm"
+        confirmButton={isUnblockLoading ? "Unblocking..." : "Unblock"}
+        title="Are you sure you want to unblock this staff?"
+        actionPara="Once unblocked, this staff will regain access to their account."
+        cancelButton="No, Thanks"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionText="unblock"
+        typeText="staff"
+        popupIcon={<DeletePopupIconSvg />}
+        confirmHandeler={handleUnblockStaff}
+        showModal={showUnblockModal}
+        onClose={() => dispatch(closeUnblockModal())}
+        isLoading={isUnblockLoading}
+      />
+
+      <Modal
+        confirmButtonClass="btn_delete h-12 !w-full text-sm"
+        cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
+        confirmButton={isDeletingStaff ? "Deleting..." : "Delete"}
+        title="Are you sure you want to delete this staff?"
+        cancelButton="No, Thanks"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionPara="This action cannot be undone. The staff will be permanently removed."
+        popupIcon={<DeletePopupIconSvg />}
+        showModal={showDeleteModal}
+        onClose={() => {
+          dispatch(closeDeleteModal());
+        }}
+        confirmHandeler={handleDeleteStaff}
+        isLoading={isDeletingStaff}
+      />
+
+      <Modal
+        confirmButtonClass="btn_success h-12 !w-full text-sm"
+        confirmButton="Okay"
+        title="Successful!"
+        titleClass="text-text-700 leading-normal w-[400px]"
+        actionPara={getSuccessMessage()}
+        popupIcon={<SuccessPopupIconSvg />}
+        showModal={successModal.show}
+        onClose={handleCloseSuccessModal}
+        confirmHandeler={handleCloseSuccessModal}
+      />
     </div>
   );
 }

@@ -22,7 +22,7 @@ function AccountBalanceTable() {
   } = useAccountBalance();
 
   return (
-    <div className="bg-white w-full rounded-2xl overflow-hidden flex flex-col p-4">
+    <div className="bg-white w-full rounded-2xl overflow-hidden flex-1 flex flex-col p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
           <h2 className="text-gray-100 text-[18px] font-semibold">Sales</h2>
@@ -54,7 +54,7 @@ function AccountBalanceTable() {
         </div>
       </div>
 
-      <div className="printable-content">
+      <div className="printable-content flex-1 overflow-auto flex flex-col">
         <div className="flex-1 overflow-auto">
           <table className="table">
             <thead className="table_head sticky top-0">

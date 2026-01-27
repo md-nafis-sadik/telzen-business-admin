@@ -8,120 +8,209 @@ import {
 } from "@/features/staffs/staffApi";
 import {
   closeBlockModal,
+  closeUnblockModal,
+  closeDeleteModal,
   openBlockModal,
+  openUnblockModal,
+  openDeleteModal,
   setSuccessModal,
+  clearSuccessModal,
   updateStaffPage,
+  updateStaffPageSize,
   updateStaffSearch,
 } from "@/features/staffs/staffSlice";
-import { errorNotify, roleOptions, successNotify } from "@/services";
+import { errorNotify, roleOptions } from "@/services";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
 import { usePhoneInput } from "./usePhoneInput";
 
+const generateCacheKey = (page, search) => {
+  return `${page}_${search}`;
+};
+
 export const useStaffs = () => {
   const dispatch = useDispatch();
-  const { staffData, showBlockModal, successModal, selectedStaffForBlock } =
-    useSelector((state) => state.staffs);
+  const {
+    staffData,
+    showBlockModal,
+    showUnblockModal,
+    showDeleteModal,
+    successModal,
+    selectedStaffForBlock,
+    selectedStaffForDelete,
+  } = useSelector((state) => state.staffs);
 
-  const { lists, meta, search } = staffData;
+  const { lists, meta, search, cache, filterChangeId } = staffData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
 
-  const isTyping = search !== debouncedSearch;
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
 
-  const { isFetching, isError, error } = useGetStaffQuery({
-    current_page: currentPage,
-    limit: pageSize,
-    search: debouncedSearch,
-  });
+  const { isFetching, isError, error } = useGetStaffQuery(
+    {
+      current_page: currentPage,
+      limit: pageSize,
+      search: debouncedSearch,
+      _filterChangeId: filterChangeId,
+    },
+    {
+      refetchOnMountOrArgChange: false,
+      skip: false,
+    },
+  );
 
   const [changeStaffStatus, { isLoading: isChangingStatus }] =
     useChangeStaffStatusMutation();
-  const [deleteStaff, { isLoading: isDeletingStaff }] =
+  const [deleteStaffMutation, { isLoading: isDeletingStaff }] =
     useDeleteStaffMutation();
 
-  const displayData = isTyping ? [] : lists;
+  const isTyping = search !== debouncedSearch;
+  const displayData = cachedData?.data || lists || [];
 
   const handleSearchChange = (searchValue) => {
     dispatch(updateStaffSearch(searchValue));
+    dispatch(updateStaffPage(1));
   };
 
   const handlePageChange = (page) => {
-    dispatch(updateStaffPage(page));
+    dispatch(updateStaffPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateStaffPageSize(newPageSize));
+    }
   };
 
   const handleOpenBlockModal = (staff) => {
     dispatch(openBlockModal(staff));
   };
 
+  const handleOpenUnblockModal = (staff) => {
+    dispatch(openUnblockModal(staff));
+  };
+
+  const handleOpenDeleteModal = (staff) => {
+    dispatch(openDeleteModal(staff));
+  };
+
   const handleCloseBlockModal = () => {
     dispatch(closeBlockModal());
+  };
+
+  const handleCloseUnblockModal = () => {
+    dispatch(closeUnblockModal());
+  };
+
+  const handleCloseDeleteModal = () => {
+    dispatch(closeDeleteModal());
   };
 
   const handleBlockStaff = async () => {
     if (!selectedStaffForBlock) return;
 
     try {
-      await changeStaffStatus({
+      const response = await changeStaffStatus({
         id: selectedStaffForBlock._id,
-        status: "blocked",
+        is_blocked: true,
         staffData: selectedStaffForBlock,
       }).unwrap();
 
-      dispatch(setSuccessModal({ show: true, type: "block" }));
-      handleCloseBlockModal();
+      dispatch(closeBlockModal());
+      dispatch(
+        setSuccessModal({
+          show: true,
+          type: "block",
+          message: response?.message || "Staff blocked successfully!",
+        }),
+      );
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to block staff");
     }
   };
 
-  const handleUnblockStaff = async (staffId) => {
+  const handleUnblockStaff = async () => {
+    if (!selectedStaffForBlock) return;
+
     try {
-      await changeStaffStatus({
-        id: staffId,
-        status: "active",
+      const response = await changeStaffStatus({
+        id: selectedStaffForBlock._id,
+        is_blocked: false,
       }).unwrap();
 
-      successNotify("Staff unblocked successfully");
+      dispatch(closeUnblockModal());
+      dispatch(
+        setSuccessModal({
+          show: true,
+          type: "unblock",
+          message: response?.message || "Staff unblocked successfully!",
+        }),
+      );
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to unblock staff");
     }
   };
 
-  const handleDeleteStaff = async (staffId) => {
+  const handleDeleteStaff = async () => {
+    if (!selectedStaffForDelete) return;
+
     try {
-      await deleteStaff(staffId).unwrap();
-      successNotify("Staff deleted successfully");
+      const response = await deleteStaffMutation(
+        selectedStaffForDelete._id,
+      ).unwrap();
+
+      dispatch(closeDeleteModal());
+      dispatch(
+        setSuccessModal({
+          show: true,
+          type: "delete",
+          message: response?.message || "Staff deleted successfully!",
+        }),
+      );
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to delete staff");
     }
   };
 
+  const handleCloseSuccessModal = () => {
+    dispatch(clearSuccessModal());
+  };
+
   return {
-    staffList: displayData,
-    currentPage,
-    pageSize,
-    totalPages,
-    totalItems,
+    staffList: isTyping || isError ? [] : displayData,
+    current_page: currentPage,
+    limit: pageSize,
+    total_page: totalPages,
+    total_items: totalItems,
     search,
     isFetching: isFetching || isTyping,
+    isLoading: false,
     isError,
     error,
     showBlockModal,
+    showUnblockModal,
+    showDeleteModal,
     successModal,
     selectedStaffForBlock,
-    isChangingStatus,
+    selectedStaffForDelete,
+    isBlockLoading: isChangingStatus,
+    isUnblockLoading: isChangingStatus,
     isDeletingStaff,
     handleSearchChange,
-    handlePageChange,
+    updatePage: handlePageChange,
     handleOpenBlockModal,
+    handleOpenUnblockModal,
+    handleOpenDeleteModal,
     handleCloseBlockModal,
+    handleCloseUnblockModal,
+    handleCloseDeleteModal,
     handleBlockStaff,
     handleUnblockStaff,
     handleDeleteStaff,
+    handleCloseSuccessModal,
+    dispatch,
   };
 };
 
@@ -178,6 +267,7 @@ export const useStaffMutations = () => {
 
 export const useAddStaff = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedRole, setSelectedRole] = useState("");
   const { phone, countryInfo, handlePhoneChange } = usePhoneInput("", "bd");
   const [addStaff, { isLoading: isAdding }] = useAddStaffMutation();
@@ -198,9 +288,18 @@ export const useAddStaff = () => {
     formData.append("data", JSON.stringify(data));
 
     try {
-      await addStaff(formData).unwrap();
-      successNotify("Staff added successfully");
-      navigate("/admin/staffs");
+      const response = await addStaff(formData).unwrap();
+      dispatch(
+        setSuccessModal({
+          show: true,
+          type: "add",
+          message: response?.message || "Staff added successfully!",
+        }),
+      );
+      // Navigate after showing success modal
+      setTimeout(() => {
+        navigate("/admin/staffs");
+      }, 1500);
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to add staff");
     }
@@ -214,11 +313,13 @@ export const useAddStaff = () => {
     roleOptions,
     handleSubmit,
     isAdding,
+    dispatch,
   };
 };
 
 export const useEditStaff = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const { singleStaff } = useSelector((state) => state.staffs);
   const [updateStaff, { isLoading: isUpdating }] = useUpdateStaffMutation();
@@ -236,8 +337,6 @@ export const useEditStaff = () => {
     return roleValue?.toLowerCase() || "";
   };
 
-  console.log("singleStaff:", singleStaff);
-
   const [selectedRole, setSelectedRole] = useState(getRoleValue());
   const { phone, countryInfo, handlePhoneChange } = usePhoneInput(
     singleStaff?.phone,
@@ -247,7 +346,6 @@ export const useEditStaff = () => {
   );
 
   const handleSubmit = async (e) => {
-    // console.log("countryInfo:", countryInfo);
     e.preventDefault();
     const name = e.target.name.value;
     const data = {
@@ -259,9 +357,21 @@ export const useEditStaff = () => {
     formData.append("data", JSON.stringify(data));
 
     try {
-      await updateStaff({ id: singleStaff._id, data: formData }).unwrap();
-      successNotify("Staff updated successfully");
-      navigate("/admin/staffs");
+      const response = await updateStaff({
+        id: singleStaff._id,
+        data: formData,
+      }).unwrap();
+      dispatch(
+        setSuccessModal({
+          show: true,
+          type: "update",
+          message: response?.message || "Staff updated successfully!",
+        }),
+      );
+      // Navigate after showing success modal
+      setTimeout(() => {
+        navigate("/admin/staffs");
+      }, 1500);
     } catch (error) {
       errorNotify(error?.data?.message || "Failed to update staff");
     }
@@ -279,5 +389,6 @@ export const useEditStaff = () => {
     roleOptions,
     handleSubmit,
     isUpdating,
+    dispatch,
   };
 };

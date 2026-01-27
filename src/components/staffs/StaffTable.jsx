@@ -17,22 +17,15 @@ function StaffTable() {
     isFetching,
     isError,
     error,
-    currentPage,
-    pageSize,
-    totalPages,
-    totalItems,
-    handlePageChange,
+    current_page,
+    limit,
+    total_page,
+    total_items,
+    updatePage,
     handleOpenBlockModal,
-    handleUnblockStaff,
-    handleDeleteStaff,
-    isDeletingStaff,
+    handleOpenUnblockModal,
+    handleOpenDeleteModal,
   } = useStaffs();
-
-  const handleDelete = (staffId) => {
-    if (window.confirm("Are you sure you want to delete this staff member?")) {
-      handleDeleteStaff(staffId);
-    }
-  };
 
   return (
     <Fragment>
@@ -56,13 +49,13 @@ function StaffTable() {
               isError={isError}
               status={error?.status}
               dataLength={staffList.length}
-              column={7}
+              column={8}
               tableName="Staffs"
             >
               {staffList.map((staff, index) => (
                 <tr key={staff._id || index} className="table_row group">
                   <td className="table_outline_td">
-                    {(currentPage - 1) * pageSize + index + 1}
+                    {(current_page - 1) * limit + index + 1}
                   </td>
                   <td className="table_outline_td">
                     <div className="flex items-center justify-center gap-2">
@@ -71,7 +64,6 @@ function StaffTable() {
                         alt=""
                         className="w-8 h-8 rounded-full object-cover"
                       />
-                      {/* <span>{staff?.full_name || "-"}</span> */}
                     </div>
                   </td>
                   <td className="table_outline_td">{staff?.name || "-"}</td>
@@ -96,14 +88,14 @@ function StaffTable() {
 
                       {staff?.is_blocked === false ? (
                         <button
-                          onClick={() => handleOpenBlockModal(staff._id)}
+                          onClick={() => handleOpenBlockModal(staff)}
                           title="Block Staff"
                         >
                           <BlockIconSvg />
                         </button>
                       ) : (
                         <button
-                          onClick={() => handleUnblockStaff(staff._id)}
+                          onClick={() => handleOpenUnblockModal(staff)}
                           title="Unblock Staff"
                         >
                           <ActiveIconSvg color="#10B981" />
@@ -111,8 +103,7 @@ function StaffTable() {
                       )}
 
                       <button
-                        onClick={() => handleDelete(staff._id)}
-                        disabled={isDeletingStaff}
+                        onClick={() => handleOpenDeleteModal(staff)}
                         title="Delete Staff"
                       >
                         <DeleteIconSvg />
@@ -128,11 +119,11 @@ function StaffTable() {
 
       <div className="max-w-full border-gray-200 rounded-b-lg bg-white">
         <Pagination
-          current_page={currentPage}
-          total_page={totalPages}
-          updatePage={handlePageChange}
-          limit={pageSize}
-          total_items={totalItems}
+          current_page={current_page}
+          total_page={total_page}
+          updatePage={updatePage}
+          limit={limit}
+          total_items={total_items}
         />
       </div>
     </Fragment>

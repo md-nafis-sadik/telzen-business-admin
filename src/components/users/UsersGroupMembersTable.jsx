@@ -1,7 +1,12 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useGroupMembers } from "@/hooks";
-import { ViewIconSvg, DeleteIconSvg, adminRouteLinks, BlockIconSvg } from "@/services";
+import {
+  ViewIconSvg,
+  DeleteIconSvg,
+  adminRouteLinks,
+  BlockIconSvg,
+} from "@/services";
 import moment from "moment";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
@@ -12,7 +17,8 @@ import { openDeleteGroupModal } from "@/features/users/usersSlice";
 function UsersGroupMembersTable() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { members,
+  const {
+    members,
     current_page,
     limit,
     total_page,
@@ -20,8 +26,8 @@ function UsersGroupMembersTable() {
     isFetching,
     isError,
     error,
-    updatePage, } =
-    useGroupMembers(id);
+    updatePage,
+  } = useGroupMembers(id);
 
   const handleRemoveClick = (member) => {
     dispatch(openDeleteGroupModal(member));
@@ -87,18 +93,20 @@ function UsersGroupMembersTable() {
                     <span className="text-green-600">{"Active"}</span>
                   </td>
                   <td className="table_outline_td flex gap-3 justify-center items-center">
-                    {/* <Link
+                    <div>
+                      {/* <Link
                       to={`${adminRouteLinks.usersActive.path}/details/${member._id || member.id}`}
                       className="cursor-pointer"
                     >
                       <ViewIconSvg />
                     </Link> */}
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => handleRemoveClick(member)}
-                    >
-                      <DeleteIconSvg />
-                    </button>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleRemoveClick(member)}
+                      >
+                        <DeleteIconSvg />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

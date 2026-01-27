@@ -10,6 +10,8 @@ const initialState = {
       pageSize: 10,
     },
     search: "",
+    cache: {},
+    filterChangeId: 0,
   },
 
   singleStaff: {},
@@ -17,9 +19,13 @@ const initialState = {
   successModal: {
     show: false,
     type: "", // 'block', 'unblock', 'add', 'update', 'delete'
+    message: "",
   },
   showBlockModal: false,
+  showUnblockModal: false,
+  showDeleteModal: false,
   selectedStaffForBlock: null,
+  selectedStaffForDelete: null,
 
   roleOptions: [
     { id: "manager", label: "Manager" },
@@ -31,6 +37,10 @@ const initialState = {
     { id: "active", label: "Active" },
     { id: "blocked", label: "Blocked" },
   ],
+};
+
+const generateCacheKey = (page, search) => {
+  return `${page}_${search}`;
 };
 
 const staffSlice = createSlice({
@@ -48,6 +58,15 @@ const staffSlice = createSlice({
         pageSize: meta?.limit || 10,
       };
 
+      // Use the current search state for cache key, not the incoming search parameter
+      const currentSearch = search !== undefined ? search : state.staffData.search;
+      const cacheKey = generateCacheKey(meta?.page || 1, currentSearch || "");
+      state.staffData.cache[cacheKey] = {
+        data: data || [],
+        meta: meta || {},
+        timestamp: Date.now(),
+      };
+
       if (search !== undefined) {
         state.staffData.search = search;
       }
@@ -55,10 +74,19 @@ const staffSlice = createSlice({
 
     updateStaffSearch: (state, action) => {
       state.staffData.search = action.payload;
+      state.staffData.filterChangeId += 1;
+      state.staffData.cache = {};
     },
 
     updateStaffPage: (state, action) => {
       state.staffData.meta.currentPage = action.payload;
+    },
+
+    updateStaffPageSize: (state, action) => {
+      state.staffData.meta.pageSize = action.payload;
+      state.staffData.meta.currentPage = 1;
+      state.staffData.filterChangeId += 1;
+      state.staffData.cache = {};
     },
 
     setSingleStaff: (state, action) => {
@@ -90,6 +118,22 @@ const staffSlice = createSlice({
         };
       }
 
+      // Update in cache
+      Object.keys(state.staffData.cache).forEach((key) => {
+        const cacheStaffIndex = state.staffData.cache[key].data.findIndex(
+          (staff) =>
+            staff._id === staff_id ||
+            staff.staff_user_id === staff_id ||
+            staff.id === staff_id,
+        );
+        if (cacheStaffIndex !== -1) {
+          state.staffData.cache[key].data[cacheStaffIndex] = {
+            ...state.staffData.cache[key].data[cacheStaffIndex],
+            ...updatedStaff,
+          };
+        }
+      });
+
       if (
         state.singleStaff._id === staff_id ||
         state.singleStaff.staff_user_id === staff_id ||
@@ -115,6 +159,22 @@ const staffSlice = createSlice({
           status: "blocked",
         };
       }
+
+      // Update in cache
+      Object.keys(state.staffData.cache).forEach((key) => {
+        const cacheStaffIndex = state.staffData.cache[key].data.findIndex(
+          (staff) =>
+            staff._id === staff_id ||
+            staff.staff_user_id === staff_id ||
+            staff.id === staff_id,
+        );
+        if (cacheStaffIndex !== -1) {
+          state.staffData.cache[key].data[cacheStaffIndex] = {
+            ...state.staffData.cache[key].data[cacheStaffIndex],
+            status: "blocked",
+          };
+        }
+      });
 
       if (
         (state.singleStaff._id === staff_id ||
@@ -143,6 +203,22 @@ const staffSlice = createSlice({
         };
       }
 
+      // Update in cache
+      Object.keys(state.staffData.cache).forEach((key) => {
+        const cacheStaffIndex = state.staffData.cache[key].data.findIndex(
+          (staff) =>
+            staff._id === staff_id ||
+            staff.staff_user_id === staff_id ||
+            staff.id === staff_id,
+        );
+        if (cacheStaffIndex !== -1) {
+          state.staffData.cache[key].data[cacheStaffIndex] = {
+            ...state.staffData.cache[key].data[cacheStaffIndex],
+            status: "active",
+          };
+        }
+      });
+
       if (
         state.singleStaff._id === staff_id ||
         state.singleStaff.staff_user_id === staff_id ||
@@ -156,6 +232,16 @@ const staffSlice = createSlice({
       const newStaff = action.payload;
       state.staffData.lists.unshift(newStaff);
       state.staffData.meta.totalItems += 1;
+
+      // Add to first page of cache if it exists
+      const firstPageKey = generateCacheKey(1, state.staffData.search);
+      if (state.staffData.cache[firstPageKey]) {
+        state.staffData.cache[firstPageKey].data.unshift(newStaff);
+        // Remove last item if exceeds page size
+        if (state.staffData.cache[firstPageKey].data.length > state.staffData.meta.pageSize) {
+          state.staffData.cache[firstPageKey].data.pop();
+        }
+      }
     },
 
     deleteStaff: (state, action) => {
@@ -175,6 +261,31 @@ const staffSlice = createSlice({
           state.staffData.meta.totalItems - 1,
         );
       }
+
+      // Remove from all cache entries
+      Object.keys(state.staffData.cache).forEach((key) => {
+        state.staffData.cache[key].data = state.staffData.cache[key].data.filter(
+          (staff) =>
+            staff._id !== staff_id &&
+            staff.staff_user_id !== staff_id &&
+            staff.id !== staff_id,
+        );
+      });
+
+      // Recalculate total pages
+      state.staffData.meta.totalPages = Math.max(
+        1,
+        Math.ceil(state.staffData.meta.totalItems / state.staffData.meta.pageSize)
+      );
+
+      // Adjust current page if current page is now empty and not page 1
+      if (state.staffData.lists.length === 0 && state.staffData.meta.currentPage > 1) {
+        const newPage = Math.min(
+          state.staffData.meta.currentPage,
+          state.staffData.meta.totalPages
+        );
+        state.staffData.meta.currentPage = Math.max(1, newPage);
+      }
     },
 
     setStaffSelectedData: (state, action) => {
@@ -183,8 +294,9 @@ const staffSlice = createSlice({
 
     setSuccessModal: (state, action) => {
       state.successModal = {
-        show: action.payload.show || true,
+        show: action.payload.show ?? true,
         type: action.payload.type || "",
+        message: action.payload.message || "",
       };
     },
 
@@ -192,6 +304,7 @@ const staffSlice = createSlice({
       state.successModal = {
         show: false,
         type: "",
+        message: "",
       };
     },
 
@@ -205,6 +318,26 @@ const staffSlice = createSlice({
       state.selectedStaffForBlock = null;
     },
 
+    openUnblockModal: (state, action) => {
+      state.showUnblockModal = true;
+      state.selectedStaffForBlock = action.payload;
+    },
+
+    closeUnblockModal: (state) => {
+      state.showUnblockModal = false;
+      state.selectedStaffForBlock = null;
+    },
+
+    openDeleteModal: (state, action) => {
+      state.showDeleteModal = true;
+      state.selectedStaffForDelete = action.payload;
+    },
+
+    closeDeleteModal: (state) => {
+      state.showDeleteModal = false;
+      state.selectedStaffForDelete = null;
+    },
+
     resetStaffState: () => initialState,
   },
 });
@@ -213,6 +346,7 @@ export const {
   setStaff,
   updateStaffSearch,
   updateStaffPage,
+  updateStaffPageSize,
   setSingleStaff,
   updateSingleStaff,
   updateStaff,
@@ -225,6 +359,10 @@ export const {
   clearSuccessModal,
   openBlockModal,
   closeBlockModal,
+  openUnblockModal,
+  closeUnblockModal,
+  openDeleteModal,
+  closeDeleteModal,
   resetStaffState,
 } = staffSlice.actions;
 

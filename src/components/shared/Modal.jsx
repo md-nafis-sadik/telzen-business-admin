@@ -72,14 +72,15 @@ const Modal = forwardRef(
             </div>
             <div className="flex items-center justify-between gap-6 w-full">
               {cancelButton && (
-                <button className={`${cancelButtonClass}`} onClick={closeModal}>
+                <button className={`${cancelButtonClass}`} onClick={closeModal} disabled={isLoading}>
                   {cancelButton}
                 </button>
               )}
               {confirmButton && (
                 <button
-                  className={`${confirmButtonClass} bg-main-700 hover:bg-main-700`}
+                  className={`${confirmButtonClass} bg-main-700 hover:bg-main-700 disabled:bg-main-100`}
                   onClick={confirmHandeler}
+                  disabled={isLoading}
                 >
                   {confirmButton}
                 </button>

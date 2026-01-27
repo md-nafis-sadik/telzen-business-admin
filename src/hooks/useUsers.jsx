@@ -11,12 +11,17 @@ import {
 import {
   updateActiveRegularSearch,
   updateActiveRegularPage,
+  updateActiveRegularPageSize,
   updateGroupSearch,
   updateGroupPage,
+  updateGroupPageSize,
   updateBlockedRegularSearch,
   updateBlockedRegularPage,
+  updateBlockedRegularPageSize,
   updateGroupMembersSearch,
   updateGroupMembersPage,
+  updateGroupMembersPageSize,
+  resetGroupMembers,
   setActiveTab,
   setBlockedTab,
   openBlockModal,
@@ -30,8 +35,15 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { errorNotify, successNotify } from "@/services";
+
+const generateCacheKey = (page, search, groupId = null) => {
+  if (groupId) {
+    return `${page}_${search}_${groupId}`;
+  }
+  return `${page}_${search}`;
+};
 
 export const useActiveUsers = () => {
   const { currentTab } = useUserTabs("active");
@@ -176,28 +188,36 @@ export const useActiveRegularUsers = () => {
   const dispatch = useDispatch();
   const { activeRegularData } = useSelector((state) => state.users);
 
-  const { lists, meta, search } = activeRegularData;
-
+  const { lists, meta, search, cache, filterChangeId } = activeRegularData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
 
   const { isFetching, isError, error } = useGetActiveRegularUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
+      refetchOnMountOrArgChange: false,
       skip: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateActiveRegularPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateActiveRegularPageSize(newPageSize));
+    }
   };
 
   const handleSearchChange = (value) => {
@@ -231,27 +251,36 @@ export const useGroupUsers = () => {
   const dispatch = useDispatch();
   const { groupData } = useSelector((state) => state.users);
 
-  const { lists, meta, search } = groupData;
+  const { lists, meta, search, cache, filterChangeId } = groupData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
 
   const { isFetching, isError, error } = useGetGroupUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
+      refetchOnMountOrArgChange: false,
       skip: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateGroupPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateGroupPageSize(newPageSize));
+    }
   };
 
   const handleSearchChange = (value) => {
@@ -280,27 +309,36 @@ export const useBlockedRegularUsers = () => {
   const dispatch = useDispatch();
   const { blockedRegularData } = useSelector((state) => state.users);
 
-  const { lists, meta, search } = blockedRegularData;
+  const { lists, meta, search, cache, filterChangeId } = blockedRegularData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch);
+  const cachedData = cache[cacheKey];
 
   const { isFetching, isError, error } = useGetBlockedRegularUsersQuery(
     {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
+      refetchOnMountOrArgChange: false,
       skip: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateBlockedRegularPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateBlockedRegularPageSize(newPageSize));
+    }
   };
 
   const handleSearchChange = (value) => {
@@ -371,10 +409,13 @@ export const useGroupMembers = (groupId) => {
   const dispatch = useDispatch();
   const { groupMembersData } = useSelector((state) => state.users);
 
-  const { lists, meta, search } = groupMembersData;
+  const { lists, meta, search, cache, filterChangeId } = groupMembersData;
   const { currentPage, pageSize, totalPages, totalItems } = meta;
 
   const debouncedSearch = useDebounce(search, 500);
+
+  const cacheKey = generateCacheKey(currentPage, debouncedSearch, groupId);
+  const cachedData = cache[cacheKey];
 
   const { isFetching, isError, error } = useGetGroupMembersQuery(
     {
@@ -382,17 +423,23 @@ export const useGroupMembers = (groupId) => {
       current_page: currentPage,
       limit: pageSize,
       search: debouncedSearch,
+      _filterChangeId: filterChangeId,
     },
     {
       skip: !groupId,
+      refetchOnMountOrArgChange: false,
     },
   );
 
   const isTyping = search !== debouncedSearch;
-  const displayData = lists;
+  const displayData = cachedData?.data || lists || [];
 
   const handlePageChange = (page) => {
     dispatch(updateGroupMembersPage(page.current_page));
+    const newPageSize = page.per_page || page.limit;
+    if (newPageSize && newPageSize !== pageSize) {
+      dispatch(updateGroupMembersPageSize(newPageSize));
+    }
   };
 
   const handleSearchChange = (value) => {

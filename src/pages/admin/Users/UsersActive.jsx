@@ -23,7 +23,7 @@ function UsersActive() {
   } = useActiveUsers();
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="w-full flex-1 flex flex-col gap-6">
       <UsersActiveHeader />
       <div className="w-full flex-1 flex flex-col overflow-auto bg-white p-4 rounded-2xl">
         <div>
@@ -44,13 +44,12 @@ function UsersActive() {
         )}
       </div>
 
-      {isBlockLoading && <RequestLoader />}
-      {isDeleteLoading && <RequestLoader />}
+      {(isBlockLoading || isDeleteLoading) && <RequestLoader />}
 
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"
         cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
-        confirmButton="Block"
+        confirmButton={isBlockLoading ? "Blocking..." : "Block"}
         title="Are you sure you want to block this user?"
         cancelButton="No, Thanks"
         titleClass="text-text-700 leading-normal w-[400px]"
@@ -61,12 +60,13 @@ function UsersActive() {
           dispatch(closeBlockModal());
         }}
         confirmHandeler={handleBlockConfirm}
+        isLoading={isBlockLoading}
       />
 
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"
         cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
-        confirmButton="Delete"
+        confirmButton={isDeleteLoading ? "Deleting..." : "Delete"}
         title="Are you sure you want to delete this group?"
         cancelButton="No, Thanks"
         titleClass="text-text-700 leading-normal w-[400px]"
@@ -77,6 +77,7 @@ function UsersActive() {
           dispatch(closeDeleteGroupModal());
         }}
         confirmHandeler={handleDeleteGroupConfirm}
+        isLoading={isDeleteLoading}
       />
     </div>
   );

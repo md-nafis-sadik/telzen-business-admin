@@ -13,8 +13,8 @@ const staffApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get All Staff
     getStaff: builder.query({
-      query: ({ current_page = 1, per_page = 10, search = "" }) => {
-        let url = `/staff?page=${current_page}&limit=${per_page}`;
+      query: ({ current_page = 1, limit = 10, search = "" }) => {
+        let url = `/staff?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
@@ -25,32 +25,22 @@ const staffApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
           const responseData = result?.data;
+          const apiMeta = responseData?.meta;
 
           dispatch(
             setStaff({
               data: responseData?.data || [],
-              meta: responseData?.meta || {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
+              meta: {
+                page: apiMeta?.current_page || arg.current_page || 1,
+                limit: apiMeta?.page_size || arg.limit || 10,
+                total: apiMeta?.total_items || 0,
+                last_page: apiMeta?.total_pages || 1,
               },
-              search: arg.search || "",
+              search: undefined, // Don't update search from API response
             }),
           );
         } catch (error) {
-          dispatch(
-            setStaff({
-              data: [],
-              meta: {
-                page: arg.current_page || 1,
-                limit: arg.limit || 10,
-                total: 0,
-                last_page: 0,
-              },
-              search: arg.search || "",
-            }),
-          );
+          // Don't update anything on error to preserve user's search input
         }
       },
     }),
@@ -109,20 +99,20 @@ const staffApi = apiSlice.injectEndpoints({
 
     // Change Staff Status (Block/Unblock)
     changeStaffStatus: builder.mutation({
-      query: ({ id, status }) => ({
-        url: `/admin/staff-users/${id}/status`,
+      query: ({ id, is_blocked }) => ({
+        url: `staff/update?staff_id=${id}`,
         method: "PATCH",
-        body: { status },
+        body: { is_blocked },
       }),
       async onQueryStarted(
-        { id, status, staffData },
+        { id, is_blocked, staffData },
         { queryFulfilled, dispatch },
       ) {
         try {
           await queryFulfilled;
-          if (status === "blocked") {
+          if (is_blocked) {
             dispatch(blockStaff({ staff_id: id, staffData }));
-          } else if (status === "active") {
+          } else if (!is_blocked) {
             dispatch(unblockStaff({ staff_id: id }));
           }
         } catch (error) {
