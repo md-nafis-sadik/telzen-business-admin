@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useGetSinglePackageQuery } from "@/features/inventory/inventoryApi";
 import {
   useGetCustomersQuery,
@@ -7,28 +7,38 @@ import {
   useCreateCheckoutPaymentMutation,
   useCheckoutVerifyPaymentMutation,
 } from "@/features/inventory/customerApi";
+import { errorNotify } from "@/services";
 import {
-  successNotify,
-  errorNotify,
-  customerValidation,
-  billingValidation,
-} from "@/services";
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 
 export const useCheckout = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const stripe = useStripe();
+  const elements = useElements();
 
   const country_id = searchParams.get("country_id");
   const region_id = searchParams.get("region_id");
   const package_id = searchParams.get("package_id");
 
-  const [step, setStep] = useState(1); // 1: Customer Info, 2: Billing, 3: Success
-  const [selectionType, setSelectionType] = useState("customer"); // "customer" or "group"
+  const [step, setStep] = useState(1);
+  const [selectionType, setSelectionType] = useState("customer");
   const [selectedCustomers, setSelectedCustomers] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
+  const [cardholderName, setCardholderName] = useState("");
+  const [cardBrand, setCardBrand] = useState("unknown");
+
+  const selectionOptions = [
+    { label: "Customer", value: "customer" },
+    { label: "Group", value: "group" },
+  ];
 
   // API Queries
   const {
@@ -41,7 +51,8 @@ export const useCheckout = () => {
     package_id,
   });
 
-  const { data: customersData, refetch: refetchCustomers } = useGetCustomersQuery();
+  const { data: customersData, refetch: refetchCustomers } =
+    useGetCustomersQuery();
   const { data: groupsData, refetch: refetchGroups } = useGetGroupsQuery();
 
   const [createCheckoutPayment] = useCreateCheckoutPaymentMutation();
@@ -101,14 +112,14 @@ export const useCheckout = () => {
         checkoutData.group = selectedGroup;
       }
 
-      console.log('Checkout data being sent:', checkoutData);
-      console.log('Selection type:', selectionType);
-      console.log('Selected customers:', selectedCustomers);
-      console.log('Selected group:', selectedGroup);
+      console.log("Checkout data being sent:", checkoutData);
+      console.log("Selection type:", selectionType);
+      console.log("Selected customers:", selectedCustomers);
+      console.log("Selected group:", selectedGroup);
 
       // Create payment
       const paymentResult = await createCheckoutPayment(checkoutData).unwrap();
-      
+
       if (!paymentResult?.success || !paymentResult?.data) {
         throw new Error("Failed to create payment");
       }
@@ -135,22 +146,32 @@ export const useCheckout = () => {
       }
 
       if (paymentIntent?.status === "succeeded") {
-        // Verify payment with backend
         if (!payment_id) {
           throw new Error("Payment ID not found");
         }
 
-        const verifyResult = await verifyCheckoutPayment({ paymentId: payment_id }).unwrap();
-        
+        const verifyResult = await verifyCheckoutPayment({
+          paymentId: payment_id,
+        }).unwrap();
+
         if (verifyResult?.success) {
-          setStep(3);
+          setShowSuccessModal(true);
+          setSelectedCustomers([]);
+          setSelectedGroup("");
+          setCardholderName("");
+          setCardBrand("unknown");
+          setStep(1);
           return true;
         } else {
           throw new Error("Payment verification failed");
         }
       }
     } catch (error) {
-      errorNotify(error?.data?.message || error?.message || "Payment failed. Please try again.");
+      errorNotify(
+        error?.data?.message ||
+          error?.message ||
+          "Payment failed. Please try again.",
+      );
       console.error("Payment error:", error);
       return false;
     } finally {
@@ -159,7 +180,54 @@ export const useCheckout = () => {
   };
 
   const handleBackToInventory = () => {
-    navigate("/admin/my-esim");
+    navigate("/admin/inventory");
+  };
+
+  const handleClose = () => {
+    setShowSuccessModal(false);
+  };
+
+  const handleSelectionTypeChange = (newType) => {
+    setSelectionType(newType);
+    if (newType === "customer") {
+      setSelectedGroup("");
+    } else {
+      setSelectedCustomers([]);
+    }
+  };
+
+  const handleCardChange = (event) => {
+    if (event.brand) {
+      setCardBrand(event.brand);
+    }
+  };
+  const handleAddCustomerSuccess = () => {
+    handleRefetchData();
+    setShowAddCustomerModal(false);
+  };
+  const handleCustomerFormSubmit = (e) => {
+    e.preventDefault();
+    handleCustomerSubmit();
+  };
+
+  const handleBillingFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    if (!cardholderName.trim()) {
+      return;
+    }
+
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    await handlePaymentSubmit({
+      cardholderName,
+      cardNumberElement,
+      stripe,
+      elements,
+    });
   };
 
   const getCoverageText = () => {
@@ -179,15 +247,17 @@ export const useCheckout = () => {
   const grandTotal = subtotal;
 
   // Format customers and groups for dropdowns
-  const customers = customersData?.data?.map((customer) => ({
-    label: `${customer.name} (${customer.email})`,
-    value: customer._id,
-  })) || [];
+  const customers =
+    customersData?.data?.map((customer) => ({
+      label: `${customer.name} (${customer.email})`,
+      value: customer._id,
+    })) || [];
 
-  const groups = groupsData?.data?.map((group) => ({
-    label: group.name,
-    value: group._id,
-  })) || [];
+  const groups =
+    groupsData?.data?.map((group) => ({
+      label: group.name,
+      value: group._id,
+    })) || [];
 
   return {
     step,
@@ -213,6 +283,22 @@ export const useCheckout = () => {
     customers,
     groups,
     handleRefetchData,
+    showSuccessModal,
+    handleClose,
+    showAddCustomerModal,
+    setShowAddCustomerModal,
+    cardholderName,
+    setCardholderName,
+    cardBrand,
+    setCardBrand,
+    selectionOptions,
+    handleSelectionTypeChange,
+    handleCardChange,
+    handleAddCustomerSuccess,
+    handleCustomerFormSubmit,
+    handleBillingFormSubmit,
+    stripe,
+    elements,
   };
 };
 

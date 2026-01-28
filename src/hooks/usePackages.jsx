@@ -36,6 +36,10 @@ export const usePackages = () => {
     navigate("/admin/inventory");
   };
 
+  const packages = data?.data?.packages || [];
+
+  const encodedImage = data?.data?.country?.image ? encodeURI(data?.data?.country?.image) : encodeURI(data?.data?.region?.image);
+
   return {
     data,
     isLoading,

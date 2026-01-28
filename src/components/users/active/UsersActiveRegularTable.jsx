@@ -2,7 +2,6 @@ import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useActiveRegularUsers } from "@/hooks";
 import { BlockIconSvg, formatDate } from "@/services";
-import moment from "moment";
 import { Fragment } from "react";
 import ReactCountryFlag from "react-country-flag";
 

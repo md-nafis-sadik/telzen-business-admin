@@ -1,12 +1,8 @@
-import { useState } from "react";
 import {
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
-  useStripe,
-  useElements,
 } from "@stripe/react-stripe-js";
-import Input from "@/components/shared/Input";
 import MultiSelectInput from "@/components/shared/MultiSelectInput";
 import SelectInput from "@/components/shared/SelectInput";
 import SliderButton from "@/components/shared/SliderButton";
@@ -16,11 +12,10 @@ import AddCustomerModal from "@/components/inventory/AddCustomerModal";
 import { images } from "@/services";
 import { useCheckout } from "@/hooks";
 import CheckoutSkeleton from "./CheckoutSkeleton";
+import CustomModal from "@/components/shared/CustomModal";
+import { CardBrandIcon } from "@/components/shared/CardBrandIcon";
 
 function Checkout() {
-  const stripe = useStripe();
-  const elements = useElements();
-
   const {
     step,
     packageData,
@@ -30,82 +25,32 @@ function Checkout() {
     setQuantity,
     isProcessing,
     formatDataSize,
-    handleCustomerSubmit,
-    handlePaymentSubmit,
     handleBackToInventory,
     getCoverageText,
     subtotal,
     grandTotal,
     selectionType,
-    setSelectionType,
     selectedCustomers,
     setSelectedCustomers,
     selectedGroup,
     setSelectedGroup,
     customers,
     groups,
-    handleRefetchData,
+    showSuccessModal,
+    handleClose,
+    showAddCustomerModal,
+    setShowAddCustomerModal,
+    cardholderName,
+    setCardholderName,
+    cardBrand,
+    selectionOptions,
+    handleSelectionTypeChange,
+    handleCardChange,
+    handleAddCustomerSuccess,
+    handleCustomerFormSubmit,
+    handleBillingFormSubmit,
+    stripe,
   } = useCheckout();
-
-  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
-  const [cardholderName, setCardholderName] = useState("");
-  const [cardBrand, setCardBrand] = useState("unknown");
-
-  const [billingData, setBillingData] = useState({
-    yourName: "",
-    cardNumber: "",
-    expirationDate: "",
-    cvv: "",
-  });
-
-  const selectionOptions = [
-    { label: "Customer", value: "customer" },
-    { label: "Group", value: "group" },
-  ];
-
-  const handleSelectionTypeChange = (newType) => {
-    setSelectionType(newType);
-    // Clear selections when switching types
-    if (newType === "customer") {
-      setSelectedGroup("");
-    } else {
-      setSelectedCustomers([]);
-    }
-  };
-
-  const handleCardChange = (event) => {
-    if (event.brand) {
-      setCardBrand(event.brand);
-    }
-  };
-  const handleAddCustomerSuccess = () => {
-    handleRefetchData();
-    setShowAddCustomerModal(false);
-  };
-  const handleCustomerFormSubmit = (e) => {
-    e.preventDefault();
-    handleCustomerSubmit();
-  };
-
-  const handleBillingFormSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) {
-      return;
-    }
-
-    if (!cardholderName.trim()) {
-      return;
-    }
-
-    const cardNumberElement = elements.getElement(CardNumberElement);
-    await handlePaymentSubmit({
-      cardholderName,
-      cardNumberElement,
-      stripe,
-      elements,
-    });
-  };
 
   if (isLoading) {
     return <CheckoutSkeleton />;
@@ -118,37 +63,6 @@ function Checkout() {
           <p className="text-red-600">
             Failed to load package details. Please try again.
           </p>
-        </div>
-      </section>
-    );
-  }
-
-  // Success Step
-  if (step === 3) {
-    return (
-      <section className="w-full flex-1 flex flex-col justify-center rounded-2xl">
-        <div className="rounded-2xl p-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="mb-6">
-              <img
-                src={images.successful || "/success.png"}
-                alt="Success"
-                className="w-64 h-64 mx-auto"
-              />
-            </div>
-            <h1 className="text-4xl md:text-[56px] font-[900] font-barlowCondensed text-main-700 mb-4 uppercase">
-              Purchase Successful!
-            </h1>
-            <p className="text-text-700 mb-6">
-              eSIM can be usable now also sent on given emails.
-            </p>
-            <button
-              onClick={handleBackToInventory}
-              className="px-8 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 w-[244px] transition-colors font-semibold"
-            >
-              My eSIM
-            </button>
-          </div>
         </div>
       </section>
     );
@@ -301,6 +215,9 @@ function Checkout() {
                       }}
                       onChange={handleCardChange}
                     />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <CardBrandIcon brand={cardBrand} />
+                    </div>
                   </div>
                 </div>
 
@@ -395,6 +312,38 @@ function Checkout() {
         onClose={() => setShowAddCustomerModal(false)}
         onSuccess={handleAddCustomerSuccess}
       />
+
+      <CustomModal
+        showModal={showSuccessModal}
+        onClose={handleClose}
+        widthClass="w-full sm:w-[600px]"
+      >
+        <section className="w-full flex-1 flex flex-col justify-center rounded-2xl">
+          <div className="rounded-2xl p-8">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="mb-6">
+                <img
+                  src={images.successful || "/success.png"}
+                  alt="Success"
+                  className="w-64 h-64 mx-auto"
+                />
+              </div>
+              <h1 className="text-[40px] font-[900] font-barlowCondensed text-main-700 mb-1 uppercase">
+                Purchase Successful!
+              </h1>
+              <p className="text-text-700 mb-6">
+                Thank you for your purchase. Expore more packages in inventory.
+              </p>
+              <button
+                onClick={handleBackToInventory}
+                className="px-8 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 w-[244px] transition-colors font-semibold"
+              >
+                Explore Inventory
+              </button>
+            </div>
+          </div>
+        </section>
+      </CustomModal>
     </section>
   );
 }
