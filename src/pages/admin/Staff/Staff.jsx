@@ -29,7 +29,7 @@ function Staff() {
       <StaffHeader />
       <StaffTable />
 
-      {(isBlockLoading || isUnblockLoading || isDeletingStaff) && <RequestLoader />}
+      {/* {(isBlockLoading || isUnblockLoading || isDeletingStaff) && <RequestLoader />} */}
 
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"

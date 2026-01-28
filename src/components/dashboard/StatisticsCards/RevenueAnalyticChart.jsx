@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import SelectInput from "@/components/shared/SelectInput";
+import { getSymbol } from "@/services";
 
 function RevenueAnalyticChart({ data = [], wrapper = "" }) {
   const [filter, setFilter] = useState("6_months");
@@ -75,11 +76,11 @@ function RevenueAnalyticChart({ data = [], wrapper = "" }) {
               fontWeight: "500",
             }}
           >
-            <p style={{ margin: 0 }}>
+            {/* <p style={{ margin: 0 }}>
               {data?.name} {data?.year && `(${data.year})`}
-            </p>
+            </p> */}
             <p style={{ margin: 0 }}>
-              Revenue: {data?.currency || "$"}
+              Revenue: {getSymbol(data?.currency) || "$"}
               {payload[0].value}
             </p>
           </div>

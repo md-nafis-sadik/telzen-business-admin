@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import SelectInput from "@/components/shared/SelectInput";
+import { getSymbol } from "@/services";
 
 function SalesAnlyticChart({ data = [], wrapper = "" }) {
   const [filter, setFilter] = useState("6_months");
@@ -64,11 +65,11 @@ function SalesAnlyticChart({ data = [], wrapper = "" }) {
               fontWeight: "500",
             }}
           >
-            <p style={{ margin: 0 }}>
+            {/* <p style={{ margin: 0 }}>
               {data?.name} {data?.year && `(${data.year})`}
-            </p>
+            </p> */}
             <p style={{ margin: 0 }}>
-              Total Sales: {data?.currency || "$"}
+              Total Sales: {getSymbol(data?.currency) || "$"}
               {payload[0].value}
             </p>
           </div>

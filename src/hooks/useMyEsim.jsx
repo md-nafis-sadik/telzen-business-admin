@@ -22,6 +22,7 @@ import {
   formatInvoiceData,
   generateInvoicePDF,
   images,
+  successNotify,
 } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import { useDebounce } from "./useDebounce";
@@ -105,7 +106,7 @@ export const useRegularMyEsims = () => {
       );
 
       if (result.success) {
-        console.log("Invoice generated successfully");
+        successNotify("Invoice generated successfully");
       }
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);
@@ -210,7 +211,7 @@ export const useGroupMyEsims = () => {
       );
 
       if (result.success) {
-        console.log("Invoice generated successfully");
+        successNotify("Invoice generated successfully");
       }
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);
@@ -303,8 +304,8 @@ export const useGroupEsimDetails = (groupId) => {
         address1: "254 Chapman Rd, Suite 101-B, Newark,",
         address2: "DE 19702",
         email: "support@telzen.net",
-        businessName: "Business Name",
-        businessEmail: "Business Email",
+        businessName: myEsim?.customer?.name || "Business Name",
+        businessEmail: myEsim?.customer?.email || "Business Email",
       };
 
       const result = await generateInvoicePDF(
@@ -315,7 +316,7 @@ export const useGroupEsimDetails = (groupId) => {
       );
 
       if (result.success) {
-        console.log("Invoice generated successfully");
+        successNotify("Invoice generated successfully");
       }
     } catch (error) {
       console.error("Error in handleDownloadInvoice:", error);

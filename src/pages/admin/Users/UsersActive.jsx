@@ -44,7 +44,7 @@ function UsersActive() {
         )}
       </div>
 
-      {(isBlockLoading || isDeleteLoading) && <RequestLoader />}
+      {/* {(isBlockLoading || isDeleteLoading) && <RequestLoader />} */}
 
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"

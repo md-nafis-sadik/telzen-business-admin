@@ -39,11 +39,11 @@ function UsersGroupMembers() {
         <p className="text-black-600 text-sm">View group members</p>
       </div>
       <UsersGroupMembersTable />
-      {isRemoveLoading && <RequestLoader />}
+      {/* {isRemoveLoading && <RequestLoader />} */}
       <Modal
         confirmButtonClass="btn_delete h-12 !w-full text-sm"
         cancelButtonClass="btn_cancel h-12 !w-full text-sm focus:outline-none"
-        confirmButton="Remove"
+        confirmButton={isRemoveLoading ? "Removing..." : "Remove"}
         title="Are you sure you want to remove this user from group?"
         cancelButton="No, Thanks"
         titleClass="text-text-700 leading-normal w-[400px]"
@@ -54,6 +54,7 @@ function UsersGroupMembers() {
           dispatch(closeDeleteGroupModal());
         }}
         confirmHandeler={handleRemoveConfirm}
+        isLoading={isRemoveLoading}
       />
     </div>
   );

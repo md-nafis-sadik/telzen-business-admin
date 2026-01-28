@@ -23,7 +23,7 @@ function Packages() {
         {/* Country/Region Image */}
         <div className="w-full md:w-[300px] lg:w-[330px] xl:w-[386px] md:shrink-0">
           {isLoading ? (
-            <div className="w-full aspect-[5/6] rounded-2xl bg-gray-200 animate-pulse"></div>
+            <div className="w-full aspect-[5/6] rounded-2xl bg-natural-300 animate-pulse"></div>
           ) : (
             <div className="sticky top-0">
               <div

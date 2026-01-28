@@ -44,7 +44,7 @@ function Inventory() {
         </div>
 
         {/* Search */}
-        <div className="w-full sm:w-64">
+        <div className="w-full sm:w-auto">
           <SearchInput
             value={searchTerm}
             onChange={handleSearchChange}

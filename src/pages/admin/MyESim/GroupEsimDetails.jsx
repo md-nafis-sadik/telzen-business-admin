@@ -5,12 +5,11 @@ import { images } from "@/services";
 import { useDispatch, useSelector } from "react-redux";
 import { closeQrModal, closeRemoveModal } from "@/features/myEsim/myEsimSlice";
 import CustomModal from "@/components/shared/CustomModal";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MyEsimGroupDetailsHeader from "@/components/myEsims/group/MyEsimGroupDetailsHeader";
 
 function GroupEsimDetails() {
   const { id: groupId } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { showQrModal, showRemoveModal, selectedData } = useSelector(
     (state) => state.myEsim,

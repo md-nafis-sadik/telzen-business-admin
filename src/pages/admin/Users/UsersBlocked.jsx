@@ -44,7 +44,7 @@ function UsersBlocked() {
         )}
       </div>
 
-      {(isUnblockLoading || isDeleteLoading) && <RequestLoader />}
+      {/* {(isUnblockLoading || isDeleteLoading) && <RequestLoader />} */}
 
       <Modal
         confirmButtonClass="btn_green !bg-[#00AE5B] h-12 !w-full text-sm"
