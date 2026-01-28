@@ -79,8 +79,8 @@ function UsersBlockedRegularTable() {
                       )}
                     </div>
                   </td>
-                  <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <div>
+                  <td className="table_outline_td">
+                    <span className="flex gap-3 justify-center items-center">
                       {/* <Link
                       to={`${adminRouteLinks.usersActive.path}/details/${user._id || user.id}`}
                       className="cursor-pointer"
@@ -93,7 +93,7 @@ function UsersBlockedRegularTable() {
                       >
                         <ActiveIconSvg />
                       </button>
-                    </div>
+                    </span>
                   </td>
                 </tr>
               ))}

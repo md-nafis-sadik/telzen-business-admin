@@ -1,13 +1,26 @@
 import { useState } from "react";
+import {
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import Input from "@/components/shared/Input";
 import MultiSelectInput from "@/components/shared/MultiSelectInput";
+import SelectInput from "@/components/shared/SelectInput";
+import SliderButton from "@/components/shared/SliderButton";
 import RequestLoader from "@/components/shared/RequestLoader";
 import CheckoutCard from "@/components/inventory/CheckoutCard";
+import AddCustomerModal from "@/components/inventory/AddCustomerModal";
 import { images } from "@/services";
 import { useCheckout } from "@/hooks";
-import SelectInput from "@/components/shared/SelectInput";
+import CheckoutSkeleton from "./CheckoutSkeleton";
 
 function Checkout() {
+  const stripe = useStripe();
+  const elements = useElements();
+
   const {
     step,
     packageData,
@@ -17,27 +30,26 @@ function Checkout() {
     setQuantity,
     isProcessing,
     formatDataSize,
-    handleAddCustomer,
     handleCustomerSubmit,
     handlePaymentSubmit,
     handleBackToInventory,
     getCoverageText,
     subtotal,
     grandTotal,
-    setIsAdded,
-    isAdded,
-    addedCustomers,
-    mockUsers,
-    mockGroups,
+    selectionType,
+    setSelectionType,
+    selectedCustomers,
+    setSelectedCustomers,
+    selectedGroup,
+    setSelectedGroup,
+    customers,
+    groups,
+    handleRefetchData,
   } = useCheckout();
 
-  const [customerData, setCustomerData] = useState({
-    selectUser: [],
-    selectGroup: "",
-    customerName: "",
-    email: "",
-    phoneNumber: "",
-  });
+  const [showAddCustomerModal, setShowAddCustomerModal] = useState(false);
+  const [cardholderName, setCardholderName] = useState("");
+  const [cardBrand, setCardBrand] = useState("unknown");
 
   const [billingData, setBillingData] = useState({
     yourName: "",
@@ -46,89 +58,57 @@ function Checkout() {
     cvv: "",
   });
 
-  const handleCustomerChange = (e) => {
-    const { name, value } = e.target;
-    setCustomerData((prev) => ({ ...prev, [name]: value }));
+  const selectionOptions = [
+    { label: "Customer", value: "customer" },
+    { label: "Group", value: "group" },
+  ];
+
+  const handleSelectionTypeChange = (newType) => {
+    setSelectionType(newType);
+    // Clear selections when switching types
+    if (newType === "customer") {
+      setSelectedGroup("");
+    } else {
+      setSelectedCustomers([]);
+    }
   };
 
-  const handleBillingChange = (e) => {
-    const { name, value } = e.target;
-
-    // Format card number with spaces
-    if (name === "cardNumber") {
-      const cleaned = value.replace(/\s/g, "");
-      const formatted = cleaned.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
-      setBillingData((prev) => ({ ...prev, [name]: formatted }));
-      return;
+  const handleCardChange = (event) => {
+    if (event.brand) {
+      setCardBrand(event.brand);
     }
-
-    // Format expiration date as MM/YY
-    if (name === "expirationDate") {
-      const cleaned = value.replace(/\D/g, "");
-      if (cleaned.length >= 2) {
-        const formatted = cleaned.slice(0, 2) + "/" + cleaned.slice(2, 4);
-        setBillingData((prev) => ({ ...prev, [name]: formatted }));
-      } else {
-        setBillingData((prev) => ({ ...prev, [name]: cleaned }));
-      }
-      return;
-    }
-
-    // Only allow digits for CVV
-    if (name === "cvv") {
-      const cleaned = value.replace(/\D/g, "").slice(0, 4);
-      setBillingData((prev) => ({ ...prev, [name]: cleaned }));
-      return;
-    }
-
-    setBillingData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const handleAddCustomerSuccess = () => {
+    handleRefetchData();
+    setShowAddCustomerModal(false);
+  };
   const handleCustomerFormSubmit = (e) => {
     e.preventDefault();
-    // Go to billing
-    handleCustomerSubmit(customerData);
+    handleCustomerSubmit();
   };
 
-  const handleAddCustomerClick = () => {
-    if (!isAdded) {
-      setIsAdded(true);
+  const handleBillingFormSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
       return;
     }
 
-    // Add customer to list
-    const added = handleAddCustomer({
-      selectGroup: customerData.selectGroup,
-      customerName: customerData.customerName,
-      email: customerData.email,
-      phoneNumber: customerData.phoneNumber,
-    });
-
-    if (added) {
-      // Reset the add customer fields
-      setCustomerData((prev) => ({
-        ...prev,
-        selectGroup: "",
-        customerName: "",
-        email: "",
-        phoneNumber: "",
-      }));
+    if (!cardholderName.trim()) {
+      return;
     }
-  };
 
-  const handleBillingFormSubmit = (e) => {
-    e.preventDefault();
-    handlePaymentSubmit(billingData);
+    const cardNumberElement = elements.getElement(CardNumberElement);
+    await handlePaymentSubmit({
+      cardholderName,
+      cardNumberElement,
+      stripe,
+      elements,
+    });
   };
 
   if (isLoading) {
-    return (
-      <section className="w-full flex-1 flex flex-col rounded-2xl">
-        <div className="bg-white rounded-2xl p-6 flex items-center justify-center min-h-[400px]">
-          <RequestLoader />
-        </div>
-      </section>
-    );
+    return <CheckoutSkeleton />;
   }
 
   if (isError) {
@@ -190,124 +170,68 @@ function Checkout() {
               </p>
 
               <form onSubmit={handleCustomerFormSubmit} className="space-y-6">
-                <div
-                  className={`grid grid-cols-1 gap-4 ${
-                    isAdded ? "md:grid-cols-2" : ""
-                  }`}
-                >
+                {/* Selection Type Toggle */}
+                <div className="flex flex-col gap-3">
+                  <SliderButton
+                    value={selectionType}
+                    onChange={handleSelectionTypeChange}
+                    options={selectionOptions}
+                  />
+                </div>
+
+                {/* Customer Selection */}
+                {selectionType === "customer" && (
                   <MultiSelectInput
                     label="Select Customer"
                     placeholder="Select Users"
                     name="selectUser"
-                    value={customerData.selectUser}
-                    onChange={(value) =>
-                      setCustomerData((prev) => ({
-                        ...prev,
-                        selectUser: value,
-                      }))
-                    }
-                    data={mockUsers}
+                    value={selectedCustomers}
+                    onChange={setSelectedCustomers}
+                    data={customers}
                     labelKey="label"
                     selector="value"
                     chips={true}
                   />
-                  {isAdded && (
-                    <SelectInput
-                      label="Select Customer in group"
-                      placeholder="Select group"
-                      name="selectGroup"
-                      value={customerData.selectGroup}
-                      onValueChange={(value) =>
-                        setCustomerData((prev) => ({
-                          ...prev,
-                          selectGroup: value,
-                        }))
-                      }
-                      data={mockGroups}
-                      labelKey="label"
-                      selector="value"
-                    />
-                  )}
-                </div>
-                {isAdded && (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                      <Input
-                        label="Customer Name"
-                        placeholder="Type name"
-                        name="customerName"
-                        value={customerData.customerName}
-                        onChange={handleCustomerChange}
-                      />
-
-                      <Input
-                        label="Email (eSIM will be sent)"
-                        labelClass="truncate"
-                        placeholder="Type Email"
-                        type="email"
-                        name="email"
-                        value={customerData.email}
-                        onChange={handleCustomerChange}
-                      />
-
-                      <Input
-                        label="Phone Number (Opt)"
-                        placeholder="Type phone no"
-                        name="phoneNumber"
-                        value={customerData.phoneNumber}
-                        onChange={handleCustomerChange}
-                      />
-                    </div>
-
-                    {!isAdded && (
-                      <button
-                        type="button"
-                        onClick={handleAddCustomerClick}
-                        className="flex items-center gap-2 px-4 py-2 bg-main-50 text-main-700 rounded-lg hover:bg-main-100 transition-colors font-medium w-max"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                        >
-                          <path
-                            d="M18 13H13V18C13 18.55 12.55 19 12 19C11.45 19 11 18.55 11 18V13H6C5.45 13 5 12.55 5 12C5 11.45 5.45 11 6 11H11V6C11 5.45 11.45 5 12 5C12.55 5 13 5.45 13 6V11H18C18.55 11 19 11.45 19 12C19 12.55 18.55 13 18 13Z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                        Add to List ({addedCustomers.length})
-                      </button>
-                    )}
-                  </>
                 )}
 
-                {!isAdded && (
-                  <button
-                    type="button"
-                    onClick={handleAddCustomerClick}
-                    className="flex items-center gap-2 cursor-pointer w-max"
-                  >
-                    <span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M18 13H13V18C13 18.55 12.55 19 12 19C11.45 19 11 18.55 11 18V13H6C5.45 13 5 12.55 5 12C5 11.45 5.45 11 6 11H11V6C11 5.45 11.45 5 12 5C12.55 5 13 5.45 13 6V11H18C18.55 11 19 11.45 19 12C19 12.55 18.55 13 18 13Z"
-                          fill="black"
-                        />
-                      </svg>
-                    </span>
-                    <span className="text-main-700 font-bold">
-                      Add New Customer
-                    </span>
-                  </button>
+                {/* Group Selection */}
+                {selectionType === "group" && (
+                  <SelectInput
+                    label="Select Customer in group"
+                    placeholder="Select group"
+                    name="selectGroup"
+                    value={selectedGroup}
+                    onValueChange={setSelectedGroup}
+                    data={groups}
+                    labelKey="label"
+                    selector="value"
+                  />
                 )}
+
+                {/* Add New Customer Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowAddCustomerModal(true)}
+                  className="flex items-center gap-2 cursor-pointer w-max"
+                >
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M18 13H13V18C13 18.55 12.55 19 12 19C11.45 19 11 18.55 11 18V13H6C5.45 13 5 12.55 5 12C5 11.45 5.45 11 6 11H11V6C11 5.45 11.45 5 12 5C12.55 5 13 5.45 13 6V11H18C18.55 11 19 11.45 19 12C19 12.55 18.55 13 18 13Z"
+                        fill="black"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-main-700 font-bold">
+                    Add New Customer
+                  </span>
+                </button>
 
                 {step === 1 && (
                   <div className="flex w-full gap-3 border-t border-natural-200 pt-6">
@@ -337,50 +261,109 @@ function Checkout() {
               </h2>
 
               <form onSubmit={handleBillingFormSubmit} className="space-y-6">
-                <Input
-                  label="Your Name"
-                  placeholder="Enter your Name"
-                  name="yourName"
-                  value={billingData.yourName}
-                  onChange={handleBillingChange}
-                  required
-                />
-
-                <Input
-                  label="Card Number"
-                  placeholder="0000 0000 0000 0000"
-                  name="cardNumber"
-                  value={billingData.cardNumber}
-                  onChange={handleBillingChange}
-                  maxLength={19}
-                  required
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <Input
-                    label="Expiration Date"
-                    placeholder="MM/YY"
-                    name="expirationDate"
-                    value={billingData.expirationDate}
-                    onChange={handleBillingChange}
-                    maxLength={5}
-                    required
-                  />
-
-                  <Input
-                    label="CVV/CVC"
-                    placeholder="000"
-                    name="cvv"
-                    value={billingData.cvv}
-                    onChange={handleBillingChange}
-                    maxLength={4}
+                {/* Cardholder Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    value={cardholderName}
+                    onChange={(e) => setCardholderName(e.target.value)}
+                    placeholder="Enter your Name"
+                    className="w-full px-3 md:px-4 placeholder:text-sm md:placeholder:text-base py-2.5 md:py-3.5 border border-gray-300 rounded-lg focus:ring-0 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                     required
                   />
                 </div>
 
+                {/* Card Number with Brand Icon */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Card Number
+                  </label>
+                  <div className="relative border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 md:py-3.5 pr-16 focus-within:border-main-500 transition-colors">
+                    <CardNumberElement
+                      options={{
+                        placeholder: "0000 0000 0000 0000",
+                        style: {
+                          base: {
+                            fontSize: "16px",
+                            color: "#111827",
+                            fontFamily: "system-ui, -apple-system, sans-serif",
+                            "::placeholder": {
+                              color: "#9ca3af",
+                            },
+                          },
+                          invalid: {
+                            color: "#ef4444",
+                          },
+                        },
+                      }}
+                      onChange={handleCardChange}
+                    />
+                  </div>
+                </div>
+
+                {/* Expiration Date and CVV */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Expiration Date
+                    </label>
+                    <div className="border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 md:py-3.5 focus-within:border-main-500 transition-colors">
+                      <CardExpiryElement
+                        options={{
+                          placeholder: "MM/YY",
+                          style: {
+                            base: {
+                              fontSize: "16px",
+                              color: "#111827",
+                              fontFamily:
+                                "system-ui, -apple-system, sans-serif",
+                              "::placeholder": {
+                                color: "#9ca3af",
+                              },
+                            },
+                            invalid: {
+                              color: "#ef4444",
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      CVV/CVC
+                    </label>
+                    <div className="border border-gray-300 rounded-lg px-3 md:px-4 py-2.5 md:py-3.5 focus-within:border-main-500 transition-colors">
+                      <CardCvcElement
+                        options={{
+                          placeholder: "000",
+                          style: {
+                            base: {
+                              fontSize: "16px",
+                              color: "#111827",
+                              fontFamily:
+                                "system-ui, -apple-system, sans-serif",
+                              "::placeholder": {
+                                color: "#9ca3af",
+                              },
+                            },
+                            invalid: {
+                              color: "#ef4444",
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   type="submit"
-                  disabled={isProcessing}
+                  disabled={isProcessing || !stripe || !cardholderName.trim()}
                   className="w-full px-6 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {isProcessing ? "Processing..." : "Complete Payment"}
@@ -405,6 +388,13 @@ function Checkout() {
       </div>
 
       {isProcessing && <RequestLoader />}
+
+      {/* Add Customer Modal */}
+      <AddCustomerModal
+        showModal={showAddCustomerModal}
+        onClose={() => setShowAddCustomerModal(false)}
+        onSuccess={handleAddCustomerSuccess}
+      />
     </section>
   );
 }

@@ -48,20 +48,22 @@ function UsersActiveRegularTable() {
                 <tr key={user._id || index} className="table_row group">
                   <td className="table_outline_td">{user?.uid || "-"}</td>
                   <td className="table_outline_td">
-                    <div className="flex items-center justify-center gap-2">
-                      <ReactCountryFlag
-                        countryCode={user?.country?.code}
-                        svg
-                        style={{
-                          width: "1.3em",
-                          height: "1.3em",
-                          borderRadius: "100%",
-                          objectPosition: "center",
-                          objectFit: "cover",
-                        }}
-                        title={user?.country?.name || ""}
-                      />
-                      <span>{user?.country?.name || "-"}</span>
+                    <div className="flex items-center justify-center">
+                      <div className="flex items-center gap-2 min-w-32">
+                        <ReactCountryFlag
+                          countryCode={user?.country?.code}
+                          svg
+                          style={{
+                            width: "1.3em",
+                            height: "1.3em",
+                            borderRadius: "100%",
+                            objectPosition: "center",
+                            objectFit: "cover",
+                          }}
+                          title={user?.country?.name || ""}
+                        />
+                        <span>{user?.country?.name || "-"}</span>
+                      </div>
                     </div>
                   </td>
                   <td className="table_outline_td">
@@ -80,8 +82,8 @@ function UsersActiveRegularTable() {
                       )}
                     </div>
                   </td>
-                  <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <div>
+                  <td className="table_outline_td">
+                    <span className="flex gap-3 justify-center items-center">
                       {/* <Link
                       to={`${adminRouteLinks.usersActive.path}/details/${user._id || user.id}`}
                       className="cursor-pointer"
@@ -94,7 +96,7 @@ function UsersActiveRegularTable() {
                       >
                         <BlockIconSvg />
                       </button>
-                    </div>
+                    </span>
                   </td>
                 </tr>
               ))}

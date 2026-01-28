@@ -17,14 +17,16 @@ const CustomModal = forwardRef(
       widthClass = "w-full sm:w-[566px]",
       ...rest
     },
-    ref
+    ref,
   ) => {
-    const closeModal = () => {
-      onClose();
+    const handleOpenChange = (open) => {
+      if (!open) {
+        onClose();
+      }
     };
 
     return (
-      <Dialog open={showModal} onOpenChange={closeModal}>
+      <Dialog open={showModal} onOpenChange={handleOpenChange}>
         <DialogContent
           className={`p-6 sm:p-10 gap-0 select-none rounded-3xl ${className} ${widthClass}`}
         >
@@ -36,7 +38,7 @@ const CustomModal = forwardRef(
         </DialogContent>
       </Dialog>
     );
-  }
+  },
 );
 
 CustomModal.displayName = "CustomModal";

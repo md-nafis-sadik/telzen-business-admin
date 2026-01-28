@@ -45,5 +45,6 @@ export const apiSlice = createApi({
     }
     return result;
   },
+  tagTypes: ["Customer", "CustomerGroup", "Esim"],
   endpoints: (builder) => ({}),
 });

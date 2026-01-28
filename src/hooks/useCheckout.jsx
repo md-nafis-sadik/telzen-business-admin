@@ -2,28 +2,17 @@ import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useGetSinglePackageQuery } from "@/features/inventory/inventoryApi";
 import {
+  useGetCustomersQuery,
+  useGetGroupsQuery,
+  useCreateCheckoutPaymentMutation,
+  useCheckoutVerifyPaymentMutation,
+} from "@/features/inventory/customerApi";
+import {
   successNotify,
   errorNotify,
   customerValidation,
-  addedCustomerValidation,
   billingValidation,
 } from "@/services";
-
-// Mock data for testing
-const MOCK_USERS = [
-  { id: "user1", label: "John Doe", value: "user1" },
-  { id: "user2", label: "Jane Smith", value: "user2" },
-  { id: "user3", label: "Bob Johnson", value: "user3" },
-  { id: "user4", label: "Alice Williams", value: "user4" },
-  { id: "user5", label: "Charlie Brown", value: "user5" },
-];
-
-const MOCK_GROUPS = [
-  { id: "group1", label: "Sales Team", value: "group1" },
-  { id: "group2", label: "Marketing Team", value: "group2" },
-  { id: "group3", label: "Development Team", value: "group3" },
-  { id: "group4", label: "Support Team", value: "group4" },
-];
 
 export const useCheckout = () => {
   const navigate = useNavigate();
@@ -35,12 +24,13 @@ export const useCheckout = () => {
   const package_id = searchParams.get("package_id");
 
   const [step, setStep] = useState(1); // 1: Customer Info, 2: Billing, 3: Success
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [addedCustomers, setAddedCustomers] = useState([]);
+  const [selectionType, setSelectionType] = useState("customer"); // "customer" or "group"
+  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isAdded, setIsAdded] = useState(false);
 
+  // API Queries
   const {
     data: packageData,
     isLoading,
@@ -51,6 +41,12 @@ export const useCheckout = () => {
     package_id,
   });
 
+  const { data: customersData, refetch: refetchCustomers } = useGetCustomersQuery();
+  const { data: groupsData, refetch: refetchGroups } = useGetGroupsQuery();
+
+  const [createCheckoutPayment] = useCreateCheckoutPaymentMutation();
+  const [verifyCheckoutPayment] = useCheckoutVerifyPaymentMutation();
+
   const formatDataSize = (sizeInMB) => {
     if (sizeInMB >= 1024) {
       return `${(sizeInMB / 1024).toFixed(0)} GB`;
@@ -58,63 +54,103 @@ export const useCheckout = () => {
     return `${sizeInMB} MB`;
   };
 
-  const handleAddCustomer = (customerDetails) => {
-    // Validate only if fields are filled
-    if (customerDetails.customerName || customerDetails.email) {
-      const validation = addedCustomerValidation(customerDetails);
-      if (validation.error) {
-        errorNotify(validation.error);
-        return false;
-      }
-    }
-
-    // Add to list if at least name and email are provided
-    if (customerDetails.customerName && customerDetails.email) {
-      setAddedCustomers((prev) => [...prev, customerDetails]);
-      successNotify("Customer added successfully!");
-      return true;
-    }
-
-    return false;
+  const handleRefetchData = () => {
+    refetchCustomers();
+    refetchGroups();
   };
 
-  const handleCustomerSubmit = (customer) => {
-    const validation = customerValidation(customer);
-    if (validation.error) {
-      errorNotify(validation.error);
+  const handleCustomerSubmit = () => {
+    // Validate selection
+    if (selectionType === "customer" && selectedCustomers.length === 0) {
+      errorNotify("Please select at least one customer");
       return false;
     }
-    setSelectedCustomer({ ...customer, addedCustomers });
+    if (selectionType === "group" && !selectedGroup) {
+      errorNotify("Please select a group");
+      return false;
+    }
     setStep(2);
     return true;
   };
 
   const handlePaymentSubmit = async (paymentData) => {
-    const validation = billingValidation(paymentData);
-    if (validation.error) {
-      errorNotify(validation.error);
+    if (!paymentData.cardholderName?.trim()) {
+      errorNotify("Please enter cardholder name");
+      return false;
+    }
+
+    if (!paymentData.stripe || !paymentData.elements) {
+      errorNotify("Payment system not ready. Please try again.");
       return false;
     }
 
     setIsProcessing(true);
 
     try {
-      // TODO: Replace with actual API call
-      console.log("Processing payment:", {
-        customer: selectedCustomer,
-        package: packageData?.data,
-        quantity,
-        payment: paymentData,
-      });
+      // Prepare payment data based on selection type
+      const checkoutData = {
+        package: package_id,
+        final_payment_amount: grandTotal,
+        quantity: quantity,
+        currency: "USD",
+      };
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      if (selectionType === "customer") {
+        checkoutData.customers = selectedCustomers;
+      } else {
+        checkoutData.group = selectedGroup;
+      }
 
-      successNotify("Purchase successful!");
-      setStep(3);
-      return true;
+      console.log('Checkout data being sent:', checkoutData);
+      console.log('Selection type:', selectionType);
+      console.log('Selected customers:', selectedCustomers);
+      console.log('Selected group:', selectedGroup);
+
+      // Create payment
+      const paymentResult = await createCheckoutPayment(checkoutData).unwrap();
+      
+      if (!paymentResult?.success || !paymentResult?.data) {
+        throw new Error("Failed to create payment");
+      }
+
+      const { client_secret, payment_id } = paymentResult.data;
+
+      if (!client_secret) {
+        throw new Error("Payment initialization failed. Please try again.");
+      }
+
+      // Confirm card payment with Stripe
+      const { error: stripeError, paymentIntent } =
+        await paymentData.stripe.confirmCardPayment(client_secret, {
+          payment_method: {
+            card: paymentData.cardNumberElement,
+            billing_details: {
+              name: paymentData.cardholderName.trim(),
+            },
+          },
+        });
+
+      if (stripeError) {
+        throw new Error(stripeError.message);
+      }
+
+      if (paymentIntent?.status === "succeeded") {
+        // Verify payment with backend
+        if (!payment_id) {
+          throw new Error("Payment ID not found");
+        }
+
+        const verifyResult = await verifyCheckoutPayment({ paymentId: payment_id }).unwrap();
+        
+        if (verifyResult?.success) {
+          setStep(3);
+          return true;
+        } else {
+          throw new Error("Payment verification failed");
+        }
+      }
     } catch (error) {
-      errorNotify("Payment failed. Please try again.");
+      errorNotify(error?.data?.message || error?.message || "Payment failed. Please try again.");
       console.error("Payment error:", error);
       return false;
     } finally {
@@ -123,7 +159,7 @@ export const useCheckout = () => {
   };
 
   const handleBackToInventory = () => {
-    navigate("/admin/inventory");
+    navigate("/admin/my-esim");
   };
 
   const getCoverageText = () => {
@@ -142,28 +178,41 @@ export const useCheckout = () => {
 
   const grandTotal = subtotal;
 
+  // Format customers and groups for dropdowns
+  const customers = customersData?.data?.map((customer) => ({
+    label: `${customer.name} (${customer.email})`,
+    value: customer._id,
+  })) || [];
+
+  const groups = groupsData?.data?.map((group) => ({
+    label: group.name,
+    value: group._id,
+  })) || [];
+
   return {
     step,
     packageData: packageData?.data,
     isLoading,
     isError,
-    selectedCustomer,
-    addedCustomers,
+    selectionType,
+    setSelectionType,
+    selectedCustomers,
+    setSelectedCustomers,
+    selectedGroup,
+    setSelectedGroup,
     quantity,
     setQuantity,
     isProcessing,
     formatDataSize,
-    handleAddCustomer,
     handleCustomerSubmit,
     handlePaymentSubmit,
     handleBackToInventory,
     getCoverageText,
     subtotal,
     grandTotal,
-    setIsAdded,
-    isAdded,
-    mockUsers: MOCK_USERS,
-    mockGroups: MOCK_GROUPS,
+    customers,
+    groups,
+    handleRefetchData,
   };
 };
 

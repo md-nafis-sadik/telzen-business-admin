@@ -22,7 +22,7 @@ function CheckoutCard({
   return (
     <div className="bg-white rounded-3xl p-4 lg:p-6 w-full h-max">
       {/* Responsibility Banner */}
-      <div className="flex flex-col xl:flex-row justify-between bg-[#9FE2D1] rounded-lg overflow-hidden mb-6">
+      {/* <div className="flex flex-col xl:flex-row justify-between bg-[#9FE2D1] rounded-lg overflow-hidden mb-6">
         <div className=" p-4 text-center xl:text-left">
           <div className="text-xl lg:text-3xl font-[900] font-barlowCondensed uppercase mb-2">
             RESPONSIBILITY
@@ -39,7 +39,7 @@ function CheckoutCard({
             className="w-32 h-32 object-contain mb-[-20px] xl:mt-[10px] min-w-[132px] mr-4"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* Package Details */}
       <div className="flex flex-col gap-4 text-sm lg:text-base">

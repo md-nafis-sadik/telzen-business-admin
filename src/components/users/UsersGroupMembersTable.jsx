@@ -75,8 +75,8 @@ function UsersGroupMembersTable() {
                   <td className="table_outline_td">
                     <span className="text-green-600">{"Active"}</span>
                   </td>
-                  <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <div>
+                  <td className="table_outline_td">
+                    <span className="flex gap-3 justify-center items-center">
                       {/* <Link
                       to={`${adminRouteLinks.usersActive.path}/details/${member._id || member.id}`}
                       className="cursor-pointer"
@@ -89,7 +89,7 @@ function UsersGroupMembersTable() {
                       >
                         <DeleteIconSvg />
                       </button>
-                    </div>
+                    </span>
                   </td>
                 </tr>
               ))}

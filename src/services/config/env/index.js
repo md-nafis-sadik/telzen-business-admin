@@ -5,6 +5,9 @@ const envConfig = {
 
   //Crypto Js
   cryptoSecret: import.meta.env.VITE_CRYPTO_SECRET,
+  
+  // Stripe
+  stripePublishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
 };
 
 export { envConfig };

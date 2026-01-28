@@ -19,7 +19,11 @@ export const usePhoneInput = (initialValue = "", initialCountry = "bd") => {
 
   const resetPhone = () => {
     setPhone("");
-    setCountry(initialCountry);
+    setCountryInfo({
+      countryCode: initialCountry,
+      dialCode: "",
+      name: "",
+    });
   };
 
   return {

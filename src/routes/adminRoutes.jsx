@@ -20,7 +20,7 @@ import ContactSupport from "@/pages/admin/ContactSupport/ContactSupport";
 import ApiSettings from "@/pages/admin/ApiSettings/ApiSettings";
 import Inventory from "@/pages/admin/Inventory/Inventory";
 import Packages from "@/pages/admin/Inventory/Packages";
-import Checkout from "@/pages/admin/Inventory/Checkout";
+import CheckoutWrapper from "@/pages/admin/Inventory/CheckoutWrapper";
 
 const {
   dashboard,
@@ -119,7 +119,7 @@ export const adminRoutes = {
       path: inventoryCheckout?.path,
       element: (
         <RoleBasedRoute requiredActivePath="inventory">
-          <Checkout />
+          <CheckoutWrapper />
         </RoleBasedRoute>
       ),
     },

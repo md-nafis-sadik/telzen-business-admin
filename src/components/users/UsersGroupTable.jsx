@@ -56,19 +56,21 @@ function UsersGroupTable() {
                   <td className="table_outline_td">
                     {group?.group_name || group?.name || "Group Name 1"}
                   </td>
-                  <td className="table_outline_td flex gap-3 justify-center items-center">
-                    <Link
-                      to={`${adminRouteLinks.usersActive.path}/group/${group._id || group.id}`}
-                      className="cursor-pointer"
-                    >
-                      <ViewIconSvg />
-                    </Link>
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => handleDeleteClick(group)}
-                    >
-                      <DeleteIconSvg />
-                    </button>
+                  <td className="table_outline_td">
+                    <span className="flex gap-3 justify-center items-center">
+                      <Link
+                        to={`${adminRouteLinks.usersActive.path}/group/${group._id || group.id}`}
+                        className="cursor-pointer"
+                      >
+                        <ViewIconSvg />
+                      </Link>
+                      <button
+                        className="cursor-pointer"
+                        onClick={() => handleDeleteClick(group)}
+                      >
+                        <DeleteIconSvg />
+                      </button>
+                    </span>
                   </td>
                 </tr>
               ))}
