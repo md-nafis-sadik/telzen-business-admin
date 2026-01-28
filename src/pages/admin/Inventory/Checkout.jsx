@@ -50,6 +50,7 @@ function Checkout() {
     handleCustomerFormSubmit,
     handleBillingFormSubmit,
     stripe,
+    customerCount,
   } = useCheckout();
 
   if (isLoading) {
@@ -300,6 +301,7 @@ function Checkout() {
             formatDataSize={formatDataSize}
             subtotal={subtotal}
             grandTotal={grandTotal}
+            customerCount={customerCount}
           />
         </div>
       </div>

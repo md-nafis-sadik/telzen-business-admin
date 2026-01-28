@@ -6,6 +6,7 @@ import {
   SimIconSvg,
   WorldIconSvg,
 } from "@/services";
+import { UserRoundIcon } from "lucide-react";
 
 function CheckoutCard({
   packageData,
@@ -15,6 +16,7 @@ function CheckoutCard({
   formatDataSize,
   subtotal,
   grandTotal,
+  customerCount,
 }) {
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
@@ -81,6 +83,14 @@ function CheckoutCard({
             <span>Validity</span>
           </div>
           <div className="font-bold">{packageData?.validity || "N/A"}</div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <UserRoundIcon className="w-5.5 h-5.5 text-[#006752]" />
+            <span>Customer</span>
+          </div>
+          <div className="font-bold">{customerCount || 1}</div>
         </div>
 
         <div className="flex items-center justify-between">

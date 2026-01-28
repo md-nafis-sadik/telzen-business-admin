@@ -71,7 +71,6 @@ export const useCheckout = () => {
   };
 
   const handleCustomerSubmit = () => {
-    // Validate selection
     if (selectionType === "customer" && selectedCustomers.length === 0) {
       errorNotify("Please select at least one customer");
       return false;
@@ -85,6 +84,15 @@ export const useCheckout = () => {
   };
 
   const handlePaymentSubmit = async (paymentData) => {
+    if (selectionType === "customer" && selectedCustomers.length === 0) {
+      errorNotify("Please select at least one customer");
+      return false;
+    }
+    if (selectionType === "group" && !selectedGroup) {
+      errorNotify("Please select a group");
+      return false;
+    }
+
     if (!paymentData.cardholderName?.trim()) {
       errorNotify("Please enter cardholder name");
       return false;
@@ -160,6 +168,7 @@ export const useCheckout = () => {
           setSelectedGroup("");
           setCardholderName("");
           setCardBrand("unknown");
+          setQuantity(1);
           setStep(1);
           return true;
         } else {
@@ -240,13 +249,15 @@ export const useCheckout = () => {
     return "N/A";
   };
 
-  const subtotal = packageData?.data?.grand_total_selling_price
-    ? packageData.data.grand_total_selling_price * quantity
-    : 0;
+  const basePrice = packageData?.data?.grand_total_selling_price || 0;
+  const customerCount =
+    selectionType === "customer" && selectedCustomers.length > 0
+      ? selectedCustomers.length
+      : 1;
 
-  const grandTotal = subtotal;
+  const subtotal = basePrice * quantity;
+  const grandTotal = basePrice * quantity * customerCount;
 
-  // Format customers and groups for dropdowns
   const customers =
     customersData?.data?.map((customer) => ({
       label: `${customer.name} (${customer.email})`,
@@ -299,6 +310,7 @@ export const useCheckout = () => {
     handleBillingFormSubmit,
     stripe,
     elements,
+    customerCount,
   };
 };
 
