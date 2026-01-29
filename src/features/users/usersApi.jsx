@@ -171,9 +171,7 @@ const usersApi = apiSlice.injectEndpoints({
         url: `/customer/update?customer_id=${customer_id}`,
         method: "PATCH",
         body: {
-          data: {
-            is_blocked,
-          },
+          is_blocked,
         },
       }),
     }),

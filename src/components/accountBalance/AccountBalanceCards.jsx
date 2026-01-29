@@ -8,8 +8,8 @@ function AccountBalanceCards() {
         <h4 className="text-lg text-text-700 font-semibold mb-4">Overview</h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 items-stretch gap-4">
-          {isFetching && dataList.length === 0
-            ? // Skeleton for loading state
+          {/* {isFetching && dataList.length === 0
+            ?
               Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
@@ -19,20 +19,24 @@ function AccountBalanceCards() {
                   <div className="h-7 w-1/2 bg-neutral-400 rounded"></div>
                 </div>
               ))
-            : // Actual content when loaded
-              summaryCards?.map((item, i) => (
-                <div
-                  key={i}
-                  className={`${item.bgColor} p-5 rounded-lg flex flex-col justify-between h-full`}
-                >
-                  <div className="mb-2 text-xs font-medium text-text-700">
-                    {item?.title}
-                  </div>
-                  <div className="text-base font-semibold text-text-900">
-                    {item?.number}
-                  </div>
-                </div>
-              ))}
+            : */}
+          {summaryCards?.map((item, i) => (
+            <div
+              key={i}
+              className={`${item.bgColor} p-5 rounded-lg flex flex-col justify-between h-full`}
+            >
+              <div className="mb-2 text-xs font-medium text-text-700">
+                {item?.title}
+              </div>
+              <div className="text-base font-semibold text-text-900">
+                {isFetching && dataList.length === 0 ? (
+                  <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin inline-block" />
+                ) : (
+                  item?.number
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
