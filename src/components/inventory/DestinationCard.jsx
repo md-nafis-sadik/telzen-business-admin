@@ -1,3 +1,5 @@
+import { getSymbol } from "@/services";
+
 function DestinationCard({ item, onClick, index }) {
   const displayImage = item?.image || "";
   const displayName = item?.name || "";
@@ -40,7 +42,7 @@ function DestinationCard({ item, onClick, index }) {
           {displayName}
         </div>
         <div className="text-sm sm:text-base text-white">
-          Start from ${formattedPrice}
+          Start from {getSymbol(item?.currency || "USD")}{formattedPrice}
         </div>
       </div>
     </div>

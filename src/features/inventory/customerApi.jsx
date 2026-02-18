@@ -39,6 +39,16 @@ export const customerApi = apiSlice.injectEndpoints({
       },
     }),
 
+    // Bulk create customers
+    bulkCreateCustomers: builder.mutation({
+      query: (data) => ({
+        url: `/customer/create`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Customer", "CustomerGroup"],
+    }),
+
     // Checkout verify payment
     checkoutVerifyPayment: builder.mutation({
       query: ({ paymentId }) => ({
@@ -91,6 +101,7 @@ export const {
   useGetCustomersQuery,
   useGetGroupsQuery,
   useCreateCustomerMutation,
+  useBulkCreateCustomersMutation,
   useCheckoutVerifyPaymentMutation,
   useCreateCheckoutPaymentMutation,
 } = customerApi;

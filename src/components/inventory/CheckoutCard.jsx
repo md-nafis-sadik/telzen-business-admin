@@ -1,6 +1,7 @@
 import {
   ArrowBothIconSvg,
   ClockIconSvg,
+  getSymbol,
   images,
   RectanglesIconSvg,
   SimIconSvg,
@@ -122,12 +123,18 @@ function CheckoutCard({
       <div className="border-t border-natural-200 pt-4 mt-4 flex flex-col gap-3 text-sm lg:text-base">
         <div className="flex items-center justify-between">
           <span>Sub total</span>
-          <div className="font-bold">${subtotal.toFixed(2)}</div>
+          <div className="font-bold">
+            {getSymbol(packageData?.currency || "USD")}
+            {subtotal.toFixed(2)}
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
           <span>Grand Total</span>
-          <div className="font-bold">${grandTotal.toFixed(2)}</div>
+          <div className="font-bold">
+            {getSymbol(packageData?.currency || "USD")}
+            {grandTotal.toFixed(2)}
+          </div>
         </div>
       </div>
     </div>

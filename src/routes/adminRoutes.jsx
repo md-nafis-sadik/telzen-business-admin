@@ -7,6 +7,9 @@ import UsersActive from "@/pages/admin/Users/UsersActive";
 import UsersBlocked from "@/pages/admin/Users/UsersBlocked";
 import UserDetails from "@/pages/admin/Users/UserDetails";
 import UsersGroupMembers from "@/pages/admin/Users/UsersGroupMembers";
+import AddCustomer from "@/pages/admin/Users/AddCustomer";
+import BulkUploadCustomer from "@/pages/admin/Users/BulkUploadCustomer";
+import AddGroup from "@/pages/admin/Users/AddGroup";
 import AdminLayout from "../components/layout/AdminLayout";
 import RoleBasedRoute from "../components/shared/RoleBasedRoute";
 import { adminRouteLinks } from "../services";
@@ -168,6 +171,30 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="users">
           <UsersGroupMembers />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: "users/active/add-customer",
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <AddCustomer />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: "users/active/bulk-upload",
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <BulkUploadCustomer />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: "users/active/add-group",
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <AddGroup />
         </RoleBasedRoute>
       ),
     },

@@ -13,7 +13,7 @@ const customerSupportApi = apiSlice.injectEndpoints({
         try {
           const result = await queryFulfilled;
         } catch (error) {
-          console.error("Send support message failed:", error);
+          console.error(error?.data?.message || "Send support message failed:", error);
         }
       },
     }),

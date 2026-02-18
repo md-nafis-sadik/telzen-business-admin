@@ -45,7 +45,7 @@ function UsersBlockedRegularTable() {
             >
               {users.map((user, index) => (
                 <tr key={user._id || index} className="table_row group">
-                  <td className="table_outline_td">{user?.uid || "-"}</td>
+                  <td className="table_outline_td">{user?.customer_id || "-"}</td>
                   <td className="table_outline_td">
                     <div className="flex items-center justify-center gap-2">
                       <ReactCountryFlag

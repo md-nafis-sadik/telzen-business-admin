@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDebounce } from "./useDebounce";
 import { usePhoneInput } from "./usePhoneInput";
+import { addStaffValidation } from "@/services/validations/staff.validation";
 
 const generateCacheKey = (page, search) => {
   return `${page}_${search}`;
@@ -262,7 +263,6 @@ export const useAddStaff = () => {
 
   // Validate form on changes
   const validateForm = () => {
-    const { addStaffValidation } = require("@/services/validations/staff.validation");
     
     try {
       addStaffValidation.parse({

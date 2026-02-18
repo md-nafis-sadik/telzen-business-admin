@@ -14,11 +14,11 @@ export const useContactSupport = () => {
     const data = {
       email: formData.get("email"),
       subject: formData.get("subject"),
-      description: formData.get("description"),
+      message: formData.get("message"),
     };
 
     // Basic validation
-    if (!data.email || !data.subject || !data.description) {
+    if (!data.email || !data.subject || !data.message) {
       errorNotify("Please fill in all fields");
       return;
     }

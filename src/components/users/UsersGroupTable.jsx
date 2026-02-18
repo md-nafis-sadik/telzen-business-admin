@@ -32,7 +32,8 @@ function UsersGroupTable() {
             <tr className="table_row bg-white-700">
               <th className="table_th_first w-[80px]">SL</th>
               <th className="table_th w-[150px]">Date</th>
-              <th className="table_th w-[400px]">Group</th>
+              <th className="table_th w-[300px]">Group</th>
+              <th className="table_th w-[150px]">Customers</th>
               <th className="table_th_last w-[100px]">Action</th>
             </tr>
           </thead>
@@ -42,7 +43,7 @@ function UsersGroupTable() {
               isError={isError}
               status={error?.status}
               dataLength={groups.length}
-              column={4}
+              column={5}
               tableName="Active Groups"
             >
               {groups.map((group, index) => (
@@ -55,6 +56,9 @@ function UsersGroupTable() {
                   </td>
                   <td className="table_outline_td">
                     {group?.group_name || group?.name || "Group Name 1"}
+                  </td>
+                  <td className="table_outline_td">
+                    {group?.customer_count || group?.customers?.length || 0}
                   </td>
                   <td className="table_outline_td">
                     <span className="flex gap-3 justify-center items-center">

@@ -9,6 +9,7 @@ import {
   GroupGreenSvg,
   Icon1GreenSvg,
   StarPointSvg,
+  getSymbol,
 } from "@/services";
 
 const icons = [
@@ -52,7 +53,7 @@ function PackageCard({ packageItem, onClick, formatDataSize, index }) {
       </div>
       <div className="flex flex-col items-end justify-end">
         <div className="text-lg md:text-xl lg:text-2xl xl:text-[28px] font-semibold">
-          ${packageItem.grand_total_selling_price?.toFixed(2) || "0.00"}
+          {getSymbol(packageItem?.currency || "USD")}{packageItem.grand_total_selling_price?.toFixed(2) || "0.00"}
         </div>
       </div>
     </div>

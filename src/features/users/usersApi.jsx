@@ -18,6 +18,7 @@ const usersApi = apiSlice.injectEndpoints({
         }
         return url;
       },
+      providesTags: ["Customer"],
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
@@ -46,12 +47,13 @@ const usersApi = apiSlice.injectEndpoints({
     // Get Active Group Users
     getGroupUsers: builder.query({
       query: ({ current_page = 1, limit = 10, search = "" }) => {
-        let url = `/customer/group?page=${current_page}&limit=${limit}`;
+        let url = `/group?page=${current_page}&limit=${limit}`;
         if (search) {
           url += `&search=${encodeURIComponent(search)}`;
         }
         return url;
       },
+      providesTags: ["CustomerGroup"],
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
@@ -86,6 +88,7 @@ const usersApi = apiSlice.injectEndpoints({
         }
         return url;
       },
+      providesTags: ["Customer"],
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
@@ -133,6 +136,10 @@ const usersApi = apiSlice.injectEndpoints({
         }
         return url;
       },
+      providesTags: (result, error, arg) => [
+        "Customer",
+        { type: "GroupMembers", id: arg.groupId },
+      ],
 
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
@@ -194,6 +201,35 @@ const usersApi = apiSlice.injectEndpoints({
         },
       }),
     }),
+
+    // Get Single Group
+    getSingleGroup: builder.query({
+      query: (group_id) => `/group/single?group_id=${group_id}`,
+      providesTags: (result, error, group_id) => [{ type: "Group", id: group_id }],
+    }),
+
+    // Create Group
+    createGroup: builder.mutation({
+      query: (data) => ({
+        url: `/group/create`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["CustomerGroup"],
+    }),
+
+    // Update Group
+    updateGroup: builder.mutation({
+      query: ({ group_id, ...data }) => ({
+        url: `/group/update?group_id=${group_id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { group_id }) => [
+        "CustomerGroup",
+        { type: "Group", id: group_id },
+      ],
+    }),
   }),
 });
 
@@ -207,4 +243,7 @@ export const {
   useUpdateCustomerBlockStatusMutation,
   useDeleteCustomerGroupMutation,
   useRemoveUserFromGroupMutation,
+  useGetSingleGroupQuery,
+  useCreateGroupMutation,
+  useUpdateGroupMutation,
 } = usersApi;

@@ -16,6 +16,7 @@ import {
 import { LogsIcon } from "lucide-react";
 import Breadcrumb from "../shared/Breadcrumb";
 import { useRef } from "react";
+import { getSymbol } from "@/services";
 
 function DashboardHeader() {
   const { auth, profile } = useSelector((state) => state.auth);
@@ -56,6 +57,12 @@ function DashboardHeader() {
             className="flex gap-3 focus-visible:outline-none"
           > */}
         <div className="flex gap-3 focus-visible:outline-none select-none">
+          <div className="flex items-center gap-1 bg-main-700 text-sm text-white px-3 rounded-full border-2 border-main-600">
+            <div className="flex items-center gap-1">
+              <div>{getSymbol(profile?.business?.currency)}</div>
+              <div>{profile?.business?.credit}</div>
+            </div>
+          </div>
           <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full outline-none">
             <img
               src={auth?.image?.path || profile?.business?.image?.path}

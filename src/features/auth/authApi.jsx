@@ -156,7 +156,7 @@ export const authApi = apiSlice.injectEndpoints({
     // Update business profile
     updateBusinessProfile: builder.mutation({
       query: (data) => ({
-        url: `/business/update/own-profile`,
+        url: `/staff/update/own-profile`,
         method: "PATCH",
         body: data,
       }),
