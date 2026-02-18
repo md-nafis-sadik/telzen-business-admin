@@ -11,7 +11,7 @@ export const customerApi = apiSlice.injectEndpoints({
 
     // Get all groups
     getGroups: builder.query({
-      query: () => `/customer/group`,
+      query: () => `/group`,
       providesTags: ["CustomerGroup"],
     }),
 

@@ -24,8 +24,8 @@ function UsersActiveHeader() {
           onClick={() => handleTabChange("regular")}
           className={`px-4 py-2 h-[48px] rounded-lg font-semibold transition-all ${
             currentTab === "regular"
-              ? "bg-black text-white"
-              : "bg-main-700 text-white hover:bg-main-600"
+              ? "bg-main-700 text-white"
+              : "bg-black text-white hover:bg-text-900"
           }`}
         >
           Regular

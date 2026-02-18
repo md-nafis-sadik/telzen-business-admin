@@ -4,8 +4,7 @@ import Input from "@/components/shared/Input";
 import CountrySelect from "@/components/shared/CountrySelect";
 import SelectInput from "@/components/shared/SelectInput";
 import { useAddCustomer } from "@/hooks/useAddCustomer";
-import { useGetCountriesQuery } from "@/features/inventory/inventoryApi";
-import { adminRouteLinks } from "@/services";
+import { adminRouteLinks, allCountries } from "@/services";
 
 function AddCustomer() {
   const navigate = useNavigate();
@@ -29,25 +28,13 @@ function AddCustomer() {
     handleSubmit,
   } = useAddCustomer({ onSuccess: handleSuccess, onClose: handleClose });
 
-  const { data: countriesData, isLoading: isLoadingCountries } =
-    useGetCountriesQuery({
-      page: 1,
-      limit: 9999999,
-      search: "",
-    });
-
-  const countries = countriesData?.data || [];
   const groupOptions = groups.map((group) => ({
     name: group.name || group.group_name,
     id: group._id,
     timestamp: group.name || group.group_name,
   }));
 
-  const formattedCountries = countries.map((country) => ({
-    name: country.name,
-    code: country.code,
-    flag: country.flag || country.emoji,
-  }));
+  const formattedCountries = allCountries;
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -96,11 +83,10 @@ function AddCustomer() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <CountrySelect
                 label="Customer Country"
-                placeholder="Australia"
+                placeholder="Select country"
                 options={formattedCountries}
                 value={formData.country}
                 onChange={handleCountryChange}
-                isLoading={isLoadingCountries}
               />
 
               <SelectInput

@@ -186,7 +186,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Delete Group
     deleteCustomerGroup: builder.mutation({
       query: ({ group_id }) => ({
-        url: `/customer/group/delete?group_id=${group_id}`,
+        url: `/group/delete?group_id=${group_id}`,
         method: "DELETE",
       }),
     }),
@@ -194,7 +194,7 @@ const usersApi = apiSlice.injectEndpoints({
     // Remove User from Group
     removeUserFromGroup: builder.mutation({
       query: ({ group_id, customer_id }) => ({
-        url: `/customer/group/toggle?type=remove&group_id=${group_id}`,
+        url: `/group/toggle?type=remove&group_id=${group_id}`,
         method: "PATCH",
         body: {
           customer_id,

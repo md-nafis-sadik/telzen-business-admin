@@ -3,6 +3,7 @@ export * from "./common";
 export * from "./config";
 export * from "./config/roleBasedRoutes";
 export * from "./data.js";
+export * from "./data/countries";
 export * from "./enum";
 export * from "./getSvg.jsx";
 export * as images from "./images";
