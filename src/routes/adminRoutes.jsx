@@ -10,6 +10,7 @@ import UsersGroupMembers from "@/pages/admin/Users/UsersGroupMembers";
 import AddCustomer from "@/pages/admin/Users/AddCustomer";
 import BulkUploadCustomer from "@/pages/admin/Users/BulkUploadCustomer";
 import AddGroup from "@/pages/admin/Users/AddGroup";
+import EditGroup from "@/pages/admin/Users/EditGroup";
 import AdminLayout from "../components/layout/AdminLayout";
 import RoleBasedRoute from "../components/shared/RoleBasedRoute";
 import { adminRouteLinks } from "../services";
@@ -195,6 +196,14 @@ export const adminRoutes = {
       element: (
         <RoleBasedRoute requiredActivePath="users">
           <AddGroup />
+        </RoleBasedRoute>
+      ),
+    },
+    {
+      path: "users/active/edit-group/:id",
+      element: (
+        <RoleBasedRoute requiredActivePath="users">
+          <EditGroup />
         </RoleBasedRoute>
       ),
     },

@@ -46,7 +46,7 @@
   }
 
   .btn_cancel {
-    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-2 h-12 text-sm font-bold leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out disabled:cursor-not-allowed;
+    @apply flex items-center justify-center text-center px-6 py-2 sm:px-6 sm:py-2 h-12 text-sm font-medium leading-tight bg-white border border-black hover:bg-natural-50 text-black sm:text-sm rounded-[8px] cursor-pointer transition-transform duration-200 ease-in-out disabled:cursor-not-allowed;
     &:active {
       @apply scale-95;
     }

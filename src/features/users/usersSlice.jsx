@@ -56,6 +56,12 @@ const initialState = {
   singleUser: {},
   selectedData: {},
 
+  successModal: {
+    show: false,
+    type: "", // 'addCustomer', 'bulkCustomer', 'addGroup', 'updateGroup'
+    message: "",
+  },
+
   showBlockModal: false,
   showUnblockModal: false,
   showDeleteGroupModal: false,
@@ -504,6 +510,138 @@ const usersSlice = createSlice({
       }
     },
 
+    addNewGroup: (state, action) => {
+      const newGroup = action.payload;
+      state.groupData.lists.unshift(newGroup);
+      state.groupData.meta.totalItems += 1;
+
+      // Add to first page of cache if it exists
+      const firstPageKey = generateCacheKey(1, state.groupData.search);
+      if (state.groupData.cache[firstPageKey]) {
+        state.groupData.cache[firstPageKey].data.unshift(newGroup);
+        // Remove last item if exceeds page size
+        if (
+          state.groupData.cache[firstPageKey].data.length >
+          state.groupData.meta.pageSize
+        ) {
+          state.groupData.cache[firstPageKey].data.pop();
+        }
+      }
+
+      // Recalculate total pages
+      state.groupData.meta.totalPages = Math.ceil(
+        state.groupData.meta.totalItems / state.groupData.meta.pageSize,
+      );
+    },
+
+    updateGroupData: (state, action) => {
+      const { group_id, data } = action.payload;
+      const updatedGroup = { ...data, _id: group_id };
+
+      const groupIndex = state.groupData.lists.findIndex(
+        (group) => group._id === group_id,
+      );
+
+      if (groupIndex !== -1) {
+        state.groupData.lists[groupIndex] = {
+          ...state.groupData.lists[groupIndex],
+          ...updatedGroup,
+        };
+      }
+
+      // Update in cache
+      Object.keys(state.groupData.cache).forEach((key) => {
+        const cacheGroupIndex = state.groupData.cache[key].data.findIndex(
+          (group) => group._id === group_id,
+        );
+        if (cacheGroupIndex !== -1) {
+          state.groupData.cache[key].data[cacheGroupIndex] = {
+            ...state.groupData.cache[key].data[cacheGroupIndex],
+            ...updatedGroup,
+          };
+        }
+      });
+    },
+
+    addNewCustomer: (state, action) => {
+      const newCustomer = action.payload;
+      state.activeRegularData.lists.unshift(newCustomer);
+      state.activeRegularData.meta.totalItems += 1;
+
+      // Add to first page of cache if it exists
+      const firstPageKey = generateCacheKey(1, state.activeRegularData.search);
+      if (state.activeRegularData.cache[firstPageKey]) {
+        state.activeRegularData.cache[firstPageKey].data.unshift(newCustomer);
+        // Remove last item if exceeds page size
+        if (
+          state.activeRegularData.cache[firstPageKey].data.length >
+          state.activeRegularData.meta.pageSize
+        ) {
+          state.activeRegularData.cache[firstPageKey].data.pop();
+        }
+      }
+
+      // Recalculate total pages
+      state.activeRegularData.meta.totalPages = Math.ceil(
+        state.activeRegularData.meta.totalItems / state.activeRegularData.meta.pageSize,
+      );
+    },
+
+    updateCustomerData: (state, action) => {
+      const { customer_id, data } = action.payload;
+      const updatedCustomer = { ...data, _id: customer_id };
+
+      // Update in active regular list
+      const activeIndex = state.activeRegularData.lists.findIndex(
+        (customer) => customer._id === customer_id,
+      );
+
+      if (activeIndex !== -1) {
+        state.activeRegularData.lists[activeIndex] = {
+          ...state.activeRegularData.lists[activeIndex],
+          ...updatedCustomer,
+        };
+      }
+
+      // Update in active regular cache
+      Object.keys(state.activeRegularData.cache).forEach((key) => {
+        const cacheCustomerIndex = state.activeRegularData.cache[key].data.findIndex(
+          (customer) => customer._id === customer_id,
+        );
+        if (cacheCustomerIndex !== -1) {
+          state.activeRegularData.cache[key].data[cacheCustomerIndex] = {
+            ...state.activeRegularData.cache[key].data[cacheCustomerIndex],
+            ...updatedCustomer,
+          };
+        }
+      });
+
+      // Also check blocked list
+      const blockedIndex = state.blockedRegularData.lists.findIndex(
+        (customer) => customer._id === customer_id,
+      );
+
+      if (blockedIndex !== -1) {
+        state.blockedRegularData.lists[blockedIndex] = {
+          ...state.blockedRegularData.lists[blockedIndex],
+          ...updatedCustomer,
+        };
+      }
+
+      // Update in blocked cache
+      Object.keys(state.blockedRegularData.cache).forEach((key) => {
+        const cacheCustomerIndex = state.blockedRegularData.cache[key].data.findIndex(
+          (customer) => customer._id === customer_id,
+        );
+        if (cacheCustomerIndex !== -1) {
+          state.blockedRegularData.cache[key].data[cacheCustomerIndex] = {
+            ...state.blockedRegularData.cache[key].data[cacheCustomerIndex],
+            ...updatedCustomer,
+          };
+        }
+      });
+    },
+
     removeMemberFromGroup: (state, action) => {
       const { memberId } = action.payload;
 
@@ -541,6 +679,22 @@ const usersSlice = createSlice({
       }
     },
 
+    setSuccessModal: (state, action) => {
+      state.successModal = {
+        show: action.payload.show ?? true,
+        type: action.payload.type || "",
+        message: action.payload.message || "",
+      };
+    },
+
+    clearSuccessModal: (state) => {
+      state.successModal = {
+        show: false,
+        type: "",
+        message: "",
+      };
+    },
+
     resetUsersState: () => initialState,
   },
 });
@@ -575,7 +729,13 @@ export const {
   closeDeleteGroupModal,
   transferUserBetweenLists,
   removeGroupFromLists,
+  addNewGroup,
+  updateGroupData,
+  addNewCustomer,
+  updateCustomerData,
   removeMemberFromGroup,
+  setSuccessModal,
+  clearSuccessModal,
   resetUsersState,
 } = usersSlice.actions;
 

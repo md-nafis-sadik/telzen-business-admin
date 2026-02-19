@@ -913,6 +913,23 @@ export const EditIconSvg = () => {
   );
 };
 
+export const EditYellowIconSvg = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+    >
+      <path
+        d="M2.99878 17.4615V20.5015C2.99878 20.7815 3.21878 21.0015 3.49878 21.0015H6.53878C6.66878 21.0015 6.79878 20.9515 6.88878 20.8515L17.8088 9.94152L14.0588 6.19152L3.14878 17.1015C3.04878 17.2015 2.99878 17.3215 2.99878 17.4615ZM20.7088 7.04152C21.0988 6.65152 21.0988 6.02152 20.7088 5.63152L18.3688 3.29152C17.9788 2.90152 17.3488 2.90152 16.9588 3.29152L15.1288 5.12152L18.8788 8.87152L20.7088 7.04152Z"
+        fill="#FF9D00"
+      />
+    </svg>
+  );
+};
+
 export const DeleteIconSvg = () => {
   return (
     <svg
@@ -975,11 +992,11 @@ export const SuccessPopupIconSvg = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="0.5" y="0.5" width="99" height="99" rx="12.3" fill="#EEFFF6" />
-      <rect x="0.5" y="0.5" width="99" height="99" rx="12.3" stroke="#00AE5B" />
+      <rect x="0.5" y="0.5" width="99" height="99" rx="12.3" fill="#E9FFFA" />
+      <rect x="0.5" y="0.5" width="99" height="99" rx="12.3" stroke="#00C896" />
       <path
         d="M41.9867 59.6873L31.5617 49.2623L28.0117 52.7873L41.9867 66.7623L71.9867 36.7623L68.4617 33.2373L41.9867 59.6873Z"
-        fill="#00AE5B"
+        fill="#00C896"
       />
     </svg>
   );

@@ -6,6 +6,7 @@ import {
   ViewIconSvg,
   DeleteIconSvg,
   formatDate,
+  EditYellowIconSvg,
 } from "@/services";
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
@@ -67,6 +68,12 @@ function UsersGroupTable() {
                         className="cursor-pointer"
                       >
                         <ViewIconSvg />
+                      </Link>
+                      <Link
+                        to={`/admin/users/active/edit-group/${group._id || group.id}`}
+                        className="cursor-pointer"
+                      >
+                        <EditYellowIconSvg />
                       </Link>
                       <button
                         className="cursor-pointer"

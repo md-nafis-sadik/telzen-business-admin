@@ -17,7 +17,7 @@ function UsersActiveHeader() {
     currentTab === "regular" ? regularHook : groupHook;
 
   return (
-    <div className="w-full flex flex-col md:flex-row justify-between gap-4">
+    <div className="w-full flex flex-col lg:flex-row justify-between gap-4">
       {/* Tab Buttons */}
       <div className="flex items-center gap-4">
         <button

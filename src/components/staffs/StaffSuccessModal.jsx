@@ -1,5 +1,5 @@
 // import { Modal } from "@/components/ui/modal";
-import { GreenTickIconSvg } from "@/services";
+import { SuccessPopupIconSvg } from "@/services";
 import { useStaffs } from "@/hooks";
 import { useDispatch } from "react-redux";
 import { setSuccessModal } from "@/features/staffs/staffSlice";
@@ -14,7 +14,7 @@ const StaffSuccessModal = () => {
   };
 
   const getTitle = () => {
-    switch (successModal.type) {
+    switch (successModal?.type) {
       case "block":
         return "Staff Blocked Successfully";
       case "unblock":
@@ -31,7 +31,7 @@ const StaffSuccessModal = () => {
   };
 
   const getMessage = () => {
-    switch (successModal.type) {
+    switch (successModal?.type) {
       case "block":
         return "The staff member has been blocked successfully and will not be able to access their account.";
       case "unblock":
@@ -48,31 +48,16 @@ const StaffSuccessModal = () => {
   };
 
   return (
-    <Modal open={successModal.show} onOpenChange={handleClose}>
-      <div className="w-full max-w-md p-6 rounded-lg bg-white">
-        <div className="flex flex-col items-center gap-6">
-          <div className="flex justify-center items-center">
-            <GreenTickIconSvg />
-          </div>
-
-          <div className="flex flex-col items-center gap-3">
-            <h3 className="text-gray-100 text-xl font-semibold text-center">
-              {getTitle()}
-            </h3>
-            <p className="text-black-600 text-sm text-center">{getMessage()}</p>
-          </div>
-
-          <div className="w-full">
-            <button
-              onClick={handleClose}
-              className="w-full h-12 px-6 rounded-lg bg-main-700 text-white text-sm font-medium hover:bg-main-800 transition-colors"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      </div>
-    </Modal>
+    <Modal 
+      showModal={successModal?.show || false} 
+      onClose={handleClose}
+      title={getTitle()}
+      actionPara={getMessage()}
+      popupIcon={<SuccessPopupIconSvg />}
+      confirmButton="OK"
+      confirmButtonClass="w-full h-12 px-6 rounded-lg bg-main-700 text-white text-sm font-medium hover:bg-main-800 transition-colors"
+      confirmHandeler={handleClose}
+    />
   );
 };
 

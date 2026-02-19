@@ -5,6 +5,9 @@ import {
   setGroupMembers,
   setSingleUser,
   setGroupUsers,
+  addNewGroup,
+  updateGroupData,
+  setSuccessModal,
 } from "./usersSlice";
 
 const usersApi = apiSlice.injectEndpoints({
@@ -215,7 +218,26 @@ const usersApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["CustomerGroup"],
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          // Only add the new group to the slice, don't refetch
+          const newGroupData = result?.data?.data;
+          if (newGroupData) {
+            dispatch(addNewGroup(newGroupData));
+          }
+          // Show success modal
+          dispatch(
+            setSuccessModal({
+              show: true,
+              type: "addGroup",
+              message: result?.data?.message || "Group created successfully!",
+            })
+          );
+        } catch (error) {
+          console.error("Create group failed:", error);
+        }
+      },
     }),
 
     // Update Group
@@ -225,10 +247,27 @@ const usersApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: (result, error, { group_id }) => [
-        "CustomerGroup",
-        { type: "Group", id: group_id },
-      ],
+      async onQueryStarted({ group_id, ...data }, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            updateGroupData({
+              group_id: group_id,
+              data: result?.data?.data || data,
+            }),
+          );
+          // Show success modal
+          dispatch(
+            setSuccessModal({
+              show: true,
+              type: "updateGroup",
+              message: result?.data?.message || "Group updated successfully!",
+            })
+          );
+        } catch (error) {
+          console.error("Update group failed:", error);
+        }
+      },
     }),
   }),
 });

@@ -5,6 +5,7 @@ import CountrySelect from "@/components/shared/CountrySelect";
 import SelectInput from "@/components/shared/SelectInput";
 import { useAddCustomer } from "@/hooks/useAddCustomer";
 import { adminRouteLinks, allCountries } from "@/services";
+import UsersSuccessModal from "@/components/users/UsersSuccessModal";
 
 function AddCustomer() {
   const navigate = useNavigate();
@@ -138,6 +139,9 @@ function AddCustomer() {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <UsersSuccessModal />
     </div>
   );
 }

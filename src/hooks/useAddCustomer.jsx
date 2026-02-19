@@ -45,15 +45,10 @@ export const useAddCustomer = ({ onSuccess, onClose }) => {
     }
 
     try {
-      const result = await createCustomer(customerData).unwrap();
-      if (result.success) {
-        // Reset form
-        setFormData({ name: "", email: "", country: null, group: "" });
-        if (onSuccess) {
-          onSuccess();
-        }
-        successNotify(result.message || "Customer created successfully!");
-      }
+      await createCustomer(customerData).unwrap();
+      // Success modal will be shown automatically by the mutation
+      // Reset form
+      setFormData({ name: "", email: "", country: null, group: "" });
     } catch (error) {
       console.error("Failed to create customer:", error);
       const errorMsg =

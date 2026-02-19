@@ -1,5 +1,6 @@
 import { apiSlice } from "../api/apiSlice";
 import { toast } from "react-toastify";
+import { addNewCustomer, setSuccessModal } from "../users/usersSlice";
 
 export const customerApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,15 +23,22 @@ export const customerApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Customer", "CustomerGroup"],
-      async onQueryStarted(_arg, { queryFulfilled }) {
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
         try {
-          const { data } = await queryFulfilled;
-        //   if (data.success) {
-        //     toast.success(data.message || "Customer created successfully!");
-        //   } else {
-        //     toast.error(data.message || "Failed to create customer");
-        //   }
+          const result = await queryFulfilled;
+          // Only add the new customer to the slice, don't refetch
+          const newCustomerData = result?.data?.data;
+          if (newCustomerData) {
+            dispatch(addNewCustomer(newCustomerData));
+          }
+          // Show success modal
+          dispatch(
+            setSuccessModal({
+              show: true,
+              type: "addCustomer",
+              message: result?.data?.message || "Customer added successfully!",
+            })
+          );
         } catch (error) {
           const errorMsg =
             error?.error?.data?.message || "Failed to create customer";
@@ -46,6 +54,23 @@ export const customerApi = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      async onQueryStarted(_arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          // Show success modal
+          dispatch(
+            setSuccessModal({
+              show: true,
+              type: "bulkCustomer",
+              message: result?.data?.message || "Customers uploaded successfully!",
+            })
+          );
+        } catch (error) {
+          const errorMsg =
+            error?.error?.data?.message || "Failed to upload customers";
+          console.error(errorMsg);
+        }
+      },
       invalidatesTags: ["Customer", "CustomerGroup"],
     }),
 

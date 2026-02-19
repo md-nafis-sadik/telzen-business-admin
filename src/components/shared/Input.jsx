@@ -27,7 +27,7 @@ const Input = ({
       )}
       {isLoading ? (
         <div
-          className={`relative h-[48px] w-full rounded-lg bg-white animate-pulse`}
+          className={`relative h-[48px] w-full rounded-lg bg-natural-300 animate-pulse`}
         ></div>
       ) : (
         <div className="relative w-full">

@@ -1,16 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Input from "@/components/shared/Input";
-import { useCreateGroupMutation } from "@/features/users/usersApi";
+import { useUpdateGroupMutation, useGetSingleGroupQuery } from "@/features/users/usersApi";
 import { useGetActiveRegularUsersQuery } from "@/features/users/usersApi";
 import { errorNotify, adminRouteLinks } from "@/services";
 import { X } from "lucide-react";
 import SelectInput from "@/components/shared/SelectInput";
 import UsersSuccessModal from "@/components/users/UsersSuccessModal";
 
-function AddGroup() {
+function EditGroup() {
   const navigate = useNavigate();
-  const [createGroup, { isLoading }] = useCreateGroupMutation();
+  const { id } = useParams();
+  const [updateGroup, { isLoading: isUpdating }] = useUpdateGroupMutation();
+  const { data: groupData, isLoading: isLoadingGroup } = useGetSingleGroupQuery(id, {
+    refetchOnMountOrArgChange: true,
+  });
   const { data: customersData, isLoading: isLoadingCustomers } = useGetActiveRegularUsersQuery({
     current_page: 1,
     limit: 9999999,
@@ -26,6 +30,18 @@ function AddGroup() {
   const [tempSelection, setTempSelection] = useState("");
 
   const customers = customersData?.data || [];
+  const group = groupData?.data;
+
+  // Initialize form with group data
+  useEffect(() => {
+    if (group) {
+      setFormData({
+        name: group.name || "",
+        selectedCustomers: group.customer || [],
+      });
+      setSelectedCustomerIds(group.customer?.map(c => c._id) || []);
+    }
+  }, [group]);
 
   const availableCustomers = customers.filter(
     (customer) => !selectedCustomerIds.includes(customer._id)
@@ -67,18 +83,19 @@ function AddGroup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const groupData = {
+    const groupUpdateData = {
+      group_id: id,
       name: formData.name,
       customer: selectedCustomerIds,
     };
 
     try {
-      await createGroup(groupData).unwrap();
+      await updateGroup(groupUpdateData).unwrap();
       // Success modal will be shown automatically by the mutation
     } catch (error) {
-      console.error("Failed to create group:", error);
+      console.error("Failed to update group:", error);
       const errorMsg =
-        error?.data?.message || error?.error?.data?.message || "Failed to create group";
+        error?.data?.message || error?.error?.data?.message || "Failed to update group";
       errorNotify(errorMsg);
     }
   };
@@ -86,6 +103,17 @@ function AddGroup() {
   const handleBack = () => {
     navigate(adminRouteLinks.usersActive.path);
   };
+
+//   if (isLoadingGroup) {
+//     return (
+//       <div className="w-full flex-1 flex items-center justify-center">
+//         <div className="text-center">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-main-700 mx-auto"></div>
+//           <p className="mt-4 text-text-700">Loading group data...</p>
+//         </div>
+//       </div>
+//     );
+//   }
 
   return (
     <div className="w-full flex-1 flex flex-col gap-4">
@@ -95,10 +123,10 @@ function AddGroup() {
         <div className="space-y-4">
           <div>
             <h2 className="text-[32px] font-[900] font-barlowCondensed">
-              ADD GROUP
+              EDIT GROUP
             </h2>
             <p className="text-text-700 text-base">
-              Purchases can be make by group-wise later.
+              Update group details and manage members.
             </p>
           </div>
 
@@ -110,6 +138,7 @@ function AddGroup() {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                isLoading={isLoadingGroup}
                 required
               />
 
@@ -123,6 +152,7 @@ function AddGroup() {
                   setTempSelection("");
                 }}
                 disabled={isLoadingCustomers}
+                isLoading={isLoadingCustomers || isLoadingGroup}
               />
             </div>
 
@@ -153,17 +183,17 @@ function AddGroup() {
               <button
                 type="button"
                 onClick={handleBack}
-                disabled={isLoading}
+                disabled={isUpdating}
                 className="flex-1 px-6 py-3 border-2 border-gray-300 rounded-full hover:bg-gray-50 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Back
               </button>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isUpdating}
                 className="flex-1 px-6 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 transition-colors font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {isLoading ? "Creating..." : "Save Group"}
+                {isUpdating ? "Updating..." : "Update Group"}
               </button>
             </div>
           </form>
@@ -176,4 +206,4 @@ function AddGroup() {
   );
 }
 
-export default AddGroup;
+export default EditGroup;

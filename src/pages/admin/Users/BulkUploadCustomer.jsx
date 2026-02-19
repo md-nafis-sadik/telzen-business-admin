@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBulkCreateCustomersMutation } from "@/features/inventory/customerApi";
-import { errorNotify, successNotify, adminRouteLinks } from "@/services";
+import { errorNotify, adminRouteLinks } from "@/services";
 import * as XLSX from "xlsx";
 import { Upload } from "lucide-react";
+import UsersSuccessModal from "@/components/users/UsersSuccessModal";
 
 function BulkUploadCustomer() {
   const navigate = useNavigate();
@@ -151,13 +152,7 @@ function BulkUploadCustomer() {
         customer: customers,
       }).unwrap();
 
-      if (result.success) {
-        successNotify(
-          result.message ||
-            `${customers.length} customers uploaded successfully!`,
-        );
-        navigate(adminRouteLinks.usersActive.path);
-      }
+      // Success modal will be shown automatically by the mutation
     } catch (error) {
       console.error("Failed to upload customers:", error);
       const errorMsg =
@@ -270,6 +265,9 @@ function BulkUploadCustomer() {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <UsersSuccessModal />
     </div>
   );
 }

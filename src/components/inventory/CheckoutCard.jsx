@@ -100,7 +100,8 @@ function CheckoutCard({
             <span>Quantity</span>
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <div className="font-bold">{quantity || 1}</div>
+            {/* <button
               onClick={decrementQuantity}
               className="w-8 h-8 rounded bg-main-50 border border-main-700 text-black hover:bg-main-100 transition-colors flex items-center justify-center font-bold"
             >
@@ -114,7 +115,7 @@ function CheckoutCard({
               className="w-8 h-8 rounded bg-main-50 border border-main-700 text-black hover:bg-main-100 transition-colors flex items-center justify-center font-bold"
             >
               +
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import {
   BlockIconSvg,
   DeleteIconSvg,
   EditIconSvg,
+  EditYellowIconSvg,
   roleLabelMap,
 } from "@/services";
 import { Fragment } from "react";
@@ -87,7 +88,7 @@ function StaffTable() {
                   <td className="table_outline_td">
                     <div className="flex gap-3 justify-center items-center">
                       <Link to={`/admin/staffs/edit/${staff._id}`}>
-                        <EditIconSvg />
+                        <EditYellowIconSvg />
                       </Link>
 
                       {staff?.is_blocked === false ? (

@@ -45,7 +45,7 @@ function UsersGroupMembersTable() {
             >
               {members.map((member, index) => (
                 <tr key={member._id || index} className="table_row group">
-                  <td className="table_outline_td">{member?.uid || "-"}</td>
+                  <td className="table_outline_td">{member?.customer_id || "-"}</td>
                   <td className="table_outline_td">
                     {member?.name || member?.full_name || "-"}
                   </td>
@@ -56,9 +56,9 @@ function UsersGroupMembersTable() {
                   </td>
                   <td className="table_outline_td">
                     <span className="flex gap-3 justify-center items-center">
-                      <button className="cursor-pointer">
+                      {/* <button className="cursor-pointer">
                         <ViewIconSvg />
-                      </button>
+                      </button> */}
                       <button
                         className="cursor-pointer"
                         onClick={() => handleRemoveClick(member)}
