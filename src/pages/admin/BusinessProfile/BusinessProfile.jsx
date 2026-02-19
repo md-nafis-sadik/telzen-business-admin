@@ -23,7 +23,7 @@ function BusinessProfile() {
             Profile Settings
           </button>
 
-          <button
+          {/* <button
             onClick={() => setActiveTab("business")}
             className={`flex items-center w-56 gap-2 px-6 py-4 rounded-xl text-sm transition-colors ${
               activeTab === "business"
@@ -35,7 +35,7 @@ function BusinessProfile() {
               color={activeTab === "business" ? "#fff" : "#4A4A4A"}
             />
             Business Settings
-          </button>
+          </button> */}
         </div>
 
         {/* Form Content */}
