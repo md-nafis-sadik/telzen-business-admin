@@ -1,7 +1,7 @@
 import TableHelper from "@/components/responseHelper/TableHelper";
 import Pagination from "@/components/shared/Pagination";
 import { useAccountBalance } from "@/hooks";
-import { ExportExcelIconSvg, formatDate, PrintIconSvg } from "@/services";
+import { ExportExcelIconSvg, formatDate, getSymbol, PrintIconSvg } from "@/services";
 
 function AccountBalanceTable() {
   const {
@@ -63,7 +63,7 @@ function AccountBalanceTable() {
                 <th className="table_th w-[150px]">Customer</th>
                 <th className="table_th w-[150px]">Group Name</th>
                 <th className="table_th w-[200px]">Customer Email</th>
-                <th className="table_th w-[150px]">Customer phone</th>
+                {/* <th className="table_th w-[150px]">Customer phone</th> */}
                 <th className="table_th w-[120px]">Amount</th>
                 <th className="table_th_last w-[120px]">Revenue</th>
               </tr>
@@ -97,14 +97,14 @@ function AccountBalanceTable() {
                     <td className="table_outline_td print:text-xs">
                       {item?.customer?.email || "-"}
                     </td>
-                    <td className="table_outline_td print:text-xs">
+                    {/* <td className="table_outline_td print:text-xs">
                       {item?.customer_phone || "-"}
+                    </td> */}
+                    <td className="table_outline_td print:text-xs">
+                      {getSymbol(item?.payment_currency)}{item?.payment_amount || "-"}
                     </td>
                     <td className="table_outline_td print:text-xs">
-                      ${item?.payment_amount || "-"}
-                    </td>
-                    <td className="table_outline_td print:text-xs">
-                      ${item?.revenue}
+                      {getSymbol(item?.payment_currency)}{item?.revenue}
                     </td>
                   </tr>
                 ))}

@@ -1,18 +1,28 @@
 import CustomModal from "../shared/CustomModal";
 import Input from "../shared/Input";
-import PhoneInput from "../shared/PhoneInput";
+import CountrySelect from "../shared/CountrySelect";
 import { useAddCustomer } from "@/hooks/useAddCustomer";
+import { allCountries } from "@/services";
 
 function AddCustomerModal({ showModal, onClose, onSuccess }) {
   const {
     isCustomerAddLoading,
-    handlePhoneChange,
     formData,
     handleInputChange,
+    handleCountryChange,
     handleSubmit,
     handleClose,
-    phone,
   } = useAddCustomer({ onSuccess, onClose });
+
+  const formattedCountries = allCountries;
+
+  const isFormValid = () => {
+    return (
+      formData.name.trim() !== "" &&
+      formData.email.trim() !== "" &&
+      formData.country !== null
+    );
+  };
 
   return (
     <CustomModal
@@ -45,13 +55,12 @@ function AddCustomerModal({ showModal, onClose, onSuccess }) {
             required
           />
 
-          <PhoneInput
-            label="Phone Number (Optional)"
-            placeholder="Enter phone number"
-            name="phone"
-            value={phone}
-            onChange={handlePhoneChange}
-            country="bd"
+          <CountrySelect
+            label="Customer Country"
+            placeholder="Select country"
+            options={formattedCountries}
+            value={formData.country}
+            onChange={handleCountryChange}
           />
 
           <div className="flex gap-3 pt-4">
@@ -65,7 +74,7 @@ function AddCustomerModal({ showModal, onClose, onSuccess }) {
             </button>
             <button
               type="submit"
-              disabled={isCustomerAddLoading}
+              disabled={isCustomerAddLoading || !isFormValid()}
               className="w-full px-6 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {isCustomerAddLoading ? "Adding..." : "Add Customer"}

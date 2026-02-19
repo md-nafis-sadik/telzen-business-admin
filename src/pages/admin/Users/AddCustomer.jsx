@@ -37,6 +37,16 @@ function AddCustomer() {
 
   const formattedCountries = allCountries;
 
+  // Check if form is valid to enable submit button
+  const isFormValid = () => {
+    return (
+      formData.name.trim() !== "" &&
+      formData.email.trim() !== "" &&
+      formData.country !== null &&
+      agreedToTerms
+    );
+  };
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (!agreedToTerms) {
@@ -130,7 +140,7 @@ function AddCustomer() {
               </button>
               <button
                 type="submit"
-                disabled={isCustomerAddLoading || !agreedToTerms}
+                disabled={isCustomerAddLoading || !isFormValid()}
                 className="flex-1 px-6 py-3 bg-main-700 text-white rounded-full hover:bg-main-600 transition-colors font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isCustomerAddLoading ? "Adding..." : "Confirm"}
